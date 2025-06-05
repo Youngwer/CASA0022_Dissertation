@@ -44,17 +44,39 @@ void loop() {
   Serial.print(conductivity, 2);
   Serial.println(" μS/cm");
   
-  // 简单的水质评估
-  if (conductivity < 50) {
-    Serial.println("状态: 纯净水/蒸馏水");
-  } else if (conductivity < 150) {
-    Serial.println("状态: 优质饮用水");
-  } else if (conductivity < 500) {
-    Serial.println("状态: 良好饮用水");
-  } else if (conductivity < 1000) {
-    Serial.println("状态: 可接受的水质");
+  // 基于相对值的水质评估（无需校准）
+  String waterType = "";
+  String quality = "";
+  
+  if (sensorValue < 500) {
+    waterType = "极纯净水";
+    quality = "excellent";
+  } else if (sensorValue < 1000) {
+    waterType = "纯净水";
+    quality = "good";
+  } else if (sensorValue < 2000) {
+    waterType = "普通饮用水";
+    quality = "acceptable";
+  } else if (sensorValue < 3000) {
+    waterType = "硬水/矿物质较多";
+    quality = "marginal";
   } else {
-    Serial.println("状态: 水质较差");
+    waterType = "水质较差";
+    quality = "poor";
+  }
+  
+  Serial.print("水质类型: ");
+  Serial.println(waterType);
+  Serial.print("质量等级: ");
+  Serial.println(quality);
+  
+  // LED颜色指示（适合你的论文项目）
+  if (quality == "excellent" || quality == "good") {
+    Serial.println("LED: 绿色 ✓");
+  } else if (quality == "acceptable") {
+    Serial.println("LED: 黄色 ⚠");
+  } else {
+    Serial.println("LED: 红色 ✗");
   }
   
   Serial.println("===================");
