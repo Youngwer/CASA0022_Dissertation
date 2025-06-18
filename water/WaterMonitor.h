@@ -2,7 +2,7 @@
  * WaterMonitor.h - 水质监测系统主程序头文件
  * 
  * 整合所有模块的声明和全局变量定义
- * 适配 MKR WAN1310 + E-Paper显示
+ * 适配 MKR WAN1310 + E-Paper显示 + LoRaWAN通信
  */
 
 #ifndef WATER_MONITOR_H
@@ -14,6 +14,7 @@
 #include <DallasTemperature.h>
 #include "epd2in9_V2.h"
 #include "epdpaint.h"
+#include "LoRaComm.h"  // 添加LoRa通信模块
 
 // ==================== 引脚定义 ====================
 // 传感器引脚定义（适配MKR WAN1310）
@@ -117,5 +118,18 @@ void handleSystemError(const char* errorMsg);
 void runDiagnostics();
 int getFreeMemory();
 void handleSerialCommands();
+
+// ==================== LoRa相关函数 ====================
+// LoRa初始化和状态管理
+bool initializeLoRaSystem();
+void handleLoRaOperations();
+void printSystemStatusWithLoRa();
+
+// LoRa数据发送
+void sendDataToCloud();
+bool shouldSendToCloud();
+
+// 系统诊断（包含LoRa）
+void runFullSystemDiagnostics();
 
 #endif // WATER_MONITOR_H

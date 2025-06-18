@@ -1,178 +1,230 @@
 /**
- * water.ino - 水质监测系统主程序（模块化版本）
+ * water.ino - 简化的水质监测系统主程序
  * 
- * 设备: Arduino MKR WAN1310 + E-Paper 2.9" V2
- * 功能: 水质多参数监测，包括pH、浊度、TDS、电导率、温度
- * 
- * 模块化结构:
- * - WaterMonitor.h: 主头文件，包含所有声明和常量定义
- * - Sensors.cpp: 传感器读取模块
- * - Display.cpp: E-Paper显示模块  
- * - ButtonControl.cpp: 按钮控制模块
- * 
- * 作者: 水质监测项目
- * 版本: v2.0 (模块化版本)
+ * 只使用一个文件来避免重复定义问题
  */
 
 #include "WaterMonitor.h"
 
-// ==================== Arduino主函数 ====================
 void setup() {
   Serial.begin(115200);
-  Serial.println("=== 水质监测系统启动 (模块化版本 v2.0) ===");
   
-  // 初始化整个系统
-  initializeSystem();
+  // 等待串口
+  unsigned long startTime = millis();
+  while (!Serial && millis() - startTime < 5000) {
+    ;
+  }
   
-  Serial.println("系统初始化完成");
-  Serial.println("按下按钮开始水质检测...");
-  Serial.print("(按钮冷却时间: ");
-  Serial.print(BUTTON_COOLDOWN / 1000);
-  Serial.println(" 秒)");
+  Serial.println("\n=================================");
+  Serial.println("   水质监测系统 v2.1 (LoRa版)    ");
+  Serial.println("=================================");
+  
+  // 初始化系统
+  initializeSimpleSystem();
+  
+  Serial.println("\n系统启动完成!");
+  Serial.println("按下按钮开始水质检测");
+  Serial.println("---------------------------------");
 }
 
 void loop() {
   // 处理按钮输入
   handleButtonInput();
   
-  // 处理串口命令
-  handleSerialCommands();
+  // 处理LoRa通信（如果初始化成功）
+  if (loraConnected) {
+    handleLoRaCommunication();
+  }
   
-  // 定期显示系统状态
-  printSystemStatus();
+  // 处理简单串口命令
+  handleSimpleSerialCommands();
   
-  // 延时，避免过度占用CPU
-  delay(50); // 更快的响应，避免按钮抖动
+  // 检查是否需要自动发送数据
+  checkAutoSend();
+  
+  delay(100);
 }
 
-// ==================== 系统初始化函数 ====================
-void initializeSystem() {
+// ==================== 简化的系统初始化 ====================
+void initializeSimpleSystem() {
   Serial.println("开始系统初始化...");
   
-  // 1. 初始化按钮控制
-  initializeButton();
-  
-  // 2. 初始化传感器
+  // 1. 初始化传感器
   initializeSensors();
+  delay(1000);
   
-  // 3. 初始化E-Paper显示
+  // 2. 初始化E-Paper显示
   initializeEPaper();
+  delay(1000);
   
-  // 4. 显示启动界面
+  // 3. 初始化按钮控制
+  initializeButton();
+  delay(500);
+  
+  // 4. 尝试初始化LoRa（不强制要求成功）
+  Serial.println("尝试初始化LoRa...");
+  if (initializeLoRa() && connectToNetwork()) {
+    Serial.println("✓ LoRa初始化成功!");
+  } else {
+    Serial.println("⚠ LoRa初始化失败，系统在离线模式下运行");
+  }
+  
+  // 5. 显示启动界面
   showStartupScreen();
   
-  // 5. 标记系统准备就绪
+  // 6. 系统准备就绪
   setSystemReady(true);
   
-  Serial.println("✓ 系统初始化完成，所有模块正常");
+  Serial.println("✓ 系统初始化完成!");
 }
 
-// ==================== 主要功能函数 ====================
+// ==================== 水质检测主流程 ====================
 void performWaterQualityTest() {
-  Serial.println("开始执行水质检测流程...");
+  Serial.println("\n>>> 开始水质检测 <<<");
   
-  // 显示检测进度
-  displayProgress("Reading sensors...");
-  
-  // 读取所有传感器数据
+  // 读取所有传感器
   readAllSensors();
   
-  // 在串口输出结果
-  printAllReadings();
-  
-  // 显示检测进度
-  displayProgress("Updating display...");
-  
-  // 更新E-Paper显示
+  // 更新显示
   updateWaterQualityDisplay();
   
-  Serial.println("水质检测流程完成！");
-}
-
-// ==================== 系统状态监控 ====================
-void printSystemStatus() {
-  static unsigned long lastStatusPrint = 0;
-  unsigned long currentTime = millis();
+  // 打印读数
+  printAllReadings();
   
-  // 每10秒显示一次系统状态（只有在系统准备就绪后）
-  if (isSystemReady() && currentTime - lastStatusPrint >= 10000) {
-    Serial.print("系统运行中... 按钮状态: ");
-    Serial.print(getButtonStatus());
-    Serial.print(" | 运行时间: ");
-    Serial.print(currentTime / 60000);
-    Serial.println(" 分钟");
-    
-    lastStatusPrint = currentTime;
+  // 如果LoRa可用，发送到云端
+  if (loraConnected) {
+    Serial.println("发送数据到云端...");
+    if (sendWaterQualityData()) {
+      Serial.println("✓ 数据已上传到TTN");
+      displayProgress("Cloud: OK");
+    } else {
+      Serial.println("✗ 云端上传失败");
+      displayProgress("Cloud: Failed");
+    }
   }
+  
+  Serial.println(">>> 水质检测完成 <<<\n");
 }
 
-// ==================== 错误处理函数 ====================
-void handleSystemError(const char* errorMsg) {
-  Serial.print("系统错误: ");
-  Serial.println(errorMsg);
-  
-  // 显示错误到屏幕
-  displayError(errorMsg);
-  
-  // 禁用系统直到重启
-  setSystemReady(false);
-  
-  // 进入错误循环
-  while(true) {
-    Serial.println("系统错误，请重启设备");
-    delay(5000);
-  }
-}
-
-// ==================== 调试和维护函数 ====================
-void runDiagnostics() {
-  Serial.println("\n=== 系统诊断信息 ===");
-  
-  // 按钮状态诊断
-  printButtonDebugInfo();
-  
-  // 传感器状态诊断
-  Serial.println("传感器状态:");
-  Serial.print("- 温度传感器: ");
-  Serial.println(temperatureSensorFound ? "正常" : "未检测到");
-  
-  // 显示内存使用情况（简化版本）
-  Serial.print("估计剩余内存: ");
-  Serial.print(getFreeMemory());
-  Serial.println(" 字节");
-  
-  Serial.println("==================");
-}
-
-// ==================== 内存监控函数 ====================
-int getFreeMemory() {
-  // 简化的内存检查，适用于SAMD21处理器
-  return 16384; // 返回估计值，避免复杂的内存计算
-}
-
-// ==================== 串口命令处理 ====================
-void handleSerialCommands() {
-  // 可以添加串口命令处理功能
+// ==================== 简化的串口命令处理 ====================
+void handleSimpleSerialCommands() {
   if (Serial.available()) {
     String command = Serial.readStringUntil('\n');
     command.trim();
+    command.toLowerCase();
     
     if (command == "test") {
-      Serial.println("执行手动测试...");
       performWaterQualityTest();
+      
     } else if (command == "status") {
-      runDiagnostics();
-    } else if (command == "reset") {
-      Serial.println("请手动按复位按钮重启设备");
-      // 简化重启处理，避免使用不兼容的指令
+      printSimpleSystemStatus();
+      
+    } else if (command == "send" && loraConnected) {
+      readAllSensors();
+      if (sendWaterQualityData()) {
+        Serial.println("✓ 数据发送成功");
+      } else {
+        Serial.println("✗ 数据发送失败");
+      }
+      
     } else if (command == "help") {
-      Serial.println("可用命令:");
-      Serial.println("- test: 执行水质检测");
-      Serial.println("- status: 显示系统状态");
-      Serial.println("- reset: 提示手动重启");
-      Serial.println("- help: 显示帮助信息");
-    } else {
-      Serial.println("未知命令，输入 'help' 查看可用命令");
+      Serial.println("\n=== 可用命令 ===");
+      Serial.println("test   - 执行水质检测");
+      Serial.println("status - 显示系统状态");
+      if (loraConnected) {
+        Serial.println("send   - 手动发送数据");
+      }
+      Serial.println("help   - 显示此帮助");
+      Serial.println("===============");
     }
   }
+}
+
+// ==================== 简化的系统状态 ====================
+void printSimpleSystemStatus() {
+  Serial.println("\n=== 系统状态 ===");
+  Serial.print("系统就绪: ");
+  Serial.println(systemReady ? "是" : "否");
+  
+  Serial.print("温度传感器: ");
+  Serial.println(temperatureSensorFound ? "已连接" : "使用默认值");
+  
+  Serial.print("LoRa状态: ");
+  if (loraInitialized && loraConnected) {
+    Serial.println("已连接");
+    Serial.print("设备EUI: ");
+    Serial.println(loraModem.deviceEUI());
+  } else if (loraInitialized) {
+    Serial.println("已初始化但未连接");
+  } else {
+    Serial.println("未初始化");
+  }
+  
+  Serial.print("按钮状态: ");
+  Serial.println(getButtonStatus());
+  
+  Serial.println("================");
+}
+
+// ==================== 自动发送检查 ====================
+void checkAutoSend() {
+  static unsigned long lastAutoCheck = 0;
+  
+  // 每30秒检查一次
+  if (millis() - lastAutoCheck > 30000) {
+    lastAutoCheck = millis();
+    
+    if (loraConnected && shouldSendLoRaData()) {
+      Serial.println("自动发送数据到云端...");
+      readAllSensors();
+      sendWaterQualityData();
+    }
+  }
+}
+
+// ==================== 缺少的函数实现 ====================
+void printSystemStatus() {
+  printSimpleSystemStatus();
+}
+
+int getFreeMemory() {
+  // 简单的内存检测（Arduino方式）
+  extern int __heap_start, *__brkval;
+  int v;
+  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
+}
+
+void runDiagnostics() {
+  Serial.println("\n=== 系统诊断 ===");
+  
+  // 传感器诊断
+  Serial.println("传感器诊断:");
+  readAllSensors();
+  Serial.print("- 温度: ");
+  Serial.print(waterTemperature);
+  Serial.println("°C");
+  Serial.print("- pH: ");
+  Serial.println(pHValue);
+  Serial.print("- 浊度: ");
+  Serial.print(turbidityNTU);
+  Serial.println(" NTU");
+  Serial.print("- 电导率: ");
+  Serial.print(conductivityValue);
+  Serial.println(" μS/cm");
+  
+  // LoRa诊断
+  if (loraInitialized) {
+    Serial.println("LoRa诊断:");
+    Serial.print("- 版本: ");
+    Serial.println(loraModem.version());
+    Serial.print("- 连接状态: ");
+    Serial.println(loraConnected ? "已连接" : "未连接");
+  }
+  
+  // 内存诊断
+  Serial.print("可用内存: ");
+  Serial.print(getFreeMemory());
+  Serial.println(" 字节");
+  
+  Serial.println("===============");
 }
