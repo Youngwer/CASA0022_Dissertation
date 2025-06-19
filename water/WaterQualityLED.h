@@ -13,7 +13,7 @@
 // ==================== LED引脚定义 ====================
 #define RED_LED_PIN     0   // D0引脚 - 红色LED (不适合饮用)
 #define GREEN_LED_PIN   1   // D1引脚 - 绿色LED (优秀，适合饮用)
-#define YELLOW_LED_PIN  10  // D10引脚 - 黄色LED (一般)
+#define YELLOW_LED_PIN  11  // D10引脚 - 黄色LED (一般)
 
 // ==================== LED状态定义 ====================
 #define LED_OFF         0

@@ -1,4 +1,4 @@
-const int turbidityPin = A5;
+const int turbidityPin = A2;
 
 void setup() {
   Serial.begin(9600);

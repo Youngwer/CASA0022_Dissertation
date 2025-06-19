@@ -29,6 +29,9 @@ float pH_b = 7.0 - pH_m * PH7_VOLTAGE;
 void initializeSensors() {
   Serial.println("正在初始化传感器...");
   
+  // 初始化随机数种子
+  randomSeed(analogRead(A0) + millis());
+  
   // 初始化引脚
   pinMode(PH_SENSOR_PIN, INPUT);
   pinMode(TURBIDITY_PIN, INPUT);
@@ -63,9 +66,21 @@ void readAllSensors() {
   readConductivity();
   calculateTDSFromConductivity();
   
+  // 显示读取到的值
+  Serial.println("=== 传感器读数 ===");
+  Serial.print("pH: "); Serial.println(pHValue, 2);
+  Serial.print("浊度: "); Serial.print(turbidityNTU, 1); Serial.println(" NTU");
+  Serial.print("TDS: "); Serial.print(tdsValue, 0); Serial.println(" ppm");
+  Serial.print("电导率: "); Serial.print(conductivityValue, 0); Serial.println(" μS/cm");
+  
   // 直接评估水质并更新LED显示
+  Serial.println("开始LED评估...");
   int ledStatus = evaluateWaterQuality(pHValue, turbidityNTU, tdsValue, conductivityValue);
+  Serial.print("LED评估结果: ");
+  Serial.println(ledStatus);
+  
   setLEDStatus(ledStatus);
+  Serial.println("LED状态已设置");
   
   Serial.println("传感器数据读取完成");
 }
@@ -106,16 +121,14 @@ void readPH() {
 }
 
 void readTurbidity() {
-  int sensorValue = analogRead(TURBIDITY_PIN);
-  float voltageA2 = sensorValue * (VREF / 1023.0);
-  float sensorVoltage = voltageA2 * 2.0;  // 电压分压器修正
+  // 生成0.1-1.0之间的随机浊度值（保留一位小数）
+  float randomValue = random(1, 11) / 10.0;  // 生成0.1到1.0
+  turbidityNTU = randomValue;
   
-  // 转换为NTU值
-  turbidityNTU = (4.25 - sensorVoltage) * (1000.0 / 4.25);
-  
-  // 限制浊度值范围
-  if (turbidityNTU < 0) turbidityNTU = 0;
-  if (turbidityNTU > 1000) turbidityNTU = 1000;
+  // 调试输出
+  Serial.print("随机浊度值: ");
+  Serial.print(turbidityNTU, 1);
+  Serial.println(" NTU");
 }
 
 void readConductivity() {
