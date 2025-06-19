@@ -2,9 +2,11 @@
  * Sensors.cpp - 传感器读取模块
  * 
  * 包含所有传感器的初始化、读取和数据处理功能
+ * 包含LED水质指示功能
  */
 
 #include "WaterMonitor.h"
+#include "WaterQualityLED.h"  // 添加LED头文件
 
 // ==================== 全局变量定义 ====================
 // 温度传感器对象
@@ -45,6 +47,9 @@ void initializeSensors() {
     Serial.println("⚠ 未检测到DS18B20，将使用默认温度25℃");
   }
   
+  // 初始化LED指示系统
+  initializeLEDs();
+  
   Serial.println("传感器初始化完成");
 }
 
@@ -57,6 +62,10 @@ void readAllSensors() {
   readTurbidity();
   readConductivity();
   calculateTDSFromConductivity();
+  
+  // 直接评估水质并更新LED显示
+  int ledStatus = evaluateWaterQuality(pHValue, turbidityNTU, tdsValue, conductivityValue);
+  setLEDStatus(ledStatus);
   
   Serial.println("传感器数据读取完成");
 }
@@ -170,18 +179,7 @@ void printAllReadings() {
 
 // ==================== 水质状态评估 ====================
 String getWaterQualityStatus() {
-  // 根据WHO饮用水标准进行简单判断
-  bool phGood = (pHValue >= 6.5 && pHValue <= 8.5);
-  bool turbidityGood = (turbidityNTU < 4.0);
-  bool tdsGood = (tdsValue < 500);
-  
-  if (phGood && turbidityGood && tdsGood) {
-    return "Status: GOOD";
-  } else if (pHValue >= 6.0 && pHValue <= 9.0 && 
-             turbidityNTU < 10.0 && 
-             tdsValue < 1000) {
-    return "Status: OK";
-  } else {
-    return "Status: POOR";
-  }
+  // 使用LED评估系统获取水质状态
+  int ledStatus = evaluateWaterQuality(pHValue, turbidityNTU, tdsValue, conductivityValue);
+  return getWaterQualityDescription(ledStatus);
 }
