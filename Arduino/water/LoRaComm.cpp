@@ -66,6 +66,7 @@ bool connectToNetwork() {
   
   return true;
 }
+// ==================== 修复版本的 LoRaComm.cpp 数据打包部分 ====================
 
 // ==================== 数据打包 ====================
 WaterQualityPacket packWaterQualityData() {
@@ -80,11 +81,11 @@ WaterQualityPacket packWaterQualityData() {
   // 浊度（乘以10保留一位小数）
   packet.turbidity = (uint16_t)(turbidityNTU * 10);
   
-  // 电导率（直接使用）
-  packet.conductivity = (uint16_t)conductivityValue;
+  // 电导率（乘以10保留一位小数）- 修复点
+  packet.conductivity = (uint16_t)(conductivityValue * 10);
   
-  // TDS（直接使用）
-  packet.tds = (uint16_t)tdsValue;
+  // TDS（乘以10保留一位小数）- 修复点
+  packet.tds = (uint16_t)(tdsValue * 10);
   
   return packet;
 }
@@ -101,7 +102,7 @@ bool sendDataPacket(const WaterQualityPacket& packet) {
   Serial.print(sizeof(packet));
   Serial.println(" 字节");
   
-  // 显示要发送的数据
+  // 显示要发送的数据（修复显示格式）
   Serial.print("温度: ");
   Serial.print(packet.temperature / 100.0, 2);
   Serial.println("°C");
@@ -115,11 +116,11 @@ bool sendDataPacket(const WaterQualityPacket& packet) {
   Serial.println(" NTU");
   
   Serial.print("电导率: ");
-  Serial.print(packet.conductivity);
+  Serial.print(packet.conductivity / 10.0, 1);  // 修复点
   Serial.println(" μS/cm");
   
   Serial.print("TDS: ");
-  Serial.print(packet.tds);
+  Serial.print(packet.tds / 10.0, 1);  // 修复点
   Serial.println(" ppm");
   
   // 准备Big-Endian格式的数据包（TTN期望的格式）
@@ -163,6 +164,7 @@ bool sendDataPacket(const WaterQualityPacket& packet) {
   
   if (err > 0) {
     Serial.println("✓ 数据发送成功!");
+    Serial.println("请检查TTN Console获取解码结果");
     loraRetryCount = 0;  // 重置重试计数
     return true;
   } else {

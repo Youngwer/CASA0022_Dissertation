@@ -1,5 +1,9 @@
-// pages/api/water-data.js - 简化日志输出版本
-import { WaterQualityDB } from '../../lib/database'
+// pages/api/water-data.js - 修复导入问题的版本
+
+// 修复导入方式
+import WaterQualityDB from '../../lib/database'
+// 或者使用命名导入
+// import { WaterQualityDB } from '../../lib/database'
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -7,123 +11,106 @@ export default async function handler(req, res) {
   }
 
   try {
-    console.log('🚀 Fetching water data...')
+    console.log('🚀 Fetching water data from Neon database...')
     
-    // 初始化数据库（静默）
+    // 检查 WaterQualityDB 是否正确导入
+    if (!WaterQualityDB) {
+      console.error('❌ WaterQualityDB not imported correctly')
+      return res.status(500).json({
+        success: false,
+        message: 'Database module not available',
+        source: 'error'
+      })
+    }
+
+    // 初始化数据库连接
     await WaterQualityDB.initializeDatabase()
     const dbConnected = await WaterQualityDB.testConnection()
 
-    // TTN配置
-    const TTN_APP_ID = process.env.TTN_APP_ID
-    const TTN_API_KEY = process.env.TTN_API_KEY
-    const TTN_REGION = process.env.TTN_REGION || 'eu1'
-    const DEVICE_ID = process.env.DEVICE_ID
-
-    // 检查TTN配置
-    if (!TTN_APP_ID || !TTN_API_KEY || !DEVICE_ID) {
-      console.log('⚠️ TTN config missing, using demo data')
+    if (!dbConnected) {
+      console.log('❌ Database connection failed, using mock data')
       return res.status(200).json({
         success: true,
         data: getMockData(),
         source: 'mock',
-        message: 'TTN configuration incomplete',
+        message: 'Database connection failed',
         timestamp: new Date().toISOString()
       })
     }
 
-    let waterData = null
-    let dataSource = 'unknown'
-    let message = ''
-
-    // 检查数据库中的最新数据
+    const DEVICE_ID = process.env.DEVICE_ID || 'water-monitor'
+    
+    // 优先从数据库获取最新数据
     const latestFromDB = await WaterQualityDB.getLatestReading(DEVICE_ID)
-    const isRecentData = latestFromDB && 
-      (new Date() - new Date(latestFromDB.recorded_at)) < 10 * 60 * 1000
+    
+    if (latestFromDB) {
+      // 检查数据是否较新 (15分钟内)
+      const dataAge = new Date() - new Date(latestFromDB.recorded_at)
+      const isRecentData = dataAge < 15 * 60 * 1000 // 15分钟
+      
+      const waterData = formatDatabaseData(latestFromDB)
+      
+      let dataSource, message
+      if (isRecentData) {
+        dataSource = 'neon_database'
+        message = `Fresh database data (${Math.round(dataAge / 1000)}s ago)`
+      } else {
+        dataSource = 'neon_database_old'
+        message = `Older database data (${Math.round(dataAge / 60000)}min ago)`
+      }
 
-    if (isRecentData) {
-      waterData = formatDatabaseData(latestFromDB)
-      dataSource = 'database'
-      message = 'Recent database data'
-      console.log('📊 Using recent database data')
+      console.log(`✅ Database response: ${dataSource} | ${waterData?.temperature}°C, pH ${waterData?.ph}, Status: ${waterData?.status}`)
+      
+      return res.status(200).json({
+        success: true,
+        data: waterData,
+        source: dataSource,
+        message: message,
+        timestamp: new Date().toISOString(),
+        data_age_seconds: Math.round(dataAge / 1000)
+      })
     } else {
-      // 获取TTN新数据
-      try {
-        console.log('📡 Querying TTN...')
+      // 数据库中没有数据，尝试从TTN获取 (作为后备)
+      console.log('⚠️ No data in database, trying TTN as fallback...')
+      
+      const ttnData = await tryGetTTNData()
+      if (ttnData) {
+        // 保存TTN数据到数据库
+        try {
+          await WaterQualityDB.saveReading({
+            device_id: DEVICE_ID,
+            ...ttnData,
+            recorded_at: new Date(),
+            raw_data: { source: 'ttn_fallback' }
+          })
+          console.log('💾 TTN fallback data saved to database')
+        } catch (saveError) {
+          console.error('❌ Failed to save TTN fallback data:', saveError.message)
+        }
         
-        const storageUrl = `https://${TTN_REGION}.cloud.thethings.network/api/v3/as/applications/${TTN_APP_ID}/devices/${DEVICE_ID}/packages/storage/uplink_message?limit=1&order=-received_at`
-
-        const response = await fetch(storageUrl, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${TTN_API_KEY}`,
-            'Accept': 'application/json',
-          },
-          timeout: 10000
+        return res.status(200).json({
+          success: true,
+          data: ttnData,
+          source: 'ttn_fallback',
+          message: 'Data from TTN (saved to database)',
+          timestamp: new Date().toISOString()
         })
-
-        if (response.ok) {
-          const responseText = await response.text()
-          
-          if (responseText.trim().length === 0) {
-            console.log('⚠️ TTN empty response')
-            message = 'No data in TTN storage'
-            dataSource = 'mock'
-            waterData = getMockData()
-          } else {
-            const ttnData = JSON.parse(responseText)
-            const processedData = processTTNStorageData(ttnData)
-            
-            if (processedData) {
-              waterData = processedData
-              dataSource = 'ttn_storage'
-              message = 'Fresh TTN data'
-              console.log('✅ TTN data processed successfully')
-              
-              // 保存到数据库
-              if (dbConnected) {
-                await WaterQualityDB.saveReading({
-                  device_id: DEVICE_ID,
-                  ...processedData,
-                  recorded_at: new Date()
-                })
-                console.log('💾 Saved to database')
-              }
-            } else {
-              throw new Error('Failed to process TTN data')
-            }
-          }
-        } else {
-          throw new Error(`TTN API error: ${response.status}`)
-        }
-
-      } catch (ttnError) {
-        console.log('❌ TTN error:', ttnError.message)
-        
-        // 回退到数据库或模拟数据
-        if (latestFromDB) {
-          waterData = formatDatabaseData(latestFromDB)
-          dataSource = 'database_fallback'
-          message = `TTN unavailable, using DB data`
-        } else {
-          waterData = getMockData()
-          dataSource = 'mock'
-          message = 'TTN unavailable, using demo data'
-        }
+      } else {
+        // 完全没有数据，返回模拟数据
+        console.log('⚠️ No data available, using mock data')
+        return res.status(200).json({
+          success: true,
+          data: getMockData(),
+          source: 'mock',
+          message: 'No real data available',
+          timestamp: new Date().toISOString()
+        })
       }
     }
 
-    console.log(`✅ Response: ${dataSource} | ${waterData?.temperature}°C, pH ${waterData?.ph}`)
-    
-    return res.status(200).json({
-      success: true,
-      data: waterData,
-      source: dataSource,
-      message: message,
-      timestamp: new Date().toISOString()
-    })
-
   } catch (error) {
     console.error('💥 API Error:', error.message)
+    console.error('💥 Error stack:', error.stack)
     
     return res.status(200).json({
       success: true,
@@ -135,87 +122,139 @@ export default async function handler(req, res) {
   }
 }
 
-// 处理TTN数据（简化日志）
-function processTTNStorageData(ttnData) {
+// 尝试从TTN获取数据 (后备方案)
+async function tryGetTTNData() {
   try {
-    let payload = null
-    let receivedAt = null
-    
-    // 提取payload
-    if (ttnData.result && ttnData.result.uplink_message && ttnData.result.uplink_message.decoded_payload) {
-      payload = ttnData.result.uplink_message.decoded_payload
-      receivedAt = ttnData.result.received_at || ttnData.result.uplink_message.received_at
-    }
+    const TTN_APP_ID = process.env.TTN_APP_ID
+    const TTN_API_KEY = process.env.TTN_API_KEY
+    const TTN_REGION = process.env.TTN_REGION || 'eu1'
+    const DEVICE_ID = process.env.DEVICE_ID
 
-    if (!payload) {
-      console.log('❌ No payload found')
+    if (!TTN_APP_ID || !TTN_API_KEY || !DEVICE_ID) {
       return null
     }
 
-    // 转换数据格式
-    const waterData = {
-      temperature: payload.temperature || 0,
-      ph: payload.ph || 0,
-      turbidity: payload.turbidity || 0,
-      conductivity: payload.conductivity || 0,
-      tds: payload.tds || 0,
-      lastUpdate: receivedAt ? new Date(receivedAt).toLocaleString() : new Date().toLocaleString(),
-      receivedAt: receivedAt,
-      raw_data: payload
+    const storageUrl = `https://${TTN_REGION}.cloud.thethings.network/api/v3/as/applications/${TTN_APP_ID}/devices/${DEVICE_ID}/packages/storage/uplink_message?limit=1&order=-received_at`
+
+    const response = await fetch(storageUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${TTN_API_KEY}`,
+        'Accept': 'application/json',
+      },
+      timeout: 5000
+    })
+
+    if (response.ok) {
+      const responseText = await response.text()
+      if (responseText.trim().length > 0) {
+        const ttnData = JSON.parse(responseText)
+        return processTTNStorageData(ttnData)
+      }
     }
-
-    // 使用payload中的状态或自己计算
-    waterData.status = payload.status || calculateWaterQualityStatus(waterData)
-
-    return waterData
-
+    
+    return null
   } catch (error) {
-    console.error('❌ Process error:', error.message)
+    console.error('TTN fallback failed:', error.message)
     return null
   }
 }
 
-// 格式化数据库数据
-function formatDatabaseData(dbData) {
-  return {
-    temperature: parseFloat(dbData.temperature) || 0,
-    ph: parseFloat(dbData.ph) || 0,
-    turbidity: parseFloat(dbData.turbidity) || 0,
-    conductivity: parseInt(dbData.conductivity) || 0,
-    tds: parseInt(dbData.tds) || 0,
-    status: dbData.status || 'UNKNOWN',
-    lastUpdate: new Date(dbData.recorded_at).toLocaleString(),
-    rawData: dbData.raw_data
+// 处理TTN数据
+function processTTNStorageData(ttnData) {
+  try {
+    const payload = ttnData.result?.uplink_message?.decoded_payload
+    const receivedAt = ttnData.result?.received_at
+    
+    if (!payload) return null
+
+    const safeParseFloat = (value, defaultValue = 0) => {
+      const parsed = parseFloat(value)
+      return isNaN(parsed) ? defaultValue : parsed
+    }
+
+    const waterData = {
+      temperature: safeParseFloat(payload.temperature, 0),
+      ph: safeParseFloat(payload.ph, 7),
+      turbidity: safeParseFloat(payload.turbidity, 0),
+      conductivity: safeParseFloat(payload.conductivity, 0),
+      tds: safeParseFloat(payload.tds, 0),
+      status: mapTTNStatusToFrontend(payload.status),
+      lastUpdate: receivedAt ? 
+        new Date(receivedAt).toLocaleString('en-GB', { 
+          timeZone: 'Europe/London',
+          year: 'numeric', 
+          month: 'short', 
+          day: 'numeric',
+          hour: '2-digit', 
+          minute: '2-digit'
+        }) : 
+        'Unknown'
+    }
+
+    return waterData
+  } catch (error) {
+    console.error('Error processing TTN data:', error)
+    return null
   }
 }
 
-// 计算水质状态
-function calculateWaterQualityStatus(data) {
-  const { ph, turbidity, tds } = data
-  
-  const phGood = (ph >= 6.5 && ph <= 8.5)
-  const turbidityGood = (turbidity < 4.0)
-  const tdsGood = (tds < 500)
-  
-  if (phGood && turbidityGood && tdsGood) {
-    return 'GOOD'
-  } else if (ph >= 6.0 && ph <= 9.0 && turbidity < 10.0 && tds < 1000) {
-    return 'OK'
-  } else {
-    return 'POOR'
+// TTN状态映射到前端状态
+function mapTTNStatusToFrontend(ttnStatus) {
+  const statusMap = {
+    'excellent': 'EXCELLENT',
+    'marginal': 'MARGINAL',
+    'unsafe': 'UNSAFE'
   }
+  return statusMap[ttnStatus] || 'UNKNOWN'
+}
+
+// 格式化数据库数据
+function formatDatabaseData(dbData) {
+  if (!dbData) return getMockData()
+  
+  const safeParseFloat = (value, defaultValue = 0) => {
+    if (value === null || value === undefined) return defaultValue
+    const parsed = parseFloat(value)
+    return isNaN(parsed) ? defaultValue : parsed
+  }
+
+  const waterData = {
+    temperature: safeParseFloat(dbData.temperature, 0),
+    ph: safeParseFloat(dbData.ph, 7),
+    turbidity: safeParseFloat(dbData.turbidity, 0),
+    conductivity: safeParseFloat(dbData.conductivity, 0),
+    tds: safeParseFloat(dbData.tds, 0),
+    status: dbData.status || 'UNKNOWN',
+    lastUpdate: new Date(dbData.recorded_at).toLocaleString('en-GB', { 
+      timeZone: 'Europe/London',
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric',
+      hour: '2-digit', 
+      minute: '2-digit'
+    })
+  }
+
+  return waterData
 }
 
 // 模拟数据
 function getMockData() {
   return {
-    temperature: 23.12,
-    ph: 7.06,
+    temperature: 22.5,
+    ph: 7.2,
     turbidity: 0.8,
-    conductivity: 5,
-    tds: 2,
-    status: 'GOOD',
-    lastUpdate: new Date().toLocaleString(),
-    source: 'demo'
+    conductivity: 350.0,
+    tds: 280.0,
+    status: 'EXCELLENT',
+    lastUpdate: new Date().toLocaleString('en-GB', { 
+      timeZone: 'Europe/London',
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric',
+      hour: '2-digit', 
+      minute: '2-digit'
+    })
   }
 }
