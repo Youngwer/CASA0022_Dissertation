@@ -3,6 +3,7 @@
  * 
  * 整合所有模块的声明和全局变量定义
  * 适配 MKR WAN1310 + E-Paper显示 + LoRaWAN通信
+ * 清理版本：移除了图像显示相关代码
  */
 
 #ifndef WATER_MONITOR_H

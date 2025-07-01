@@ -2,6 +2,7 @@
  * Display.cpp - E-Paper显示模块
  * 
  * 处理E-Paper显示屏的所有显示功能
+ * 清理版本：移除了时间显示，不包含图像显示
  */
 
 #include "WaterMonitor.h"
@@ -117,7 +118,7 @@ void displaySensorData() {
   // 调整高度用于参数显示
   paint.SetHeight(16);
   
-  // 恢复原来的详细显示格式
+  // 传感器数据显示
   
   // 温度显示
   paint.Clear(UNCOLORED);
@@ -160,12 +161,8 @@ void displaySensorData() {
   paint.DrawStringAt(2, 2, status.c_str(), &Font12, COLORED);
   epd.SetFrameMemory(paint.GetImage(), 0, 140, paint.GetWidth(), paint.GetHeight());
   
-  // 时间戳显示
-  paint.Clear(UNCOLORED);
-  char timeStr[25];
-  sprintf(timeStr, "Time: %lu min", millis()/60000);
-  paint.DrawStringAt(2, 2, timeStr, &Font12, COLORED);
-  epd.SetFrameMemory(paint.GetImage(), 0, 160, paint.GetWidth(), paint.GetHeight());
+  // *** 时间戳显示已永久移除 ***
+  // *** 图像显示功能已永久移除 ***
   
   // 底部操作提示（黑色背景，分两行显示，置于屏幕底部）
   paint.SetHeight(28);  // 增加高度以容纳两行文字
