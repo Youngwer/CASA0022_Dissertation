@@ -59,53 +59,56 @@ void showStartupScreen() {
   paint.SetRotate(ROTATE_0);
   paint.SetWidth(128);
   
-  // === 主标题 - 水平和垂直都居中显示 ===
+  // === 主标题 - 保持与数据界面一致 ===
   paint.SetHeight(24);
   paint.Clear(COLORED);  // 黑色背景
-  // "Water Monitor" = 13个字符，Font12每字符7像素，总宽91像素
-  // 水平居中：(128 - 91) / 2 = 18像素
-  // 垂直居中：(24 - 12) / 2 = 6像素（24像素画布高度，12像素字体高度）
-  paint.DrawStringAt(18, 6, "Water Monitor", &Font12, UNCOLORED);  // 白色文字
+  // "Water Monitor" 居中显示
+  paint.DrawStringAt(18, 6, "Water Monitor", &Font12, UNCOLORED);
   epd.SetFrameMemory(paint.GetImage(), 0, 15, paint.GetWidth(), paint.GetHeight());
   
-  // === 系统状态信息 ===
-  paint.SetHeight(20);  // 增加高度避免重叠
-  const int LINE_SPACING = 25;
+  // === 内容信息 - 使用与数据行一致的间距，包含空行设计 ===
+  paint.SetHeight(20);  // 与数据行相同高度
+  const int LINE_SPACING = 25;  // 与数据行相同间距
   int currentY = 50;
   
-  // System Ready
+  // Water Quality
   paint.Clear(UNCOLORED);
-  paint.DrawStringAt(2, 2, "System Ready", &Font12, COLORED);
+  paint.DrawStringAt(2, 2, "Water Quality", &Font12, COLORED);
   epd.SetFrameMemory(paint.GetImage(), 0, currentY, paint.GetWidth(), paint.GetHeight());
   currentY += LINE_SPACING;
   
-  // Initializing...
+  // Testing System
   paint.Clear(UNCOLORED);
-  paint.DrawStringAt(2, 2, "Initializing...", &Font12, COLORED);
+  paint.DrawStringAt(2, 2, "Testing System", &Font12, COLORED);
   epd.SetFrameMemory(paint.GetImage(), 0, currentY, paint.GetWidth(), paint.GetHeight());
   currentY += LINE_SPACING;
   
-  // 传感器状态
+  // 空行 - 增加视觉间距
+  currentY += LINE_SPACING;
+  
+  // Ready for Analysis - 上下都有大间距
   paint.Clear(UNCOLORED);
-  String sensorStatus = temperatureSensorFound ? "Temp: OK" : "Temp: Default";
-  paint.DrawStringAt(2, 2, sensorStatus.c_str(), &Font12, COLORED);
+  paint.DrawStringAt(2, 2, "Ready for Analysis", &Font12, COLORED);
   epd.SetFrameMemory(paint.GetImage(), 0, currentY, paint.GetWidth(), paint.GetHeight());
   currentY += LINE_SPACING;
   
-  // 版本信息
+  // 空行 - 增加视觉间距
+  currentY += LINE_SPACING;
+  
+  // UCL CASA Project
   paint.Clear(UNCOLORED);
-  paint.DrawStringAt(2, 2, "v2.0 Stable", &Font12, COLORED);
+  paint.DrawStringAt(2, 2, "UCL CASA Project", &Font12, COLORED);
   epd.SetFrameMemory(paint.GetImage(), 0, currentY, paint.GetWidth(), paint.GetHeight());
   
-  // === 底部操作提示 - 大幅增加间距匹配数据行 ===
-  paint.SetHeight(50);  // 大幅增加高度，从32到50
+  // === 底部操作提示 - 与数据界面完全一致 ===
+  paint.SetHeight(50);  // 大幅增加高度，与数据界面一致
   paint.Clear(COLORED);  // 黑色背景
   
-  // 第一行："Press Button" - 居中显示，增加更多上边距
-  paint.DrawStringAt(22, 8, "Press Button", &Font12, UNCOLORED);   // Y从4改为8
+  // 第一行："Press Button" - 居中显示
+  paint.DrawStringAt(22, 8, "Press Button", &Font12, UNCOLORED);
   
-  // 第二行："to Start" - 居中显示，大幅增加行间距匹配数据行
-  paint.DrawStringAt(36, 30, "to Start", &Font12, UNCOLORED);     // Y从18改为30，间距22像素
+  // 第二行："to Start" - 居中显示，大幅增加行间距
+  paint.DrawStringAt(36, 30, "to Start", &Font12, UNCOLORED);
   
   // 调整底部位置：296 - 50 = 246
   epd.SetFrameMemory(paint.GetImage(), 0, 246, paint.GetWidth(), paint.GetHeight());
@@ -210,31 +213,35 @@ void displaySensorData() {
   epd.SetFrameMemory(paint.GetImage(), 0, currentY, paint.GetWidth(), paint.GetHeight());
   currentY += LINE_SPACING;
   
- // === 水质状态显示 - 使用Font16突出显示 ===
-  paint.SetHeight(32);  // 增加高度适配Font16 (16px高度 + 上下边距)
+  // === 水质状态显示 - 使用Font16并统一黑底白字显示 ===
+  paint.SetHeight(32);  // 32像素高的画布
   String status = getSimplifiedWaterStatus();
   
+  // 统一使用黑底白字显示，突出所有状态
+  paint.Clear(COLORED);  // 黑色背景
+  
   if (status.indexOf("UNSAFE") != -1) {
-    // UNSAFE - 黑底白字，使用Font16
-    paint.Clear(COLORED);
+    // UNSAFE - 黑底白字
     // "UNSAFE" = 6个字符，Font16每字符11像素，总宽66像素
-    // 居中位置：(128 - 66) / 2 = 31像素
+    // 水平居中：(128 - 66) / 2 = 31像素
+    // 垂直居中：(32 - 16) / 2 = 8像素
     paint.DrawStringAt(31, 8, status.c_str(), &Font16, UNCOLORED);
   } else if (status.indexOf("EXCELLENT") != -1) {
-    // EXCELLENT - 白底黑字，使用Font16
-    paint.Clear(UNCOLORED);
+    // EXCELLENT - 黑底白字（与UNSAFE统一）
     // "EXCELLENT" = 9个字符，Font16每字符11像素，总宽99像素
-    // 居中位置：(128 - 99) / 2 = 14像素
-    paint.DrawStringAt(14, 8, status.c_str(), &Font16, COLORED);
+    // 水平居中：(128 - 99) / 2 = 14像素
+    // 垂直居中：(32 - 16) / 2 = 8像素
+    paint.DrawStringAt(14, 8, status.c_str(), &Font16, UNCOLORED);
   } else {
-    // MARGINAL或其他 - 正常显示，使用Font16
-    paint.Clear(UNCOLORED);
+    // MARGINAL或其他 - 黑底白字（与UNSAFE统一）
     // "MARGINAL" = 8个字符，Font16每字符11像素，总宽88像素
-    // 居中位置：(128 - 88) / 2 = 20像素
-    paint.DrawStringAt(20, 8, status.c_str(), &Font16, COLORED);
+    // 水平居中：(128 - 88) / 2 = 20像素
+    // 垂直居中：(32 - 16) / 2 = 8像素
+    paint.DrawStringAt(20, 8, status.c_str(), &Font16, UNCOLORED);
   }
   
   epd.SetFrameMemory(paint.GetImage(), 0, currentY, paint.GetWidth(), paint.GetHeight());
+  
 // === 底部操作提示 - 大幅增加间距匹配数据行 ===
   paint.SetHeight(50);  // 大幅增加高度，从32到50
   paint.Clear(COLORED);  // 黑色背景
