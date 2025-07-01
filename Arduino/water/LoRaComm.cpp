@@ -1,3 +1,4 @@
+// ==================== 文件2：Arduino/water/LoRaComm.cpp ====================
 /**
  * LoRaComm.cpp - LoRa通信模块实现
  * 
@@ -13,6 +14,7 @@ bool loraInitialized = false;
 bool loraConnected = false;
 unsigned long lastLoRaSend = 0;
 int loraRetryCount = 0;
+bool autoSendEnabled = false;  // 新增：默认关闭自动发送
 
 // ==================== LoRa初始化 ====================
 bool initializeLoRa() {
@@ -66,7 +68,6 @@ bool connectToNetwork() {
   
   return true;
 }
-// ==================== 修复版本的 LoRaComm.cpp 数据打包部分 ====================
 
 // ==================== 数据打包 ====================
 WaterQualityPacket packWaterQualityData() {
@@ -81,10 +82,10 @@ WaterQualityPacket packWaterQualityData() {
   // 浊度（乘以10保留一位小数）
   packet.turbidity = (uint16_t)(turbidityNTU * 10);
   
-  // 电导率（乘以10保留一位小数）- 修复点
+  // 电导率（乘以10保留一位小数）
   packet.conductivity = (uint16_t)(conductivityValue * 10);
   
-  // TDS（乘以10保留一位小数）- 修复点
+  // TDS（乘以10保留一位小数）
   packet.tds = (uint16_t)(tdsValue * 10);
   
   return packet;
@@ -102,7 +103,7 @@ bool sendDataPacket(const WaterQualityPacket& packet) {
   Serial.print(sizeof(packet));
   Serial.println(" 字节");
   
-  // 显示要发送的数据（修复显示格式）
+  // 显示要发送的数据
   Serial.print("温度: ");
   Serial.print(packet.temperature / 100.0, 2);
   Serial.println("°C");
@@ -116,11 +117,11 @@ bool sendDataPacket(const WaterQualityPacket& packet) {
   Serial.println(" NTU");
   
   Serial.print("电导率: ");
-  Serial.print(packet.conductivity / 10.0, 1);  // 修复点
+  Serial.print(packet.conductivity / 10.0, 1);
   Serial.println(" μS/cm");
   
   Serial.print("TDS: ");
-  Serial.print(packet.tds / 10.0, 1);  // 修复点
+  Serial.print(packet.tds / 10.0, 1);
   Serial.println(" ppm");
   
   // 准备Big-Endian格式的数据包（TTN期望的格式）
@@ -197,8 +198,21 @@ bool sendWaterQualityData() {
   return success;
 }
 
-// ==================== 检查是否需要发送 ====================
+// ==================== 检查是否需要发送（修改版） ====================
 bool shouldSendLoRaData() {
+  // 如果自动发送被禁用，只允许重试失败的发送
+  if (!autoSendEnabled) {
+    if (loraRetryCount > 0 && loraRetryCount < LORA_MAX_RETRIES) {
+      unsigned long currentTime = millis();
+      // 重试间隔：1分钟
+      if (currentTime - lastLoRaSend >= 60000) {
+        return true;
+      }
+    }
+    return false;  // 不再基于时间间隔自动发送
+  }
+  
+  // 如果自动发送开启，使用原有逻辑
   unsigned long currentTime = millis();
   
   // 检查时间间隔
@@ -217,7 +231,7 @@ bool shouldSendLoRaData() {
   return false;
 }
 
-// ==================== 处理LoRa通信 ====================
+// ==================== 处理LoRa通信（原版） ====================
 void handleLoRaCommunication() {
   // 检查下行消息
   if (loraModem.available()) {
@@ -241,6 +255,44 @@ void handleLoRaCommunication() {
     } else {
       sendWaterQualityData();
     }
+  }
+}
+
+// ==================== 新增：只处理LoRa接收 ====================
+void handleLoRaReceiveOnly() {
+  // 只检查下行消息，不自动发送数据
+  if (loraModem.available()) {
+    Serial.println("\n收到下行消息:");
+    while (loraModem.available()) {
+      uint8_t rcv = loraModem.read();
+      Serial.print("0x");
+      if (rcv < 16) Serial.print("0");
+      Serial.print(rcv, HEX);
+      Serial.print(" ");
+    }
+    Serial.println();
+  }
+  
+  // 只处理重试逻辑，不处理定时发送
+  if (loraRetryCount > 0 && loraRetryCount < LORA_MAX_RETRIES) {
+    unsigned long currentTime = millis();
+    if (currentTime - lastLoRaSend >= 60000) {  // 1分钟重试间隔
+      Serial.println("重试发送失败的数据...");
+      sendWaterQualityData();
+    }
+  }
+}
+
+// ==================== 新增：控制自动发送开关 ====================
+void enableAutoSend(bool enable) {
+  autoSendEnabled = enable;
+  Serial.print("LoRa自动发送已");
+  Serial.println(enable ? "开启" : "关闭");
+  
+  if (enable) {
+    Serial.print("发送间隔: ");
+    Serial.print(LORA_SEND_INTERVAL / 1000);
+    Serial.println(" 秒");
   }
 }
 
@@ -268,6 +320,8 @@ void printLoRaStatus() {
   Serial.println(loraInitialized ? "是" : "否");
   Serial.print("连接: ");
   Serial.println(loraConnected ? "已连接" : "未连接");
+  Serial.print("自动发送: ");
+  Serial.println(autoSendEnabled ? "开启" : "关闭");
   Serial.print("重试次数: ");
   Serial.println(loraRetryCount);
   
@@ -276,13 +330,17 @@ void printLoRaStatus() {
     Serial.print((millis() - lastLoRaSend) / 1000);
     Serial.println(" 秒前");
     
-    Serial.print("下次发送: ");
-    unsigned long nextSend = LORA_SEND_INTERVAL - (millis() - lastLoRaSend);
-    if (nextSend > LORA_SEND_INTERVAL) {
-      Serial.println("立即");
+    if (autoSendEnabled && LORA_SEND_INTERVAL > 0) {
+      Serial.print("下次发送: ");
+      unsigned long nextSend = LORA_SEND_INTERVAL - (millis() - lastLoRaSend);
+      if (nextSend > LORA_SEND_INTERVAL) {
+        Serial.println("立即");
+      } else {
+        Serial.print(nextSend / 1000);
+        Serial.println(" 秒后");
+      }
     } else {
-      Serial.print(nextSend / 1000);
-      Serial.println(" 秒后");
+      Serial.println("下次发送: 仅手动触发");
     }
   } else {
     Serial.println("尚未发送过数据");
@@ -308,6 +366,9 @@ void printLoRaDiagnostics() {
   } else {
     Serial.println("LoRa模块未初始化");
   }
+  
+  Serial.print("自动发送状态: ");
+  Serial.println(autoSendEnabled ? "开启" : "关闭");
   
   Serial.println("===================");
 }

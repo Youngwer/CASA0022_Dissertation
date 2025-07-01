@@ -1,5 +1,6 @@
+// ==================== 文件3：Arduino/water/water.ino ====================
 /**
- * water.ino - 水质监测系统主程序 (带LED指示)
+ * water.ino - 水质监测系统主程序 (禁用LoRA自动发送版)
  * 
  * 包含LED三色指示水质状态功能
  */
@@ -16,7 +17,7 @@ void setup() {
   }
   
   Serial.println("\n=================================");
-  Serial.println("   水质监测系统 v2.2 (LED版)     ");
+  Serial.println("   水质监测系统 v2.3 (手动版)     ");
   Serial.println("=================================");
   
   // 初始化系统
@@ -25,6 +26,7 @@ void setup() {
   Serial.println("\n系统启动完成!");
   Serial.println("按下按钮开始水质检测");
   Serial.println("LED指示: 绿灯=优秀 黄灯=一般 红灯=不安全");
+  Serial.println("⚠️  LoRa自动发送已禁用，仅手动触发");
   Serial.println("---------------------------------");
 }
 
@@ -32,16 +34,16 @@ void loop() {
   // 处理按钮输入
   handleButtonInput();
   
-  // 处理LoRa通信（如果初始化成功）
+  // 只处理LoRa接收消息，不自动发送
   if (loraConnected) {
-    handleLoRaCommunication();
+    handleLoRaReceiveOnly();  // 使用新的只接收函数
   }
   
   // 处理简单串口命令
   handleSimpleSerialCommands();
   
-  // 检查是否需要自动发送数据
-  checkAutoSend();
+  // 禁用自动发送检查
+  // checkAutoSend();  // 注释掉这行
   
   delay(100);
 }
@@ -66,6 +68,7 @@ void initializeSimpleSystem() {
   Serial.println("尝试初始化LoRa...");
   if (initializeLoRa() && connectToNetwork()) {
     Serial.println("✓ LoRa初始化成功!");
+    Serial.println("⚠️  自动发送已禁用，只能手动发送");
   } else {
     Serial.println("⚠ LoRa初始化失败，系统在离线模式下运行");
   }
@@ -107,7 +110,7 @@ void performWaterQualityTest() {
   Serial.println(">>> 水质检测完成 <<<\n");
 }
 
-// ==================== 简化的串口命令处理 ====================
+// ==================== 简化的串口命令处理（增强版） ====================
 void handleSimpleSerialCommands() {
   if (Serial.available()) {
     String command = Serial.readStringUntil('\n');
@@ -133,15 +136,27 @@ void handleSimpleSerialCommands() {
         Serial.println("✗ 数据发送失败");
       }
       
+    } else if (command == "autosend on") {
+      enableAutoSend(true);
+      
+    } else if (command == "autosend off") {
+      enableAutoSend(false);
+      
+    } else if (command == "lora status") {
+      printLoRaStatus();
+      
     } else if (command == "help") {
       Serial.println("\n=== 可用命令 ===");
-      Serial.println("test   - 执行水质检测");
-      Serial.println("status - 显示系统状态");
-      Serial.println("led    - 手动更新LED显示");
+      Serial.println("test        - 执行水质检测");
+      Serial.println("status      - 显示系统状态");
+      Serial.println("led         - 手动更新LED显示");
       if (loraConnected) {
-        Serial.println("send   - 手动发送数据");
+        Serial.println("send        - 手动发送数据");
+        Serial.println("autosend on - 开启自动发送");
+        Serial.println("autosend off- 关闭自动发送");
+        Serial.println("lora status - 显示LoRa详细状态");
       }
-      Serial.println("help   - 显示此帮助");
+      Serial.println("help        - 显示此帮助");
       Serial.println("===============");
     }
   }
@@ -164,6 +179,8 @@ void printSimpleSystemStatus() {
     Serial.println("已连接");
     Serial.print("设备EUI: ");
     Serial.println(loraModem.deviceEUI());
+    Serial.print("自动发送: ");
+    Serial.println(autoSendEnabled ? "开启" : "关闭");
   } else if (loraInitialized) {
     Serial.println("已初始化但未连接");
   } else {
@@ -180,7 +197,8 @@ void printSimpleSystemStatus() {
   Serial.println("================");
 }
 
-// ==================== 自动发送检查 ====================
+// ==================== 注释掉的自动发送检查 ====================
+/*
 void checkAutoSend() {
   static unsigned long lastAutoCheck = 0;
   
@@ -195,6 +213,7 @@ void checkAutoSend() {
     }
   }
 }
+*/
 
 // ==================== 其他必需函数 ====================
 void printSystemStatus() {
@@ -236,11 +255,7 @@ void runDiagnostics() {
   
   // LoRa诊断
   if (loraInitialized) {
-    Serial.println("LoRa诊断:");
-    Serial.print("- 版本: ");
-    Serial.println(loraModem.version());
-    Serial.print("- 连接状态: ");
-    Serial.println(loraConnected ? "已连接" : "未连接");
+    printLoRaDiagnostics();
   }
   
   // 内存诊断

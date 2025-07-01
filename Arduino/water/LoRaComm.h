@@ -1,3 +1,4 @@
+// ==================== 文件1：Arduino/water/LoRaComm.h ====================
 /**
  * LoRaComm.h - LoRa通信模块头文件
  * 
@@ -17,7 +18,7 @@
 #define APP_KEY "DA328F8AD1EA167A0EAA8A9265BE70DD"
 
 // LoRa发送配置
-#define LORA_SEND_INTERVAL 300000  // 5分钟发送一次（调试时可改为60000=1分钟）
+#define LORA_SEND_INTERVAL 0  // 禁用自动发送（原来是300000）
 #define LORA_MAX_RETRIES 3
 #define LORA_TIMEOUT 30000
 
@@ -37,6 +38,7 @@ extern bool loraInitialized;
 extern bool loraConnected;
 extern unsigned long lastLoRaSend;
 extern int loraRetryCount;
+extern bool autoSendEnabled;  // 新增：自动发送开关
 
 // ==================== 函数声明 ====================
 // 主要函数
@@ -45,6 +47,7 @@ bool connectToNetwork();
 bool sendWaterQualityData();
 bool shouldSendLoRaData();
 void handleLoRaCommunication();
+void handleLoRaReceiveOnly();  // 新增：只处理接收的函数
 void printLoRaStatus();
 
 // 辅助函数
@@ -52,5 +55,6 @@ WaterQualityPacket packWaterQualityData();
 bool sendDataPacket(const WaterQualityPacket& packet);
 bool reconnectLoRa();
 void printLoRaDiagnostics();
+void enableAutoSend(bool enable);  // 新增：控制自动发送开关
 
 #endif // LORA_COMM_H
