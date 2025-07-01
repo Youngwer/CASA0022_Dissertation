@@ -1,8 +1,8 @@
 /**
- * Display.cpp - E-Paper显示模块
+ * Display.cpp - E-Paper显示模块 (消除残影版本)
  * 
  * 处理E-Paper显示屏的所有显示功能
- * 清理版本：移除了时间显示，不包含图像显示
+ * 修正残影问题，改进状态显示
  */
 
 #include "WaterMonitor.h"
@@ -24,73 +24,115 @@ void initializeEPaper() {
   
   Serial.println("✓ E-Paper初始化成功");
   
-  // 只在第一次清空显示
-  Serial.println("清空E-Paper显示...");
-  epd.ClearFrameMemory(0xFF);
+  // 完全清空显示
+  Serial.println("完全清空E-Paper显示...");
+  epd.ClearFrameMemory(0xFF);  // 清空帧缓冲
   epd.DisplayFrame();
-  delay(2000); // 必要的等待时间
+  delay(2000);
+  
+  // 再次清空确保没有残影
+  epd.ClearFrameMemory(0xFF);
   
   Serial.println("E-Paper初始化完成");
+}
+
+// ==================== 完全清屏函数 ====================
+void clearEntireScreen() {
+  Serial.println("执行完全清屏...");
+  
+  // 只使用驱动提供的清屏功能，避免大画布导致卡死
+  epd.ClearFrameMemory(0xFF);
+  epd.DisplayFrame();
+  delay(2000);  // 给E-ink足够时间完成刷新
+  
+  Serial.println("清屏完成");
 }
 
 // ==================== 启动界面显示 ====================
 void showStartupScreen() {
   Serial.println("显示启动界面...");
   
-  // 设置画布
+  // 先完全清屏
+  clearEntireScreen();
+  
+  // 设置画布基本参数
   paint.SetRotate(ROTATE_0);
   paint.SetWidth(128);
+  
+  // === 主标题 - 水平和垂直都居中显示 ===
   paint.SetHeight(24);
-  
-  // 绘制标题
   paint.Clear(COLORED);  // 黑色背景
-  paint.DrawStringAt(5, 4, "Water Monitor", &Font12, UNCOLORED);  // 白色文字
-  epd.SetFrameMemory(paint.GetImage(), 0, 10, paint.GetWidth(), paint.GetHeight());
+  // "Water Monitor" = 13个字符，Font12每字符7像素，总宽91像素
+  // 水平居中：(128 - 91) / 2 = 18像素
+  // 垂直居中：(24 - 12) / 2 = 6像素（24像素画布高度，12像素字体高度）
+  paint.DrawStringAt(18, 6, "Water Monitor", &Font12, UNCOLORED);  // 白色文字
+  epd.SetFrameMemory(paint.GetImage(), 0, 15, paint.GetWidth(), paint.GetHeight());
   
-  // 调整高度
-  paint.SetHeight(16);
+  // === 系统状态信息 ===
+  paint.SetHeight(20);  // 增加高度避免重叠
+  const int LINE_SPACING = 25;
+  int currentY = 50;
   
-  // 系统状态信息
+  // System Ready
   paint.Clear(UNCOLORED);
   paint.DrawStringAt(2, 2, "System Ready", &Font12, COLORED);
-  epd.SetFrameMemory(paint.GetImage(), 0, 40, paint.GetWidth(), paint.GetHeight());
+  epd.SetFrameMemory(paint.GetImage(), 0, currentY, paint.GetWidth(), paint.GetHeight());
+  currentY += LINE_SPACING;
   
+  // Initializing...
   paint.Clear(UNCOLORED);
   paint.DrawStringAt(2, 2, "Initializing...", &Font12, COLORED);
-  epd.SetFrameMemory(paint.GetImage(), 0, 60, paint.GetWidth(), paint.GetHeight());
+  epd.SetFrameMemory(paint.GetImage(), 0, currentY, paint.GetWidth(), paint.GetHeight());
+  currentY += LINE_SPACING;
   
-  // 显示传感器状态
+  // 传感器状态
   paint.Clear(UNCOLORED);
   String sensorStatus = temperatureSensorFound ? "Temp: OK" : "Temp: Default";
   paint.DrawStringAt(2, 2, sensorStatus.c_str(), &Font12, COLORED);
-  epd.SetFrameMemory(paint.GetImage(), 0, 80, paint.GetWidth(), paint.GetHeight());
+  epd.SetFrameMemory(paint.GetImage(), 0, currentY, paint.GetWidth(), paint.GetHeight());
+  currentY += LINE_SPACING;
   
   // 版本信息
   paint.Clear(UNCOLORED);
   paint.DrawStringAt(2, 2, "v2.0 Stable", &Font12, COLORED);
-  epd.SetFrameMemory(paint.GetImage(), 0, 100, paint.GetWidth(), paint.GetHeight());
+  epd.SetFrameMemory(paint.GetImage(), 0, currentY, paint.GetWidth(), paint.GetHeight());
   
-  // 底部操作提示（黑色背景，分两行显示，置于屏幕底部）
-  paint.SetHeight(28);
+  // === 底部操作提示 - 大幅增加间距匹配数据行 ===
+  paint.SetHeight(50);  // 大幅增加高度，从32到50
   paint.Clear(COLORED);  // 黑色背景
   
-  // 第一行："Press Button" - 居中显示
-  paint.DrawStringAt(22, 2, "Press Button", &Font12, UNCOLORED);  // 白色文字
+  // 第一行："Press Button" - 居中显示，增加更多上边距
+  paint.DrawStringAt(22, 8, "Press Button", &Font12, UNCOLORED);   // Y从4改为8
   
-  // 第二行："to Start" - 居中显示
-  // "to Start" = 8个字符，总宽56像素
-  // 居中位置：(128 - 56) / 2 = 36像素
-  paint.DrawStringAt(36, 15, "to Start", &Font12, UNCOLORED);  // 白色文字
+  // 第二行："to Start" - 居中显示，大幅增加行间距匹配数据行
+  paint.DrawStringAt(36, 30, "to Start", &Font12, UNCOLORED);     // Y从18改为30，间距22像素
   
-  // 移到屏幕底部：296 - 28 = 268
-  epd.SetFrameMemory(paint.GetImage(), 0, 268, paint.GetWidth(), paint.GetHeight());
+  // 调整底部位置：296 - 50 = 246
+  epd.SetFrameMemory(paint.GetImage(), 0, 246, paint.GetWidth(), paint.GetHeight());
   
   // 刷新显示
   Serial.println("刷新启动界面到屏幕...");
   epd.DisplayFrame();
-  delay(3000); // 等待刷新完成
+  delay(3000);
   
   Serial.println("启动界面显示完成，系统准备就绪");
+}
+
+
+// ==================== 获取简化的水质状态 ====================
+String getSimplifiedWaterStatus() {
+  String fullStatus = getWaterQualityStatus();
+  
+  // 从完整状态中提取关键词
+  if (fullStatus.indexOf("UNSAFE") != -1) {
+    return "UNSAFE";
+  } else if (fullStatus.indexOf("EXCELLENT") != -1) {
+    return "EXCELLENT";
+  } else if (fullStatus.indexOf("MARGINAL") != -1) {
+    return "MARGINAL";
+  } else {
+    return "UNKNOWN";
+  }
 }
 
 // ==================== 水质数据显示 ====================
@@ -105,86 +147,110 @@ void updateWaterQualityDisplay() {
 void displaySensorData() {
   Serial.println("更新传感器数据显示...");
   
-  // 设置画布
+  // === 关键：使用简化清屏避免卡死 ===
+  Serial.println("清除屏幕内容...");
+  epd.ClearFrameMemory(0xFF);
+  // 注意：不立即DisplayFrame，等所有内容准备好后一次性刷新
+  
+  // 设置画布基本参数
   paint.SetRotate(ROTATE_0);
   paint.SetWidth(128);
+  
+  // === 主标题 - 水平和垂直都居中显示 ===
   paint.SetHeight(24);
+  paint.Clear(COLORED);  // 黑色背景
+  // "Water Monitor" = 13个字符，Font12每字符7像素，总宽91像素
+  // 水平居中：(128 - 91) / 2 = 18像素
+  // 垂直居中：(24 - 12) / 2 = 6像素（24像素画布高度，12像素字体高度）
+  paint.DrawStringAt(18, 6, "Water Monitor", &Font12, UNCOLORED);  // 白色文字
+  epd.SetFrameMemory(paint.GetImage(), 0, 15, paint.GetWidth(), paint.GetHeight());
   
-  // 标题
-  paint.Clear(COLORED);
-  paint.DrawStringAt(10, 4, "Water Monitor", &Font12, UNCOLORED);
-  epd.SetFrameMemory(paint.GetImage(), 0, 10, paint.GetWidth(), paint.GetHeight());
-  
-  // 调整高度用于参数显示
-  paint.SetHeight(16);
-  
-  // 传感器数据显示
+  // === 传感器数据显示区域 ===
+  paint.SetHeight(20);  // 统一使用20像素高度
+  const int LINE_SPACING = 25;
+  int currentY = 50;
   
   // 温度显示
   paint.Clear(UNCOLORED);
-  char tempStr[20];
-  sprintf(tempStr, "Temp: %.1f C", waterTemperature);
+  char tempStr[25];
+  sprintf(tempStr, " Temp: %.1f C", waterTemperature);
   paint.DrawStringAt(2, 2, tempStr, &Font12, COLORED);
-  epd.SetFrameMemory(paint.GetImage(), 0, 40, paint.GetWidth(), paint.GetHeight());
+  epd.SetFrameMemory(paint.GetImage(), 0, currentY, paint.GetWidth(), paint.GetHeight());
+  currentY += LINE_SPACING;
   
-  // pH显示
+  // pH显示  
   paint.Clear(UNCOLORED);
-  char phStr[20];
-  sprintf(phStr, "pH: %.2f", pHValue);
+  char phStr[25];
+  sprintf(phStr, "   pH: %.2f", pHValue);
   paint.DrawStringAt(2, 2, phStr, &Font12, COLORED);
-  epd.SetFrameMemory(paint.GetImage(), 0, 60, paint.GetWidth(), paint.GetHeight());
+  epd.SetFrameMemory(paint.GetImage(), 0, currentY, paint.GetWidth(), paint.GetHeight());
+  currentY += LINE_SPACING;
   
   // 浊度显示
   paint.Clear(UNCOLORED);
-  char turbStr[20];
-  sprintf(turbStr, "Turb: %.1f NTU", turbidityNTU);
+  char turbStr[25];
+  sprintf(turbStr, " Turb: %.1f NTU", turbidityNTU);
   paint.DrawStringAt(2, 2, turbStr, &Font12, COLORED);
-  epd.SetFrameMemory(paint.GetImage(), 0, 80, paint.GetWidth(), paint.GetHeight());
+  epd.SetFrameMemory(paint.GetImage(), 0, currentY, paint.GetWidth(), paint.GetHeight());
+  currentY += LINE_SPACING;
   
   // TDS显示
   paint.Clear(UNCOLORED);
-  char tdsStr[20];
-  sprintf(tdsStr, "TDS: %.1f ppm", tdsValue);
+  char tdsStr[25];
+  sprintf(tdsStr, "  TDS: %.1f ppm", tdsValue);
   paint.DrawStringAt(2, 2, tdsStr, &Font12, COLORED);
-  epd.SetFrameMemory(paint.GetImage(), 0, 100, paint.GetWidth(), paint.GetHeight());
+  epd.SetFrameMemory(paint.GetImage(), 0, currentY, paint.GetWidth(), paint.GetHeight());
+  currentY += LINE_SPACING;
   
   // 电导率显示
   paint.Clear(UNCOLORED);
-  char ecStr[20];
-  sprintf(ecStr, "EC: %.1f uS/cm", conductivityValue);
+  char ecStr[30];
+  sprintf(ecStr, "   EC: %.1f uS/cm", conductivityValue);
   paint.DrawStringAt(2, 2, ecStr, &Font12, COLORED);
-  epd.SetFrameMemory(paint.GetImage(), 0, 120, paint.GetWidth(), paint.GetHeight());
+  epd.SetFrameMemory(paint.GetImage(), 0, currentY, paint.GetWidth(), paint.GetHeight());
+  currentY += LINE_SPACING;
   
-  // 水质状态显示
-  paint.Clear(UNCOLORED);
-  String status = getWaterQualityStatus();
-  paint.DrawStringAt(2, 2, status.c_str(), &Font12, COLORED);
-  epd.SetFrameMemory(paint.GetImage(), 0, 140, paint.GetWidth(), paint.GetHeight());
+ // === 水质状态显示 - 使用Font16突出显示 ===
+  paint.SetHeight(32);  // 增加高度适配Font16 (16px高度 + 上下边距)
+  String status = getSimplifiedWaterStatus();
   
-  // *** 时间戳显示已永久移除 ***
-  // *** 图像显示功能已永久移除 ***
+  if (status.indexOf("UNSAFE") != -1) {
+    // UNSAFE - 黑底白字，使用Font16
+    paint.Clear(COLORED);
+    // "UNSAFE" = 6个字符，Font16每字符11像素，总宽66像素
+    // 居中位置：(128 - 66) / 2 = 31像素
+    paint.DrawStringAt(31, 8, status.c_str(), &Font16, UNCOLORED);
+  } else if (status.indexOf("EXCELLENT") != -1) {
+    // EXCELLENT - 白底黑字，使用Font16
+    paint.Clear(UNCOLORED);
+    // "EXCELLENT" = 9个字符，Font16每字符11像素，总宽99像素
+    // 居中位置：(128 - 99) / 2 = 14像素
+    paint.DrawStringAt(14, 8, status.c_str(), &Font16, COLORED);
+  } else {
+    // MARGINAL或其他 - 正常显示，使用Font16
+    paint.Clear(UNCOLORED);
+    // "MARGINAL" = 8个字符，Font16每字符11像素，总宽88像素
+    // 居中位置：(128 - 88) / 2 = 20像素
+    paint.DrawStringAt(20, 8, status.c_str(), &Font16, COLORED);
+  }
   
-  // 底部操作提示（黑色背景，分两行显示，置于屏幕底部）
-  paint.SetHeight(28);  // 增加高度以容纳两行文字
+  epd.SetFrameMemory(paint.GetImage(), 0, currentY, paint.GetWidth(), paint.GetHeight());
+// === 底部操作提示 - 大幅增加间距匹配数据行 ===
+  paint.SetHeight(50);  // 大幅增加高度，从32到50
   paint.Clear(COLORED);  // 黑色背景
   
-  // 第一行："Press Button" - 居中显示
-  // "Press Button" = 12个字符，Font12每个字符宽7像素，总宽84像素
-  // 居中位置：(128 - 84) / 2 = 22像素
-  paint.DrawStringAt(22, 2, "Press Button", &Font12, UNCOLORED);  // 白色文字
+  // 第一行："Press Button" - 居中显示，增加更多上边距
+  paint.DrawStringAt(22, 8, "Press Button", &Font12, UNCOLORED);
   
-  // 第二行："to Update" - 居中显示  
-  // "to Update" = 9个字符，总宽63像素
-  // 居中位置：(128 - 63) / 2 = 32.5 ≈ 33像素
-  paint.DrawStringAt(33, 15, "to Update", &Font12, UNCOLORED);  // 白色文字，Y=15（第一行12px + 间距3px）
+  // 第二行："to Update" - 居中显示，大幅增加行间距匹配数据行
+  paint.DrawStringAt(33, 30, "to Update", &Font12, UNCOLORED);   // Y从18改为30，间距22像素
   
-  // 移到屏幕底部：296 - 28 = 268
-  epd.SetFrameMemory(paint.GetImage(), 0, 268, paint.GetWidth(), paint.GetHeight());
+  // 调整底部位置：296 - 50 = 246  
+  epd.SetFrameMemory(paint.GetImage(), 0, 246, paint.GetWidth(), paint.GetHeight());
   
   Serial.println("刷新显示到屏幕...");
-  // 使用标准刷新，确保可靠显示
   epd.DisplayFrame();
-  delay(2000); // 等待刷新完成
+  delay(2000);
   
   Serial.println("传感器数据显示完成");
 }
@@ -194,7 +260,9 @@ void displayError(const char* errorMsg) {
   Serial.print("显示错误信息: ");
   Serial.println(errorMsg);
   
-  // 设置画布
+  // 先清屏
+  clearEntireScreen();
+  
   paint.SetRotate(ROTATE_0);
   paint.SetWidth(128);
   paint.SetHeight(24);
@@ -205,12 +273,11 @@ void displayError(const char* errorMsg) {
   epd.SetFrameMemory(paint.GetImage(), 0, 50, paint.GetWidth(), paint.GetHeight());
   
   // 错误信息
-  paint.SetHeight(16);
+  paint.SetHeight(20);
   paint.Clear(UNCOLORED);
   paint.DrawStringAt(2, 2, errorMsg, &Font12, COLORED);
   epd.SetFrameMemory(paint.GetImage(), 0, 80, paint.GetWidth(), paint.GetHeight());
   
-  // 刷新显示
   epd.DisplayFrame();
   delay(3000);
 }
@@ -219,19 +286,5 @@ void displayError(const char* errorMsg) {
 void displayProgress(const char* progressMsg) {
   Serial.print("显示进度: ");
   Serial.println(progressMsg);
-  
-  // 简单在串口显示进度，避免E-Paper频繁刷新
-  // 如果需要屏幕显示，可以只更新一行
-  /*
-  paint.SetRotate(ROTATE_0);
-  paint.SetWidth(128);
-  paint.SetHeight(16);
-  
-  paint.Clear(UNCOLORED);
-  paint.DrawStringAt(2, 2, progressMsg, &Font12, COLORED);
-  epd.SetFrameMemory(paint.GetImage(), 0, 140, paint.GetWidth(), paint.GetHeight());
-  
-  epd.DisplayFrame();
-  delay(1000);
-  */
+  // 避免频繁刷新E-Paper，只在串口显示
 }
