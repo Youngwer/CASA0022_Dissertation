@@ -1170,6 +1170,7 @@ body {
   font-size: 0.85rem;
   line-height: 1.4;
   border: 1px solid rgba(255, 255, 255, 0.2);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }
 
@@ -1431,6 +1432,7 @@ body {
   }
 }
 /* 添加到您的globals.css文件末尾的缺失样式 */
+/* 添加到您的globals.css文件末尾的缺失样式 */
 
 /* ==================== 总览卡片更新 - 左右布局 ==================== */
 /* 主要内容区域 - 调整为更平衡的左右布局 */
@@ -1610,13 +1612,36 @@ body {
   transform: translateY(-1px);
 }
 
-/* 更新状态总览温度显示 */
+/* 更新状态总览温度显示 - 优化间距 */
 .status-main-content {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.status-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.status-label {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  font-weight: 500;
+  margin: 0;
+}
+
+.status-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  margin: 0;
 }
 
 .temperature-display {
@@ -1624,19 +1649,69 @@ body {
   align-items: center;
   gap: 0.5rem;
   background: rgba(255, 255, 255, 0.15);
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1rem;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
 }
 
 .temperature-icon {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
 }
 
 .temperature-value {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
   font-family: 'Monaco', 'Menlo', monospace;
+}
+
+.status-description {
+  font-size: 0.85rem;
+  margin-top: 0.75rem;
+  opacity: 0.9;
+  text-align: left;
+  line-height: 1.4;
+}
+
+/* ==================== 修复兼容性问题 ==================== */
+/* 修复 backdrop-filter 兼容性 */
+.overview-card,
+.parameter-card,
+.action-panel,
+.history-modal,
+.modal-overlay {
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.header {
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+/* 修复 justify-self: end 兼容性警告 */
+.header-content {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo {
+  justify-self: flex-start;
+}
+
+.header-center {
+  justify-self: center;
+}
+
+.header-right {
+  justify-self: flex-end;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1.5rem;
+  flex-wrap: wrap;
 }
 
 /* ==================== 响应式设计更新 ==================== */
@@ -1645,7 +1720,7 @@ body {
   .overview-main-content {
     grid-template-columns: 1fr;
     gap: 0;
-    min-height: auto;
+    min-height: 250px; /* 修复 min-height: auto 兼容性问题 */
   }
   
   .water-label-section {
@@ -1660,12 +1735,19 @@ body {
   
   .status-main-content {
     flex-direction: column;
-    align-items: center;
-    text-align: center;
+    align-items: flex-start;
+    text-align: left;
+    gap: 1rem;
   }
   
   .temperature-display {
-    margin-top: 0.5rem;
+    align-self: flex-end;
+    margin-top: 0;
+  }
+  
+  .status-description {
+    text-align: center;
+    margin-top: 1rem;
   }
   
   /* 紧凑标签在移动端 */
@@ -1675,6 +1757,21 @@ body {
   }
   
   .action-buttons-compact {
+    justify-content: center;
+  }
+  
+  /* 修复移动端header布局 */
+  .header-content {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .logo, .header-center, .header-right {
+    justify-self: center;
+  }
+  
+  .header-right {
     justify-content: center;
   }
 }
