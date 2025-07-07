@@ -1418,18 +1418,9 @@ body {
     min-width: 80px;
   }
   
-  /* 在极小屏幕上隐藏一些不太重要的列 */
-  .history-table th:nth-child(7),
-  .history-table td:nth-child(7) {
-    display: none; /* 隐藏浊度列 */
-  }
 }
 
 @media (max-width: 480px) {
-  .history-table th:nth-child(4),
-  .history-table td:nth-child(4) {
-    display: none; /* 隐藏温度列 */
-  }
 }
 /* 添加到您的globals.css文件末尾的缺失样式 */
 
