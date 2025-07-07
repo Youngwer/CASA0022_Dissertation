@@ -1,9 +1,6 @@
-// pages/api/water-data.js - 修复导入问题的版本
+// pages/api/water-data.js - 支持水质标签的修复版本
 
-// 修复导入方式
 import WaterQualityDB from '../../lib/database'
-// 或者使用命名导入
-// import { WaterQualityDB } from '../../lib/database'
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -70,151 +67,33 @@ export default async function handler(req, res) {
         data_age_seconds: Math.round(dataAge / 1000)
       })
     } else {
-      // 数据库中没有数据，尝试从TTN获取 (作为后备)
-      console.log('⚠️ No data in database, trying TTN as fallback...')
-      
-      const ttnData = await tryGetTTNData()
-      if (ttnData) {
-        // 保存TTN数据到数据库
-        try {
-          await WaterQualityDB.saveReading({
-            device_id: DEVICE_ID,
-            ...ttnData,
-            recorded_at: new Date(),
-            raw_data: { source: 'ttn_fallback' }
-          })
-          console.log('💾 TTN fallback data saved to database')
-        } catch (saveError) {
-          console.error('❌ Failed to save TTN fallback data:', saveError.message)
-        }
-        
-        return res.status(200).json({
-          success: true,
-          data: ttnData,
-          source: 'ttn_fallback',
-          message: 'Data from TTN (saved to database)',
-          timestamp: new Date().toISOString()
-        })
-      } else {
-        // 完全没有数据，返回模拟数据
-        console.log('⚠️ No data available, using mock data')
-        return res.status(200).json({
-          success: true,
-          data: getMockData(),
-          source: 'mock',
-          message: 'No real data available',
-          timestamp: new Date().toISOString()
-        })
-      }
+      // 数据库中没有数据，返回模拟数据
+      console.log('⚠️ No data in database, using mock data')
+      return res.status(200).json({
+        success: true,
+        data: getMockData(),
+        source: 'mock',
+        message: 'No real data available',
+        timestamp: new Date().toISOString()
+      })
     }
 
   } catch (error) {
-    console.error('💥 API Error:', error.message)
-    console.error('💥 Error stack:', error.stack)
-    
-    return res.status(200).json({
-      success: true,
-      data: getMockData(),
-      source: 'mock',
-      message: `System error: ${error.message}`,
-      timestamp: new Date().toISOString()
+    console.error('💥 API Error:', error)
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error.message,
+      source: 'error'
     })
   }
 }
 
-// 尝试从TTN获取数据 (后备方案)
-async function tryGetTTNData() {
-  try {
-    const TTN_APP_ID = process.env.TTN_APP_ID
-    const TTN_API_KEY = process.env.TTN_API_KEY
-    const TTN_REGION = process.env.TTN_REGION || 'eu1'
-    const DEVICE_ID = process.env.DEVICE_ID
-
-    if (!TTN_APP_ID || !TTN_API_KEY || !DEVICE_ID) {
-      return null
-    }
-
-    const storageUrl = `https://${TTN_REGION}.cloud.thethings.network/api/v3/as/applications/${TTN_APP_ID}/devices/${DEVICE_ID}/packages/storage/uplink_message?limit=1&order=-received_at`
-
-    const response = await fetch(storageUrl, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${TTN_API_KEY}`,
-        'Accept': 'application/json',
-      },
-      timeout: 5000
-    })
-
-    if (response.ok) {
-      const responseText = await response.text()
-      if (responseText.trim().length > 0) {
-        const ttnData = JSON.parse(responseText)
-        return processTTNStorageData(ttnData)
-      }
-    }
-    
-    return null
-  } catch (error) {
-    console.error('TTN fallback failed:', error.message)
-    return null
-  }
-}
-
-// 处理TTN数据
-function processTTNStorageData(ttnData) {
-  try {
-    const payload = ttnData.result?.uplink_message?.decoded_payload
-    const receivedAt = ttnData.result?.received_at
-    
-    if (!payload) return null
-
-    const safeParseFloat = (value, defaultValue = 0) => {
-      const parsed = parseFloat(value)
-      return isNaN(parsed) ? defaultValue : parsed
-    }
-
-    const waterData = {
-      temperature: safeParseFloat(payload.temperature, 0),
-      ph: safeParseFloat(payload.ph, 7),
-      turbidity: safeParseFloat(payload.turbidity, 0),
-      conductivity: safeParseFloat(payload.conductivity, 0),
-      tds: safeParseFloat(payload.tds, 0),
-      status: mapTTNStatusToFrontend(payload.status),
-      lastUpdate: receivedAt ? 
-        new Date(receivedAt).toLocaleString('en-GB', { 
-          timeZone: 'Europe/London',
-          year: 'numeric', 
-          month: 'short', 
-          day: 'numeric',
-          hour: '2-digit', 
-          minute: '2-digit'
-        }) : 
-        'Unknown'
-    }
-
-    return waterData
-  } catch (error) {
-    console.error('Error processing TTN data:', error)
-    return null
-  }
-}
-
-// TTN状态映射到前端状态
-function mapTTNStatusToFrontend(ttnStatus) {
-  const statusMap = {
-    'excellent': 'EXCELLENT',
-    'marginal': 'MARGINAL',
-    'unsafe': 'UNSAFE'
-  }
-  return statusMap[ttnStatus] || 'UNKNOWN'
-}
-
-// 格式化数据库数据
+// 格式化数据库数据（包含水质标签）
 function formatDatabaseData(dbData) {
   if (!dbData) return getMockData()
   
-  const safeParseFloat = (value, defaultValue = 0) => {
-    if (value === null || value === undefined) return defaultValue
+  const safeParseFloat = (value, defaultValue) => {
     const parsed = parseFloat(value)
     return isNaN(parsed) ? defaultValue : parsed
   }
@@ -226,6 +105,7 @@ function formatDatabaseData(dbData) {
     conductivity: safeParseFloat(dbData.conductivity, 0),
     tds: safeParseFloat(dbData.tds, 0),
     status: dbData.status || 'UNKNOWN',
+    waterLabel: dbData.water_label || null, // 包含水质标签
     lastUpdate: new Date(dbData.recorded_at).toLocaleString('en-GB', { 
       timeZone: 'Europe/London',
       year: 'numeric', 
@@ -239,7 +119,7 @@ function formatDatabaseData(dbData) {
   return waterData
 }
 
-// 模拟数据
+// 模拟数据（包含水质标签）
 function getMockData() {
   return {
     temperature: 22.5,
@@ -248,6 +128,7 @@ function getMockData() {
     conductivity: 350.0,
     tds: 280.0,
     status: 'EXCELLENT',
+    waterLabel: 'Demo Sample Water', // 模拟标签
     lastUpdate: new Date().toLocaleString('en-GB', { 
       timeZone: 'Europe/London',
       year: 'numeric', 

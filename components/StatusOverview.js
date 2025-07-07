@@ -1,16 +1,30 @@
-// components/StatusOverview.js - 水质状态总览组件
+// components/StatusOverview.js - 带水质标签的状态总览组件
 
+import { useState } from 'react'
 import { 
   getStatusColor, 
   getStatusText, 
   getStatusDescription, 
   getDataSourceText 
 } from '../utils/waterQualityUtils'
+import WaterLabelInput from './WaterLabelInput'
 
 const StatusOverview = ({ 
   waterData, 
-  dataSource 
+  dataSource,
+  onDataRefresh // 新增：用于刷新数据的回调
 }) => {
+  const [currentLabel, setCurrentLabel] = useState(waterData.waterLabel || '')
+
+  // 处理标签更新
+  const handleLabelUpdate = (newLabel) => {
+    setCurrentLabel(newLabel)
+    // 如果需要，可以触发数据刷新
+    if (onDataRefresh) {
+      onDataRefresh()
+    }
+  }
+
   return (
     <div className="overview-card">
       <div className="card-header">
@@ -21,6 +35,14 @@ const StatusOverview = ({
             Source: {getDataSourceText(dataSource)}
           </div>
         </div>
+      </div>
+
+      {/* 水质标签输入区域 */}
+      <div className="water-label-section">
+        <WaterLabelInput 
+          currentLabel={currentLabel}
+          onLabelUpdate={handleLabelUpdate}
+        />
       </div>
       
       <div 
