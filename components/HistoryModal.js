@@ -1,4 +1,4 @@
-// components/HistoryModal.js - 带水质标签的历史记录弹窗组件
+// components/HistoryModal.js - 带水质标签和电导率的历史记录弹窗组件
 
 import { useState, useEffect } from 'react'
 import { getStatusColor, getStatusText } from '../utils/waterQualityUtils'
@@ -110,6 +110,7 @@ const HistoryModal = ({ isOpen, onClose }) => {
                     <th>Water Source</th>
                     <th>pH</th>
                     <th>Temp</th>
+                    <th>Conductivity</th>
                     <th>TDS</th>
                     <th>Turbidity</th>
                     <th>Status</th>
@@ -128,20 +129,21 @@ const HistoryModal = ({ isOpen, onClose }) => {
                           <span className="label-text">{getWaterLabel(record)}</span>
                         </div>
                       </td>
-                      <td>{parseFloat(record.ph).toFixed(1)}</td>
-                      <td>{parseFloat(record.temperature).toFixed(1)}°C</td>
-                      <td>{Math.round(record.tds)}</td>
-                      <td>{parseFloat(record.turbidity).toFixed(1)}</td>
+                      <td>{record.ph?.toFixed(1) || 'N/A'}</td>
+                      <td>{record.temperature?.toFixed(1) || 'N/A'}°C</td>
+                      <td>{record.conductivity?.toFixed(0) || 'N/A'} μS/cm</td>
+                      <td>{record.tds?.toFixed(0) || 'N/A'} ppm</td>
+                      <td>{record.turbidity?.toFixed(1) || 'N/A'} NTU</td>
                       <td>
-                        <div 
-                          className="status-badge"
+                        <span 
+                          className="status-badge" 
                           style={{ 
                             backgroundColor: getStatusColor(record.status),
                             color: 'white'
                           }}
                         >
                           {getStatusText(record.status)}
-                        </div>
+                        </span>
                       </td>
                     </tr>
                   ))}
@@ -152,14 +154,12 @@ const HistoryModal = ({ isOpen, onClose }) => {
         </div>
 
         {/* 弹窗底部 */}
-        {!loading && !error && records.length > 0 && (
-          <div className="modal-footer">
-            <span className="record-count">
-              Showing {records.length} recent measurements with water source labels
-            </span>
-            <button onClick={onClose} className="close-btn">Close</button>
+        <div className="modal-footer">
+          <div className="record-count">
+            Showing {records.length} recent measurements
           </div>
-        )}
+          <button onClick={onClose} className="close-btn">Close</button>
+        </div>
       </div>
     </div>
   )

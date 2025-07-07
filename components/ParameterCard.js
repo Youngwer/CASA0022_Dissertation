@@ -1,5 +1,6 @@
-// components/ParameterCard.js - 单个参数卡片组件
+// components/ParameterCard.js - 单个参数卡片组件（带信息图标）
 
+import { useState } from 'react'
 import { 
   getParameterStatus, 
   getParameterDescription, 
@@ -12,24 +13,51 @@ const ParameterCard = ({
   value, 
   unit, 
   param, 
-  decimals = 1 
+  decimals = 1,
+  description 
 }) => {
+  const [showTooltip, setShowTooltip] = useState(false)
   const status = getParameterStatus(param, value)
-  const description = getParameterDescription(param, value, status)
+  const statusDescription = getParameterDescription(param, value, status)
   const reference = getParameterReference(param)
 
   return (
     <div className={`parameter-card ${status}`}>
       <div className="card-icon">{icon}</div>
       <div className="card-content">
-        <h3>{title}</h3>
+        <div className="card-title-section">
+          <h3>{title}</h3>
+          <div 
+            className="info-icon"
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
+          >
+            ℹ️
+            {showTooltip && (
+              <div className="tooltip">
+                <div className="tooltip-content">
+                  <p className="tooltip-description">{description}</p>
+                  {reference && (
+                    <div className="tooltip-reference">
+                      <strong>参考范围:</strong><br />
+                      {reference}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+        
         <div className="value">
           <span className="number">{value.toFixed(decimals)}</span>
           <span className="unit">{unit}</span>
         </div>
+        
         <div className="description">
-          {description}
+          {statusDescription}
         </div>
+        
         {reference && (
           <div className="reference">
             {reference}

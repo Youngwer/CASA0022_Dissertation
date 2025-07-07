@@ -5,7 +5,6 @@ import Header from '../components/Header'
 import StatusOverview from '../components/StatusOverview'
 import ParametersGrid from '../components/ParametersGrid'
 import ErrorBanner from '../components/ErrorBanner'
-import ActionPanel from '../components/ActionPanel'
 import Footer from '../components/Footer'
 import useWaterData from '../hooks/useWaterData'
 import useTime from '../hooks/useTime'
@@ -37,13 +36,14 @@ export default function Home() {
         <meta name="author" content="AquaMonitor Team" />
       </Head>
 
-      {/* 头部导航 */}
+      {/* 头部导航（包含快捷操作） */}
       <Header 
         currentTime={currentTime}
         mounted={mounted}
         isOnline={isOnline}
         loading={loading}
         dataSource={dataSource}
+        onRefresh={refreshData}
       />
 
       {/* 主要内容区域 */}
@@ -56,21 +56,16 @@ export default function Home() {
             onRetry={refreshData}
           />
           
-          {/* 水质状态总览 */}
+          {/* 水质状态总览（包含温度） */}
           <StatusOverview 
             waterData={waterData}
             dataSource={dataSource}
+            onDataRefresh={refreshData}
           />
 
-          {/* 参数卡片网格 */}
+          {/* 参数卡片网格（只显示核心4个参数） */}
           <ParametersGrid 
             waterData={waterData}
-          />
-
-          {/* 操作面板 */}
-          <ActionPanel 
-            loading={loading}
-            onRefresh={refreshData}
           />
 
         </div>

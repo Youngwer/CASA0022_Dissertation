@@ -1,4 +1,4 @@
-// components/StatusOverview.js - 带水质标签的状态总览组件
+// components/StatusOverview.js - 带温度和水质标签的状态总览组件
 
 import { useState } from 'react'
 import { 
@@ -12,7 +12,7 @@ import WaterLabelInput from './WaterLabelInput'
 const StatusOverview = ({ 
   waterData, 
   dataSource,
-  onDataRefresh // 新增：用于刷新数据的回调
+  onDataRefresh // 用于刷新数据的回调
 }) => {
   const [currentLabel, setCurrentLabel] = useState(waterData.waterLabel || '')
 
@@ -31,35 +31,42 @@ const StatusOverview = ({
         <h2>Real-time Water Quality Status</h2>
         <div className="last-update">
           <div>Last Update: {waterData.lastUpdate}</div>
-          <div style={{fontSize: '0.8rem', opacity: 0.7}}>
-            Source: {getDataSourceText(dataSource)}
-          </div>
         </div>
       </div>
 
-      {/* 水质标签输入区域 */}
-      <div className="water-label-section">
-        <WaterLabelInput 
-          currentLabel={currentLabel}
-          onLabelUpdate={handleLabelUpdate}
-        />
-      </div>
-      
-      <div 
-        className="status-banner" 
-        style={{backgroundColor: getStatusColor(waterData.status)}}
-      >
-        <div className="status-content">
-          <span className="status-label">Water Quality Assessment</span>
-          <span className="status-value">{getStatusText(waterData.status)}</span>
+      {/* 主要内容区域 - 左右布局 */}
+      <div className="overview-main-content">
+        {/* 左侧 - 水质标签输入区域 */}
+        <div className="water-label-section">
+          <WaterLabelInput 
+            currentLabel={currentLabel}
+            onLabelUpdate={handleLabelUpdate}
+          />
         </div>
-        <div style={{
-          fontSize: '0.9rem', 
-          marginTop: '0.5rem', 
-          opacity: 0.9,
-          textAlign: 'center'
-        }}>
-          {getStatusDescription(waterData.status)}
+        
+        {/* 右侧 - 水质状态评估 */}
+        <div 
+          className="status-banner" 
+          style={{backgroundColor: getStatusColor(waterData.status)}}
+        >
+          <div className="status-main-content">
+            <div className="status-content">
+              <span className="status-label">Water Quality Assessment</span>
+              <span className="status-value">{getStatusText(waterData.status)}</span>
+            </div>
+            
+            {/* 简化的温度显示 */}
+            <div className="temperature-display">
+              <span className="temperature-icon">🌡️</span>
+              <span className="temperature-value">
+                {waterData.temperature.toFixed(1)}°C
+              </span>
+            </div>
+          </div>
+          
+          <div className="status-description">
+            {getStatusDescription(waterData.status)}
+          </div>
         </div>
       </div>
     </div>
