@@ -1,0 +1,253 @@
+/* styles/layout.css - 头部、页脚和主要布局组件 */
+
+/* ==================== 头部样式 ==================== */
+.header {
+  background: rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.header-content {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin-left: 0.5rem;
+}
+
+.header-center, .header-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.header-right {
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.header-action-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-action-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.header-action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.history-btn {
+  background: rgba(102, 126, 234, 0.3);
+  border-color: rgba(102, 126, 234, 0.5);
+}
+
+.refresh-btn.loading {
+  animation: spin 1s linear infinite;
+}
+
+/* ==================== 时间和状态显示 ==================== */
+.current-time {
+  font-size: 1.1rem;
+  font-weight: 600;
+  font-family: 'Monaco', monospace;
+}
+
+.current-date {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.status-dot.online {
+  background: #10B981;
+  box-shadow: 0 0 6px #10B981;
+}
+
+.status-dot.offline {
+  background: #EF4444;
+  box-shadow: 0 0 6px #EF4444;
+}
+
+/* ==================== 错误横幅 ==================== */
+.error-banner {
+  background: rgba(239, 68, 68, 0.9);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.error-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.retry-button {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.retry-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+/* ==================== 页脚样式 ==================== */
+.footer {
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2rem 0;
+  margin-top: 2rem;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.footer-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footer-links {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.footer-link {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.footer-link:hover {
+  color: #10B981;
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+/* ==================== 技术栈标签 ==================== */
+.footer-tech {
+  margin-top: 0.5rem;
+}
+
+.tech-stack {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.tech-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.4rem 0.8rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.tech-item:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* 为不同技术添加特定颜色和图标 */
+.tech-item:nth-child(1):before { content: '🔧'; } /* Arduino */
+.tech-item:nth-child(2):before { content: '📡'; } /* LoRaWAN */
+.tech-item:nth-child(3):before { content: '🌐'; } /* TTN */
+.tech-item:nth-child(4):before { content: '⚡'; } /* Next.js */
+.tech-item:nth-child(5):before { content: '🚀'; } /* Vercel */
+
+.tech-item:nth-child(1):hover { background: rgba(0, 172, 193, 0.2); border-color: rgba(0, 172, 193, 0.5); } /* Arduino 青色 */
+.tech-item:nth-child(2):hover { background: rgba(106, 90, 205, 0.2); border-color: rgba(106, 90, 205, 0.5); } /* LoRaWAN 紫色 */
+.tech-item:nth-child(3):hover { background: rgba(34, 197, 94, 0.2); border-color: rgba(34, 197, 94, 0.5); } /* TTN 绿色 */
+.tech-item:nth-child(4):hover { background: rgba(0, 0, 0, 0.3); border-color: rgba(255, 255, 255, 0.6); } /* Next.js 黑白 */
+.tech-item:nth-child(5):hover { background: rgba(0, 0, 0, 0.3); border-color: rgba(255, 255, 255, 0.6); } /* Vercel 黑白 */
+
+/* 响应式技术标签 */
+@media (max-width: 768px) {
+  .tech-stack {
+    gap: 0.5rem;
+  }
+  
+  .tech-item {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.6rem;
+  }
+}

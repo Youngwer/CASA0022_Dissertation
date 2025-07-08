@@ -1,0 +1,104 @@
+/* styles/base.css - 基础样式和布局 */
+
+/* ==================== 基础样式重置 ==================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  color: #ffffff;
+}
+
+/* ==================== 基础布局容器 ==================== */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.dashboard {
+  min-height: 100vh;
+}
+
+.main {
+  padding: 2rem 0;
+}
+
+/* ==================== 动画定义 ==================== */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ==================== 响应式设计 ==================== */
+@media (max-width: 1200px) {
+  .core-params-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .header-content {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  
+  .logo, .header-center, .header-right {
+    justify-self: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .core-params-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .overview-main-content {
+    grid-template-columns: 1fr;
+    min-height: 250px;
+  }
+  
+  .water-label-section {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 1rem;
+  }
+  
+  .status-main-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .header-right {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .header-action-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .parameter-card {
+    min-height: 250px;
+  }
+  
+  .tooltip {
+    bottom: 50%;
+    left: calc(100% + 10px);
+    transform: translateY(50%);
+  }
+}

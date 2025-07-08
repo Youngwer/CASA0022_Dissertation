@@ -1,4 +1,4 @@
-// components/Footer.js - 页脚组件
+// components/Footer.js - 更新的页脚组件
 
 const Footer = () => {
   return (
