@@ -97,10 +97,10 @@ export const getParameterReference = (param) => {
 // 简化的英文悬浮提示内容（仅解释参数含义）
 export const getParameterTooltip = (param) => {
   const tooltips = {
-    ph: "pH measures the acidity or alkalinity of water, affecting taste and safety.",
-    turbidity: "Turbidity indicates the cloudiness of water caused by suspended particles.",
-    conductivity: "Conductivity reflects the total amount of ions in water, related to mineral content.",
-    tds: "Total Dissolved Solids (TDS) represents the concentration of dissolved minerals in water.",
+    ph: "the acidity or alkalinity of water",
+    turbidity: "cloudiness of water caused by suspended particles.",
+    conductivity: "the total amount of ions in water",
+    tds: "the concentration of dissolved minerals in water.",
     temperature: "Temperature affects the taste and biological activity in water."
   }
   return tooltips[param] || "This parameter indicates water quality."

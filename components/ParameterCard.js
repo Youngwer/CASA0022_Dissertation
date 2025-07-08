@@ -1,4 +1,4 @@
-// components/ParameterCard.js - 简化的参数卡片组件
+// components/ParameterCard.js - 基于您示例的简化版本
 
 import { useState } from 'react'
 import { 
@@ -16,8 +16,6 @@ const ParameterCard = ({
   param, 
   decimals = 1
 }) => {
-  const [showTooltip, setShowTooltip] = useState(false)
-  
   const status = getParameterStatus(param, value)
   const statusDescription = getParameterDescription(param, value, status)
   const reference = getParameterReference(param)
@@ -30,21 +28,9 @@ const ParameterCard = ({
         <div className="card-title-section">
           <h3>
             {title}
-            <span 
-              className="info-icon"
-              onMouseEnter={() => setShowTooltip(true)}
-              onMouseLeave={() => setShowTooltip(false)}
-            >
-              ℹ️
-              {showTooltip && (
-                <div className="tooltip">
-                  <div className="tooltip-content">
-                    <p className="tooltip-description">
-                      {tooltipText}
-                    </p>
-                  </div>
-                </div>
-              )}
+            <span className="info-container">
+              <span className="info-icon">ℹ️</span>
+              <span className="tooltip">{tooltipText}</span>
             </span>
           </h3>
         </div>

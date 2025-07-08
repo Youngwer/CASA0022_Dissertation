@@ -1,6 +1,6 @@
-/* styles/globals.css - 精简版水质监测Dashboard样式 */
+/* styles/globals.css - 超级精简版水质监测Dashboard样式 */
 
-/* ==================== 基础重置和全局样式 ==================== */
+/* ==================== 基础样式 ==================== */
 * {
   margin: 0;
   padding: 0;
@@ -8,7 +8,7 @@
 }
 
 html, body {
-  font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
   color: #ffffff;
@@ -22,10 +22,9 @@ html, body {
 
 .dashboard {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-/* ==================== 头部样式 ==================== */
+/* ==================== 头部 ==================== */
 .header {
   background: rgba(255, 255, 255, 0.15);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
@@ -34,7 +33,6 @@ html, body {
   top: 0;
   z-index: 100;
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 }
 
 .header-content {
@@ -57,7 +55,7 @@ html, body {
   margin-left: 0.5rem;
 }
 
-.header-center {
+.header-center, .header-right {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -65,10 +63,7 @@ html, body {
 }
 
 .header-right {
-  display: flex;
-  align-items: center;
   justify-content: flex-end;
-  gap: 1.5rem;
   flex-wrap: wrap;
 }
 
@@ -80,12 +75,10 @@ html, body {
   border-radius: 8px;
   cursor: pointer;
   font-size: 0.85rem;
-  font-weight: 500;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  white-space: nowrap;
 }
 
 .header-action-btn:hover:not(:disabled) {
@@ -98,27 +91,15 @@ html, body {
   cursor: not-allowed;
 }
 
-.refresh-btn.loading {
-  animation: spin 1s linear infinite;
-}
-
 .history-btn {
   background: rgba(102, 126, 234, 0.3);
   border-color: rgba(102, 126, 234, 0.5);
 }
 
-.history-btn:hover {
-  background: rgba(102, 126, 234, 0.5);
-}
-
-.time-display {
-  text-align: center;
-}
-
 .current-time {
   font-size: 1.1rem;
   font-weight: 600;
-  font-family: 'Monaco', 'Menlo', monospace;
+  font-family: 'Monaco', monospace;
 }
 
 .current-date {
@@ -150,12 +131,12 @@ html, body {
   box-shadow: 0 0 6px #EF4444;
 }
 
-/* ==================== 主要内容区域 ==================== */
+/* ==================== 主要内容 ==================== */
 .main {
   padding: 2rem 0;
 }
 
-/* ==================== 错误提示横幅 ==================== */
+/* ==================== 错误横幅 ==================== */
 .error-banner {
   background: rgba(239, 68, 68, 0.9);
   border: 1px solid rgba(239, 68, 68, 0.5);
@@ -165,7 +146,6 @@ html, body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
 }
 
 .error-content {
@@ -181,7 +161,6 @@ html, body {
   padding: 0.5rem 1rem;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 0.9rem;
   transition: all 0.3s ease;
 }
 
@@ -197,9 +176,7 @@ html, body {
   border: 1px solid rgba(255, 255, 255, 0.3);
   margin-bottom: 2rem;
   overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 }
 
 .card-header {
@@ -218,7 +195,6 @@ html, body {
 .last-update {
   font-size: 0.85rem;
   opacity: 0.8;
-  text-align: right;
 }
 
 .overview-main-content {
@@ -242,14 +218,12 @@ html, body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border-radius: 0;
 }
 
 .status-main-content {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  flex-wrap: wrap;
   gap: 1.5rem;
   margin-bottom: 1rem;
 }
@@ -257,23 +231,14 @@ html, body {
 .status-content {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: 0.5rem;
   flex: 1;
-}
-
-.status-label {
-  font-size: 0.9rem;
-  opacity: 0.9;
-  font-weight: 500;
-  margin: 0;
 }
 
 .status-value {
   font-size: 1.6rem;
   font-weight: 700;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  margin: 0;
 }
 
 .temperature-display {
@@ -284,36 +249,19 @@ html, body {
   padding: 0.6rem 1rem;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  flex-shrink: 0;
-}
-
-.temperature-icon {
-  font-size: 1.1rem;
 }
 
 .temperature-value {
-  font-size: 1rem;
   font-weight: 600;
-  font-family: 'Monaco', 'Menlo', monospace;
-}
-
-.status-description {
-  font-size: 0.85rem;
-  margin-top: 0.75rem;
-  opacity: 0.9;
-  text-align: left;
-  line-height: 1.4;
+  font-family: 'Monaco', monospace;
 }
 
 /* ==================== 参数卡片 ==================== */
-.parameters-container {
-  margin-bottom: 3rem;
-}
-
 .core-params-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
+  margin-bottom: 3rem;
 }
 
 .parameter-card {
@@ -323,10 +271,8 @@ html, body {
   padding: 1.5rem;
   transition: all 0.3s ease;
   position: relative;
-  overflow: visible; /* 关键：允许悬浮框显示 */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  overflow: visible;
   backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
   min-height: 280px;
   display: flex;
   flex-direction: column;
@@ -335,78 +281,42 @@ html, body {
 .parameter-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
-  border-color: rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.25);
 }
 
-/* 参数卡片状态样式 */
 .parameter-card.excellent {
   border-color: #10B981;
   background: rgba(16, 185, 129, 0.15);
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
-}
-
-.parameter-card.excellent::before {
-  content: '🟢';
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  font-size: 1.2rem;
-}
-
-.parameter-card.excellent .description {
-  color: #10B981;
-  font-weight: 500;
 }
 
 .parameter-card.marginal {
   border-color: #F59E0B;
   background: rgba(245, 158, 11, 0.15);
-  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
-}
-
-.parameter-card.marginal::before {
-  content: '🟡';
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  font-size: 1.2rem;
-}
-
-.parameter-card.marginal .description {
-  color: #F59E0B;
-  font-weight: 500;
 }
 
 .parameter-card.unsafe {
   border-color: #EF4444;
   background: rgba(239, 68, 68, 0.15);
-  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
   animation: statusPulse 2s infinite;
 }
 
-.parameter-card.unsafe::before {
-  content: '🔴';
+.parameter-card.excellent::before { content: '🟢'; }
+.parameter-card.marginal::before { content: '🟡'; }
+.parameter-card.unsafe::before { content: '🔴'; }
+
+.parameter-card::before {
   position: absolute;
   top: 1rem;
   right: 1rem;
   font-size: 1.2rem;
 }
 
-.parameter-card.unsafe .description {
-  color: #EF4444;
-  font-weight: 500;
-}
-
 .card-icon {
   font-size: 2.5rem;
   margin-bottom: 1rem;
-  display: block;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 .card-content {
-  position: relative;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -420,7 +330,6 @@ html, body {
 .card-title-section h3 {
   font-size: 1rem;
   font-weight: 600;
-  margin: 0;
   opacity: 0.9;
   display: flex;
   align-items: center;
@@ -437,11 +346,9 @@ html, body {
 .number {
   font-size: 2rem;
   font-weight: 700;
-  line-height: 1;
 }
 
 .unit {
-  font-size: 1rem;
   opacity: 0.8;
   font-weight: 500;
 }
@@ -449,30 +356,38 @@ html, body {
 .description {
   font-size: 0.9rem;
   line-height: 1.4;
-  margin-bottom: auto; /* 推reference到底部 */
+  margin-bottom: auto;
 }
+
+.parameter-card.excellent .description { color: #10B981; }
+.parameter-card.marginal .description { color: #F59E0B; }
+.parameter-card.unsafe .description { color: #EF4444; }
 
 .reference {
   font-size: 0.75rem;
-  margin-top: auto; /* 确保始终在底部 */
+  margin-top: auto;
   padding: 0.75rem;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   border-left: 3px solid rgba(255, 255, 255, 0.3);
   opacity: 0.8;
-  font-family: 'Monaco', 'Menlo', monospace;
+  font-family: 'Monaco', monospace;
   line-height: 1.6;
-  white-space: pre-line; /* 允许换行显示 */
+  white-space: pre-line;
 }
 
-/* ==================== 悬浮框样式 ==================== */
-.info-icon {
+/* ==================== 悬浮框 ==================== */
+.info-container {
+  display: inline-block;
   position: relative;
-  cursor: help;
+  margin-left: 0.5rem;
+}
+
+.info-icon {
+  cursor: pointer;
   font-size: 0.9rem;
-  opacity: 0.6;
+  opacity: 0.7;
   transition: all 0.2s ease;
-  z-index: 20;
 }
 
 .info-icon:hover {
@@ -482,70 +397,40 @@ html, body {
 
 .tooltip {
   position: absolute;
-  bottom: calc(100% + 15px);
-  right: -10px; /* 向右偏移避免截断 */
-  z-index: 1000;
-  opacity: 0;
-  pointer-events: none;
-  animation: tooltipFadeIn 0.3s ease-out forwards;
-}
-
-.tooltip-content {
-  background: rgba(0, 0, 0, 0.95);
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
   color: white;
   padding: 0.6rem 0.8rem;
   border-radius: 6px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-  font-size: 0.75rem; /* 缩小字体 */
-  line-height: 1.4;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  position: relative;
-  width: 200px; /* 固定宽度确保完整显示 */
-  white-space: normal;
-  word-wrap: break-word;
-}
-
-/* 指针指向图标 */
-.tooltip-content::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  right: 15px; /* 对准图标位置 */
-  border: 5px solid transparent;
-  border-top-color: rgba(0, 0, 0, 0.95);
-}
-
-.tooltip-description {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.95);
-  font-weight: 400;
+  font-size: 0.75rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  width: 250px;
+  line-height: 1.5;
   text-align: left;
 }
 
-/* ==================== 水质标签组件 ==================== */
-.water-label-container {
-  width: 100%;
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: rgba(0, 0, 0, 0.9);
 }
 
-.label-header, .label-header-compact {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
+.info-container:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
 }
 
-.label-icon {
-  font-size: 1rem;
-}
-
-.label-title {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.9);
-}
-
+/* ==================== 水质标签 ==================== */
 .label-display-compact {
   display: flex;
   align-items: center;
@@ -554,8 +439,6 @@ html, body {
 
 .current-label-compact {
   flex: 1;
-  font-size: 0.9rem;
-  font-weight: 500;
   color: #ffffff;
   background: rgba(255, 255, 255, 0.15);
   padding: 0.6rem 0.8rem;
@@ -573,7 +456,6 @@ html, body {
   padding: 0.6rem;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 0.9rem;
   transition: all 0.2s ease;
   min-width: 36px;
   height: 36px;
@@ -587,10 +469,12 @@ html, body {
   transform: translateY(-1px);
 }
 
+/* 编辑状态布局 */
 .label-edit-compact {
   display: flex;
   gap: 0.5rem;
   align-items: center;
+  width: 100%;
 }
 
 .label-select, .label-input-compact {
@@ -604,6 +488,7 @@ html, body {
   outline: none;
   transition: all 0.2s ease;
   height: 36px;
+  min-width: 0; /* 防止flex项目溢出 */
 }
 
 .label-select:focus, .label-input-compact:focus {
@@ -611,9 +496,16 @@ html, body {
   box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
 }
 
+.label-select option {
+  color: #333;
+  background: white;
+}
+
+/* 操作按钮容器 */
 .action-buttons-compact {
   display: flex;
   gap: 0.25rem;
+  flex-shrink: 0; /* 防止按钮被压缩 */
 }
 
 .save-button-compact, .cancel-button-compact {
@@ -621,13 +513,16 @@ html, body {
   height: 36px;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 500;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1px solid;
+  flex-shrink: 0;
+  text-align: center;
+  line-height: 1;
 }
 
 .save-button-compact {
@@ -639,6 +534,12 @@ html, body {
 .save-button-compact:hover:not(:disabled) {
   background: rgba(16, 185, 129, 1);
   transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.save-button-compact:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .cancel-button-compact {
@@ -650,6 +551,25 @@ html, body {
 .cancel-button-compact:hover:not(:disabled) {
   background: rgba(239, 68, 68, 1);
   transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+/* 标签头部 */
+.label-header-compact {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.label-header-compact .label-icon {
+  font-size: 1rem;
+}
+
+.label-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 /* ==================== 历史记录弹窗 ==================== */
@@ -665,20 +585,17 @@ html, body {
   justify-content: center;
   z-index: 1000;
   backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
 }
 
 .history-modal {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  width: 90%;
-  max-width: 800px;
-  max-height: 80vh;
+  width: 95%;
+  max-width: 1000px;
+  max-height: 85vh;
   overflow: hidden;
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
 .modal-header {
@@ -718,15 +635,20 @@ html, body {
 }
 
 .modal-content {
-  padding: 0;
   max-height: 60vh;
   overflow-y: auto;
+  padding: 0;
+}
+
+.history-table-container {
+  overflow-x: auto;
 }
 
 .history-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  min-width: 800px;
 }
 
 .history-table th {
@@ -745,40 +667,79 @@ html, body {
   padding: 0.75rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   color: #333;
+  vertical-align: top;
 }
 
 .history-table tr:hover {
   background: rgba(102, 126, 234, 0.05);
 }
 
+/* 优化列宽 */
+.history-table th:nth-child(1), .history-table td:nth-child(1) { /* Time */
+  width: 140px;
+  min-width: 140px;
+}
+
+.history-table th:nth-child(2), .history-table td:nth-child(2) { /* Water Source */
+  width: 160px;
+  min-width: 160px;
+}
+
+.history-table th:nth-child(3), .history-table td:nth-child(3) { /* pH */
+  width: 80px;
+  min-width: 80px;
+  text-align: center;
+}
+
+.history-table th:nth-child(4), .history-table td:nth-child(4) { /* Temp */
+  width: 90px;
+  min-width: 90px;
+  text-align: center;
+}
+
+.history-table th:nth-child(5), .history-table td:nth-child(5) { /* Conductivity */
+  width: 110px;
+  min-width: 110px;
+  text-align: center;
+}
+
+.history-table th:nth-child(6), .history-table td:nth-child(6) { /* TDS */
+  width: 90px;
+  min-width: 90px;
+  text-align: center;
+}
+
+.history-table th:nth-child(7), .history-table td:nth-child(7) { /* Turbidity */
+  width: 100px;
+  min-width: 100px;
+  text-align: center;
+}
+
+.history-table th:nth-child(8), .history-table td:nth-child(8) { /* Status */
+  width: 100px;
+  min-width: 100px;
+  text-align: center;
+}
+
 .time-cell {
-  min-width: 120px;
+  min-width: 140px;
 }
 
 .time-main {
   font-weight: 500;
   color: #333;
+  font-size: 0.9rem;
 }
 
 .time-ago {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: #666;
   margin-top: 0.2rem;
 }
 
-.status-badge {
-  padding: 0.3rem 0.8rem;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  text-align: center;
-  min-width: 70px;
-  display: inline-block;
-}
-
 .water-label-cell {
-  min-width: 150px;
-  max-width: 200px;
+  min-width: 160px;
+  max-width: 180px;
 }
 
 .water-label-display {
@@ -799,6 +760,16 @@ html, body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.status-badge {
+  padding: 0.3rem 0.8rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-align: center;
+  min-width: 70px;
+  display: inline-block;
 }
 
 .modal-footer {
@@ -831,17 +802,60 @@ html, body {
   transform: translateY(-1px);
 }
 
-/* ==================== 动画效果 ==================== */
+/* ==================== 页脚 ==================== */
+.footer {
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2rem 0;
+  margin-top: 2rem;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.footer-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footer-links {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.footer-link {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.footer-link:hover {
+  color: #10B981;
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+/* ==================== 动画 ==================== */
 @keyframes pulse {
-  0% { opacity: 1; }
+  0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
-  100% { opacity: 1; }
 }
 
 @keyframes statusPulse {
-  0% { opacity: 1; }
+  0%, 100% { opacity: 1; }
   50% { opacity: 0.8; }
-  100% { opacity: 1; }
 }
 
 @keyframes spin {
@@ -849,15 +863,8 @@ html, body {
   to { transform: rotate(360deg); }
 }
 
-@keyframes tooltipFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.refresh-btn.loading {
+  animation: spin 1s linear infinite;
 }
 
 /* ==================== 响应式设计 ==================== */
@@ -892,39 +899,14 @@ html, body {
     padding: 1rem;
   }
   
-  .status-banner {
-    padding: 1rem;
-  }
-  
   .status-main-content {
     flex-direction: column;
     align-items: flex-start;
-    text-align: left;
-  }
-  
-  .temperature-display {
-    align-self: flex-end;
-  }
-  
-  .status-description {
-    text-align: center;
-    margin-top: 1rem;
-  }
-  
-  .label-edit-compact {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-  
-  .action-buttons-compact {
-    justify-content: center;
   }
   
   .header-right {
     flex-direction: column;
-    gap: 0.5rem;
     width: 100%;
-    align-items: center;
   }
   
   .header-action-btn {
@@ -932,40 +914,94 @@ html, body {
     justify-content: center;
   }
   
-  .tooltip {
-    right: -5px;
-    bottom: calc(100% + 10px);
-  }
-  
-  .tooltip-content {
-    width: 180px;
-    font-size: 0.7rem;
-    padding: 0.5rem 0.7rem;
-  }
-  
-  .tooltip-content::after {
-    right: 12px;
-  }
-  
   .parameter-card {
     min-height: 250px;
   }
   
+  .tooltip {
+    bottom: 50%;
+    left: calc(100% + 10px);
+    transform: translateY(50%);
+    width: 220px;
+    font-size: 0.7rem;
+  }
+  
+  .tooltip::after {
+    top: 50%;
+    left: 0;
+    transform: translate(-100%, -50%);
+    border: 6px solid transparent;
+    border-right-color: rgba(0, 0, 0, 0.9);
+    border-top-color: transparent;
+  }
+  
+  /* 历史记录弹窗移动端优化 */
   .history-modal {
-    width: 95%;
-    max-height: 85vh;
+    width: 98%;
+    max-height: 90vh;
   }
   
   .modal-header {
     padding: 1rem;
   }
   
+  .modal-header h3 {
+    font-size: 1.1rem;
+  }
+  
   .history-table {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
+    min-width: 600px;
   }
   
   .history-table th, .history-table td {
-    padding: 0.5rem;
+    padding: 0.5rem 0.4rem;
+  }
+  
+  .history-table th:nth-child(1), .history-table td:nth-child(1) {
+    width: 110px;
+    min-width: 110px;
+  }
+  
+  .history-table th:nth-child(2), .history-table td:nth-child(2) {
+    width: 120px;
+    min-width: 120px;
+  }
+  
+  .history-table th:nth-child(3), .history-table td:nth-child(3),
+  .history-table th:nth-child(4), .history-table td:nth-child(4),
+  .history-table th:nth-child(6), .history-table td:nth-child(6) {
+    width: 60px;
+    min-width: 60px;
+  }
+  
+  .history-table th:nth-child(5), .history-table td:nth-child(5),
+  .history-table th:nth-child(7), .history-table td:nth-child(7) {
+    width: 80px;
+    min-width: 80px;
+  }
+  
+  .history-table th:nth-child(8), .history-table td:nth-child(8) {
+    width: 70px;
+    min-width: 70px;
+  }
+  
+  .time-main {
+    font-size: 0.8rem;
+  }
+  
+  .time-ago {
+    font-size: 0.7rem;
+  }
+  
+  .label-text {
+    font-size: 0.75rem;
+  }
+  
+  .status-badge {
+    font-size: 0.65rem;
+    padding: 0.2rem 0.5rem;
+    min-width: 50px;
   }
   
   .modal-footer {
@@ -984,16 +1020,6 @@ html, body {
     padding: 1rem 0;
   }
   
-  .tooltip-content {
-    width: 160px;
-    font-size: 0.65rem;
-    padding: 0.4rem 0.6rem;
-  }
-  
-  .tooltip-content::after {
-    right: 10px;
-  }
-  
   .parameter-card {
     min-height: 220px;
     padding: 1rem;
@@ -1007,142 +1033,32 @@ html, body {
     font-size: 1.5rem;
   }
   
-  .subtitle {
-    font-size: 0.8rem;
+  .tooltip {
+    width: 180px;
+    font-size: 0.65rem;
   }
   
-  .header-action-btn {
-    padding: 0.6rem 1rem;
-    font-size: 0.8rem;
+  /* 移动端水质标签优化 */
+  .label-edit-compact {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: stretch;
   }
   
-  .card-title-section h3 {
-    font-size: 0.9rem;
-    gap: 0.3rem;
+  .action-buttons-compact {
+    justify-content: center;
+    gap: 1rem;
   }
   
-  .status-value {
-    font-size: 1.3rem;
-  }
-  
-  .reference {
-    font-size: 0.7rem;
-  }
-  
-  .water-label-cell {
-    min-width: 120px;
-    max-width: 150px;
-  }
-  
-  .label-text {
-    font-size: 0.8rem;
-  }
-  
-  .modal-header h3 {
+  .save-button-compact, .cancel-button-compact {
+    width: 44px;
+    height: 44px;
     font-size: 1.1rem;
   }
   
-  .time-cell {
-    min-width: 100px;
+  .label-select, .label-input-compact {
+    height: 44px;
+    font-size: 0.9rem;
+    padding: 0.8rem;
   }
-}
-
-/* ==================== 页脚样式 ==================== */
-.footer {
-  background: rgba(0, 0, 0, 0.2);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 2rem 0;
-  margin-top: 2rem;
-}
-
-.footer-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-  text-align: center;
-}
-
-.footer-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.footer-info p {
-  margin: 0;
-  opacity: 0.8;
-  font-size: 0.9rem;
-}
-
-.footer-links {
-  display: flex;
-  gap: 1.5rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.footer-link {
-  color: rgba(255, 255, 255, 0.8);
-  text-decoration: none;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-  padding: 0.3rem 0.8rem;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.footer-link:hover {
-  color: #10B981;
-  background: rgba(16, 185, 129, 0.1);
-  border-color: rgba(16, 185, 129, 0.3);
-  text-decoration: none;
-}
-
-.tech-stack {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.tech-item {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 0.3rem 0.8rem;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-.parameter-card {
-  overflow: visible !important;
-}
-
-.tooltip {
-  position: absolute !important;
-  bottom: calc(100% + 15px) !important;
-  right: -10px !important;
-  left: auto !important;
-  transform: none !important;
-}
-
-.tooltip-content {
-  width: 200px !important;
-  font-size: 0.75rem !important;
-  background: rgba(0, 0, 0, 0.95) !important;
-}
-
-.tooltip-content::after {
-  right: 15px !important;
-  left: auto !important;
-}
-
-.info-icon {
-  background: none !important;
-  border: none !important;
-  width: auto !important;
-  height: auto !important;
-  border-radius: 0 !important;
-  margin-left: 0 !important;
 }
