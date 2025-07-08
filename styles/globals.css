@@ -1,30 +1,25 @@
-/* styles/globals.css - 水质监测Dashboard样式 (模块化版本) */
+/* styles/globals.css - 精简版水质监测Dashboard样式 */
 
-/* 重置和基础样式 */
+/* ==================== 基础重置和全局样式 ==================== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-html,
-body {
-  padding: 0;
-  margin: 0;
+html, body {
   font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
   color: #ffffff;
 }
 
-/* 容器 */
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
-/* Dashboard主容器 */
 .dashboard {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -38,22 +33,20 @@ body {
   position: sticky;
   top: 0;
   z-index: 100;
-  -webkit-backdrop-filter: blur(10px); /* Safari兼容性 */
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .header-content {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
   align-items: center;
-  flex-wrap: wrap;
   gap: 1rem;
 }
 
 .logo h1 {
   font-size: 1.8rem;
   font-weight: 700;
-  margin: 0;
   color: #ffffff;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
@@ -62,1148 +55,6 @@ body {
   font-size: 0.9rem;
   opacity: 0.8;
   margin-left: 0.5rem;
-}
-
-.header-info {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-}
-
-.time-display {
-  text-align: center;
-}
-
-.current-time {
-  font-size: 1.1rem;
-  font-weight: 600;
-  font-family: 'Monaco', 'Menlo', monospace;
-}
-
-.current-date {
-  font-size: 0.8rem;
-  opacity: 0.8;
-}
-
-.status-indicator {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-}
-
-.status-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  animation: pulse 2s infinite;
-}
-
-.status-dot.online {
-  background: #10B981;
-  box-shadow: 0 0 6px #10B981;
-}
-
-.status-dot.offline {
-  background: #EF4444;
-  box-shadow: 0 0 6px #EF4444;
-}
-
-.loading-text {
-  font-style: italic;
-  opacity: 0.8;
-}
-
-.data-source {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 0.8rem;
-}
-
-.source-label {
-  opacity: 0.7;
-}
-
-.source-value {
-  font-weight: 500;
-}
-
-@keyframes pulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.5; }
-  100% { opacity: 1; }
-}
-
-/* ==================== 主要内容区域 ==================== */
-.main {
-  padding: 2rem 0;
-}
-
-/* ==================== 错误提示横幅 ==================== */
-.error-banner {
-  background: rgba(239, 68, 68, 0.9);
-  border: 1px solid rgba(239, 68, 68, 0.5);
-  border-radius: 12px;
-  padding: 1rem 1.5rem;
-  margin-bottom: 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
-}
-
-.error-content {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.error-icon {
-  font-size: 1.2rem;
-}
-
-.error-message {
-  font-weight: 500;
-}
-
-.retry-button {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-}
-
-.retry-button:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-1px);
-}
-
-/* ==================== 总览卡片 ==================== */
-.overview-card {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  margin-bottom: 2rem;
-  overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  -webkit-backdrop-filter: blur(10px); /* Safari兼容性 */
-  backdrop-filter: blur(10px);
-}
-
-.card-header {
-  padding: 1.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.card-header h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-.last-update {
-  font-size: 0.85rem;
-  opacity: 0.8;
-  text-align: right;
-}
-
-.status-banner {
-  padding: 1.5rem;
-  text-align: center;
-  border-radius: 0 0 20px 20px;
-}
-
-.status-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.status-label {
-  font-size: 0.9rem;
-  opacity: 0.9;
-  font-weight: 500;
-}
-
-.status-value {
-  font-size: 1.6rem;
-  font-weight: 700;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-}
-
-/* ==================== 参数卡片网格 ==================== */
-.parameters-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 3rem;
-}
-
-.parameter-card {
-  background: rgba(255, 255, 255, 0.18);
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 1.5rem;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  -webkit-backdrop-filter: blur(5px); /* Safari兼容性 */
-  backdrop-filter: blur(5px);
-}
-
-.parameter-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
-  border-color: rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.25);
-}
-
-/* 优秀状态 - 绿色 */
-.parameter-card.excellent {
-  border-color: #10B981;
-  background: rgba(16, 185, 129, 0.15);
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
-}
-
-.parameter-card.excellent::before {
-  content: '🟢';
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  font-size: 1.2rem;
-}
-
-.parameter-card.excellent .description {
-  color: #10B981;
-  font-weight: 500;
-}
-
-/* 一般状态 - 黄色 */
-.parameter-card.marginal {
-  border-color: #F59E0B;
-  background: rgba(245, 158, 11, 0.15);
-  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
-}
-
-.parameter-card.marginal::before {
-  content: '🟡';
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  font-size: 1.2rem;
-}
-
-.parameter-card.marginal .description {
-  color: #F59E0B;
-  font-weight: 500;
-}
-
-/* 不安全状态 - 红色 */
-.parameter-card.unsafe {
-  border-color: #EF4444;
-  background: rgba(239, 68, 68, 0.15);
-  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
-}
-
-.parameter-card.unsafe::before {
-  content: '🔴';
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  font-size: 1.2rem;
-}
-
-.parameter-card.unsafe .description {
-  color: #EF4444;
-  font-weight: 500;
-}
-
-.parameter-card.unsafe {
-  animation: statusPulse 2s infinite;
-}
-
-.card-icon {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  display: block;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-}
-
-.card-content {
-  position: relative;
-}
-
-.card-content h3 {
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  opacity: 0.9;
-}
-
-.value {
-  display: flex;
-  align-items: baseline;
-  gap: 0.3rem;
-  margin: 0.8rem 0;
-}
-
-.number {
-  font-size: 2rem;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.unit {
-  font-size: 1rem;
-  opacity: 0.8;
-  font-weight: 500;
-}
-
-.description {
-  font-size: 0.9rem;
-  line-height: 1.4;
-  margin-bottom: 0.5rem;
-}
-
-.reference {
-  font-size: 0.75rem;
-  margin-top: 0.5rem;
-  padding: 0.5rem;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  border-left: 3px solid rgba(255, 255, 255, 0.3);
-  opacity: 0.8;
-  font-family: 'Monaco', 'Menlo', monospace;
-}
-
-/* ==================== 操作面板 ==================== */
-.action-panel {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  -webkit-backdrop-filter: blur(5px); /* Safari兼容性 */
-  backdrop-filter: blur(5px);
-}
-.action-panel h3 {
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  opacity: 0.9;
-}
-
-.action-buttons {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-}
-
-.action-button {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 0.75rem 1.5rem;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.action-button:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-.action-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.action-button.primary {
-  background: rgba(16, 185, 129, 0.3);
-  border-color: #10B981;
-}
-
-.action-button.primary:hover:not(:disabled) {
-  background: rgba(16, 185, 129, 0.5);
-}
-
-.action-button.secondary {
-  background: rgba(255, 255, 255, 0.15);
-}
-
-/* ==================== 页脚 ==================== */
-.footer {
-  background: rgba(0, 0, 0, 0.2);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 2rem 0;
-  margin-top: 2rem;
-}
-
-.footer-content {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  align-items: center;
-}
-
-.footer-info p {
-  margin: 0.3rem 0;
-  opacity: 0.8;
-}
-
-.footer-links {
-  display: flex;
-  gap: 1.5rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.footer-link {
-  color: rgba(255, 255, 255, 0.8);
-  text-decoration: none;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-}
-
-.footer-link:hover {
-  color: #10B981;
-  text-decoration: underline;
-}
-
-.tech-stack {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.tech-item {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 0.3rem 0.8rem;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-/* ==================== 动画效果 ==================== */
-@keyframes statusPulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.8; }
-  100% { opacity: 1; }
-}
-
-/* ==================== 响应式设计 ==================== */
-@media (max-width: 768px) {
-  .header-content {
-    flex-direction: column;
-    text-align: center;
-  }
-  
-  .header-info {
-    justify-content: center;
-  }
-  
-  .parameters-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  
-  .parameter-card {
-    padding: 1rem;
-  }
-  
-  .card-icon {
-    font-size: 2rem;
-  }
-  
-  .status-value {
-    font-size: 1.3rem;
-  }
-  
-  .reference {
-    font-size: 0.7rem;
-  }
-  
-  .action-buttons {
-    grid-template-columns: 1fr;
-  }
-  
-  .footer-content {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
-  
-  .footer-links {
-    justify-content: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .container {
-    padding: 0 15px;
-  }
-  
-  .main {
-    padding: 1rem 0;
-  }
-  
-  .card-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-  
-  .last-update {
-    text-align: left;
-    width: 100%;
-  }
-}
-/* 添加到 styles/globals.css 的历史记录弹窗样式 */
-
-/* ==================== 历史记录弹窗 ==================== */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  -webkit-backdrop-filter: blur(4px); /* Safari兼容性 */
-  backdrop-filter: blur(4px);
-}
-
-.history-modal {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  width: 90%;
-  max-width: 800px;
-  max-height: 80vh;
-  overflow: hidden;
-  -webkit-backdrop-filter: blur(10px); /* Safari兼容性 */
-  backdrop-filter: blur(10px);
-}
-
-.modal-header {
-  padding: 1.5rem;
-  background: rgba(102, 126, 234, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.modal-header h3 {
-  margin: 0;
-  color: #333;
-  font-size: 1.3rem;
-  font-weight: 600;
-}
-
-.close-button {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #666;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-}
-
-.close-button:hover {
-  background: rgba(239, 68, 68, 0.1);
-  color: #EF4444;
-}
-
-.modal-content {
-  padding: 0;
-  max-height: 60vh;
-  overflow-y: auto;
-}
-
-/* 加载状态 */
-.modal-loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem;
-  color: #666;
-}
-
-.loading-spinner {
-  font-size: 2rem;
-  animation: spin 1s linear infinite;
-  margin-bottom: 1rem;
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-/* 错误状态 */
-.modal-error {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 2rem;
-  color: #EF4444;
-  background: rgba(239, 68, 68, 0.05);
-  margin: 1rem;
-  border-radius: 8px;
-  border: 1px solid rgba(239, 68, 68, 0.2);
-}
-
-.retry-btn {
-  background: rgba(239, 68, 68, 0.1);
-  color: #EF4444;
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: all 0.2s ease;
-}
-
-.retry-btn:hover {
-  background: rgba(239, 68, 68, 0.2);
-}
-
-/* 空状态 */
-.modal-empty {
-  text-align: center;
-  padding: 3rem;
-  color: #666;
-}
-
-/* 历史记录表格 */
-.history-table-container {
-  overflow-x: auto;
-}
-
-.history-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9rem;
-}
-
-.history-table th {
-  background: rgba(102, 126, 234, 0.1);
-  color: #333;
-  font-weight: 600;
-  padding: 1rem 0.75rem;
-  text-align: left;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.history-table td {
-  padding: 0.75rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  color: #333;
-}
-
-.history-table tr:hover {
-  background: rgba(102, 126, 234, 0.05);
-}
-
-.time-cell {
-  min-width: 120px;
-}
-
-.time-main {
-  font-weight: 500;
-  color: #333;
-}
-
-.time-ago {
-  font-size: 0.8rem;
-  color: #666;
-  margin-top: 0.2rem;
-}
-
-.status-badge {
-  padding: 0.3rem 0.8rem;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  text-align: center;
-  min-width: 70px;
-  display: inline-block;
-}
-
-/* 弹窗底部 */
-.modal-footer {
-  padding: 1rem 1.5rem;
-  background: rgba(102, 126, 234, 0.05);
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.record-count {
-  color: #666;
-  font-size: 0.9rem;
-}
-
-.close-btn {
-  background: rgba(102, 126, 234, 0.2);
-  color: #667eea;
-  border: 1px solid rgba(102, 126, 234, 0.3);
-  padding: 0.5rem 1.5rem;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-.close-btn:hover {
-  background: rgba(102, 126, 234, 0.3);
-  transform: translateY(-1px);
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .history-modal {
-    width: 95%;
-    max-height: 85vh;
-  }
-  
-  .modal-header {
-    padding: 1rem;
-  }
-  
-  .modal-header h3 {
-    font-size: 1.1rem;
-  }
-  
-  .history-table {
-    font-size: 0.8rem;
-  }
-  
-  .history-table th,
-  .history-table td {
-    padding: 0.5rem;
-  }
-  
-  .time-cell {
-    min-width: 100px;
-  }
-  
-  .modal-footer {
-    flex-direction: column;
-    gap: 1rem;
-    text-align: center;
-  }
-}
-/* 添加到 styles/globals.css 的水质标签样式 */
-
-/* ==================== 水质标签组件 ==================== */
-.water-label-section {
-  padding: 1rem 1.5rem;
-  background: rgba(255, 255, 255, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.water-label-container {
-  width: 100%;
-}
-
-.label-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
-}
-
-.label-icon {
-  font-size: 1.1rem;
-}
-
-.label-title {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-/* 标签显示状态 */
-.label-display {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.current-label {
-  font-size: 1rem;
-  font-weight: 500;
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  flex: 1;
-  min-height: 40px;
-  display: flex;
-  align-items: center;
-}
-
-.edit-button {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.85rem;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-
-.edit-button:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-1px);
-}
-
-/* 标签编辑状态 */
-.label-edit {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.input-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.label-input {
-  width: 100%;
-  padding: 0.75rem;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.9);
-  color: #333;
-  font-size: 0.95rem;
-  outline: none;
-  transition: all 0.2s ease;
-}
-
-.label-input:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
-}
-
-.label-input::placeholder {
-  color: #999;
-}
-
-.action-buttons {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.save-button {
-  background: rgba(16, 185, 129, 0.8);
-  color: white;
-  border: 1px solid #10B981;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  flex: 1;
-}
-
-.save-button:hover:not(:disabled) {
-  background: rgba(16, 185, 129, 1);
-  transform: translateY(-1px);
-}
-
-.save-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.cancel-button {
-  background: rgba(239, 68, 68, 0.8);
-  color: white;
-  border: 1px solid #EF4444;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  flex: 1;
-}
-
-.cancel-button:hover:not(:disabled) {
-  background: rgba(239, 68, 68, 1);
-  transform: translateY(-1px);
-}
-
-.cancel-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* 建议标签 */
-.suggestions-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.suggestions-title {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.8);
-  font-weight: 500;
-}
-
-.suggestions-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 0.4rem;
-}
-
-.suggestion-button {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 0.4rem 0.6rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.75rem;
-  transition: all 0.2s ease;
-  text-align: center;
-}
-
-.suggestion-button:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.4);
-}
-
-/* 历史记录表格中的水质标签 */
-.water-label-cell {
-  min-width: 150px;
-  max-width: 200px;
-}
-
-.water-label-display {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-.water-label-display .label-icon {
-  font-size: 0.9rem;
-  opacity: 0.7;
-}
-
-.label-text {
-  font-size: 0.85rem;
-  color: #333;
-  font-weight: 500;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .label-display {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.5rem;
-  }
-  
-  .edit-button {
-    text-align: center;
-  }
-  
-  .action-buttons {
-    flex-direction: column;
-  }
-  
-  .suggestions-grid {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  }
-  
-  .suggestion-button {
-    font-size: 0.7rem;
-  }
-  
-  /* 表格中的标签在移动端 */
-  .water-label-cell {
-    min-width: 120px;
-    max-width: 150px;
-  }
-  
-  .label-text {
-    font-size: 0.8rem;
-  }
-}
-/* 新增到 styles/globals.css 的样式 */
-
-/* ==================== 参数容器布局 ==================== */
-.parameters-container {
-  margin-bottom: 3rem;
-}
-
-/* 温度参数单独一行 */
-.temperature-row {
-  margin-bottom: 1.5rem;
-}
-
-.temperature-row .parameter-card {
-  max-width: 500px;
-  margin: 0 auto;
-  background: rgba(255, 255, 255, 0.2);
-}
-
-/* 核心参数一行显示 */
-.core-params-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-}
-
-/* ==================== 参数卡片标题区域 ==================== */
-.card-title-section {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 0.5rem;
-  position: relative;
-}
-
-.card-title-section h3 {
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 0;
-  opacity: 0.9;
-  flex: 1;
-}
-
-/* ==================== 信息图标样式 ==================== */
-.info-icon {
-  position: relative;
-  cursor: help;
-  font-size: 1rem;
-  opacity: 0.7;
-  transition: all 0.2s ease;
-  margin-left: 0.5rem;
-  z-index: 10;
-}
-
-.info-icon:hover {
-  opacity: 1;
-  transform: scale(1.1);
-}
-
-/* ==================== 悬停提示框样式 ==================== */
-.tooltip {
-  position: absolute;
-  bottom: 100%;
-  right: 0;
-  margin-bottom: 0.5rem;
-  z-index: 1000;
-  opacity: 0;
-  animation: tooltipFadeIn 0.2s ease-out forwards;
-}
-
-@keyframes tooltipFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.tooltip-content {
-  background: rgba(0, 0, 0, 0.9);
-  color: white;
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  width: 280px;
-  max-width: 90vw;
-  font-size: 0.85rem;
-  line-height: 1.4;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-}
-
-.tooltip-description {
-  margin: 0 0 0.75rem 0;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.tooltip-reference {
-  margin: 0;
-  padding-top: 0.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  font-size: 0.8rem;
-  font-family: 'Monaco', 'Menlo', monospace;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.tooltip-reference strong {
-  color: white;
-  font-weight: 600;
-}
-
-/* ==================== 响应式设计 ==================== */
-/* ==================== 头部样式更新 ==================== */
-.header-content {
-  display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
-  align-items: center;
-  gap: 1rem;
-}
-
-.logo {
-  justify-self: start;
 }
 
 .header-center {
@@ -1216,7 +67,7 @@ body {
 .header-right {
   display: flex;
   align-items: center;
-  justify-content: end;
+  justify-content: flex-end;
   gap: 1.5rem;
   flex-wrap: wrap;
 }
@@ -1260,172 +111,116 @@ body {
   background: rgba(102, 126, 234, 0.5);
 }
 
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.time-display {
+  text-align: center;
 }
 
-/* ==================== 状态总览温度显示 ==================== */
-.status-main-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.temperature-display {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.15);
-  padding: 0.5rem 1rem;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.temperature-icon {
-  font-size: 1.2rem;
-}
-
-.temperature-value {
+.current-time {
   font-size: 1.1rem;
   font-weight: 600;
   font-family: 'Monaco', 'Menlo', monospace;
 }
 
-/* ==================== 响应式设计 ==================== */
-@media (max-width: 1200px) {
-  .core-params-row {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-  }
-  
-  .header-content {
-    grid-template-columns: 1fr;
-    text-align: center;
-    gap: 1rem;
-  }
-  
-  .logo, .header-center, .header-right {
-    justify-self: center;
-  }
-  
-  .header-center {
-    gap: 0.75rem;
-  }
-  
-  .header-right {
-    flex-direction: column;
-    gap: 1rem;
-  }
+.current-date {
+  font-size: 0.8rem;
+  opacity: 0.8;
 }
 
-@media (max-width: 768px) {
-  .core-params-row {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  
-  .header-right {
-    flex-direction: column;
-    gap: 0.5rem;
-    width: 100%;
-    align-items: center;
-  }
-  
-  .header-center {
-    gap: 0.5rem;
-  }
-  
-  .header-action-btn {
-    width: 100%;
-    justify-content: center;
-  }
-  
-  .status-main-content {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .temperature-display {
-    margin-top: 0.5rem;
-  }
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
 }
 
-@media (max-width: 480px) {
-  .card-title-section {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.25rem;
-  }
-  
-  .info-icon {
-    margin-left: 0;
-    align-self: flex-end;
-  }
-  
-  .tooltip-content {
-    width: 200px;
-    font-size: 0.75rem;
-    padding: 0.7rem;
-  }
-  
-  .tooltip {
-    right: 0;
-    left: auto;
-  }
-  
-  .header-content {
-    padding: 0 10px;
-  }
-  
-  .logo h1 {
-    font-size: 1.5rem;
-  }
-  
-  .subtitle {
-    font-size: 0.8rem;
-  }
-  
-  .header-action-btn {
-    padding: 0.6rem 1rem;
-    font-size: 0.8rem;
-  }
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
 }
 
-/* ==================== 历史记录表格电导率列样式 ==================== */
-.history-table th:nth-child(5),
-.history-table td:nth-child(5) {
-  min-width: 100px;
-  text-align: center;
+.status-dot.online {
+  background: #10B981;
+  box-shadow: 0 0 6px #10B981;
 }
 
-/* 确保表格在小屏幕上也能显示电导率 */
-@media (max-width: 768px) {
-  .history-table {
-    font-size: 0.75rem;
-  }
-  
-  .history-table th,
-  .history-table td {
-    padding: 0.4rem;
-  }
-  
-  .history-table th:nth-child(5),
-  .history-table td:nth-child(5) {
-    min-width: 80px;
-  }
-  
+.status-dot.offline {
+  background: #EF4444;
+  box-shadow: 0 0 6px #EF4444;
 }
 
-@media (max-width: 480px) {
+/* ==================== 主要内容区域 ==================== */
+.main {
+  padding: 2rem 0;
 }
-/* 添加到您的globals.css文件末尾的缺失样式 */
 
-/* ==================== 总览卡片更新 - 左右布局 ==================== */
-/* 主要内容区域 - 调整为更平衡的左右布局 */
+/* ==================== 错误提示横幅 ==================== */
+.error-banner {
+  background: rgba(239, 68, 68, 0.9);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
+}
+
+.error-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.retry-button {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.retry-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+/* ==================== 总览卡片 ==================== */
+.overview-card {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  margin-bottom: 2rem;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.card-header {
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.card-header h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.last-update {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  text-align: right;
+}
+
 .overview-main-content {
   display: grid;
   grid-template-columns: 1.2fr 1fr;
@@ -1433,7 +228,6 @@ body {
   min-height: 150px;
 }
 
-/* 左侧水质标签区域样式调整 */
 .water-label-section {
   padding: 1.5rem;
   background: rgba(255, 255, 255, 0.1);
@@ -1443,7 +237,6 @@ body {
   justify-content: center;
 }
 
-/* 右侧状态评估区域 */
 .status-banner {
   padding: 1.5rem;
   display: flex;
@@ -1452,157 +245,6 @@ body {
   border-radius: 0;
 }
 
-.status-description {
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
-  opacity: 0.9;
-  text-align: center;
-}
-
-/* ==================== 紧凑水质标签组件 ==================== */
-.compact-water-label {
-  width: 100%;
-}
-
-.label-header-compact {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
-}
-
-.label-header-compact .label-icon {
-  font-size: 1rem;
-}
-
-.label-header-compact .label-title {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-/* 显示状态 - 紧凑布局 */
-.label-display-compact {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.current-label-compact {
-  flex: 1;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.15);
-  padding: 0.6rem 0.8rem;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  min-height: 36px;
-  display: flex;
-  align-items: center;
-}
-
-.edit-button-compact {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 0.6rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: all 0.2s ease;
-  min-width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.edit-button-compact:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-1px);
-}
-
-/* 编辑状态 - 紧凑布局 */
-.label-edit-compact {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.label-select,
-.label-input-compact {
-  flex: 1;
-  padding: 0.6rem 0.8rem;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.9);
-  color: #333;
-  font-size: 0.85rem;
-  outline: none;
-  transition: all 0.2s ease;
-  height: 36px;
-}
-
-.label-select:focus,
-.label-input-compact:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
-}
-
-.label-select option {
-  color: #333;
-  background: white;
-}
-
-.action-buttons-compact {
-  display: flex;
-  gap: 0.25rem;
-}
-
-.save-button-compact,
-.cancel-button-compact {
-  width: 36px;
-  height: 36px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid;
-}
-
-.save-button-compact {
-  background: rgba(16, 185, 129, 0.8);
-  color: white;
-  border-color: #10B981;
-}
-
-.save-button-compact:hover:not(:disabled) {
-  background: rgba(16, 185, 129, 1);
-  transform: translateY(-1px);
-}
-
-.save-button-compact:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.cancel-button-compact {
-  background: rgba(239, 68, 68, 0.8);
-  color: white;
-  border-color: #EF4444;
-}
-
-.cancel-button-compact:hover:not(:disabled) {
-  background: rgba(239, 68, 68, 1);
-  transform: translateY(-1px);
-}
-
-/* 更新状态总览温度显示 - 优化间距 */
 .status-main-content {
   display: flex;
   justify-content: space-between;
@@ -1663,54 +305,585 @@ body {
   line-height: 1.4;
 }
 
-/* ==================== 修复兼容性问题 ==================== */
-/* 修复 backdrop-filter 兼容性 */
-.overview-card,
-.parameter-card,
-.action-panel,
-.history-modal,
-.modal-overlay {
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+/* ==================== 参数卡片 ==================== */
+.parameters-container {
+  margin-bottom: 3rem;
 }
 
-.header {
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-}
-
-/* 修复 justify-self: end 兼容性警告 */
-.header-content {
+.core-params-row {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
-  align-items: center;
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
 }
 
-.logo {
-  justify-self: flex-start;
+.parameter-card {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: visible; /* 关键：允许悬浮框显示 */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
 }
 
-.header-center {
-  justify-self: center;
+.parameter-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.25);
 }
 
-.header-right {
-  justify-self: flex-end;
+/* 参数卡片状态样式 */
+.parameter-card.excellent {
+  border-color: #10B981;
+  background: rgba(16, 185, 129, 0.15);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+}
+
+.parameter-card.excellent::before {
+  content: '🟢';
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.2rem;
+}
+
+.parameter-card.excellent .description {
+  color: #10B981;
+  font-weight: 500;
+}
+
+.parameter-card.marginal {
+  border-color: #F59E0B;
+  background: rgba(245, 158, 11, 0.15);
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+}
+
+.parameter-card.marginal::before {
+  content: '🟡';
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.2rem;
+}
+
+.parameter-card.marginal .description {
+  color: #F59E0B;
+  font-weight: 500;
+}
+
+.parameter-card.unsafe {
+  border-color: #EF4444;
+  background: rgba(239, 68, 68, 0.15);
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
+  animation: statusPulse 2s infinite;
+}
+
+.parameter-card.unsafe::before {
+  content: '🔴';
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.2rem;
+}
+
+.parameter-card.unsafe .description {
+  color: #EF4444;
+  font-weight: 500;
+}
+
+.card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.card-content {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-title-section {
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+
+.card-title-section h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  opacity: 0.9;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 1.5rem;
-  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
-/* ==================== 响应式设计更新 ==================== */
+.value {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  margin: 0.8rem 0;
+}
+
+.number {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.unit {
+  font-size: 1rem;
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+.description {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-bottom: auto; /* 推reference到底部 */
+}
+
+.reference {
+  font-size: 0.75rem;
+  margin-top: auto; /* 确保始终在底部 */
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  border-left: 3px solid rgba(255, 255, 255, 0.3);
+  opacity: 0.8;
+  font-family: 'Monaco', 'Menlo', monospace;
+  line-height: 1.6;
+  white-space: pre-line; /* 允许换行显示 */
+}
+
+/* ==================== 悬浮框样式 ==================== */
+.info-icon {
+  position: relative;
+  cursor: help;
+  font-size: 0.9rem;
+  opacity: 0.6;
+  transition: all 0.2s ease;
+  z-index: 20;
+}
+
+.info-icon:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.tooltip {
+  position: absolute;
+  bottom: calc(100% + 15px);
+  right: -10px; /* 向右偏移避免截断 */
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  animation: tooltipFadeIn 0.3s ease-out forwards;
+}
+
+.tooltip-content {
+  background: rgba(0, 0, 0, 0.95);
+  color: white;
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  font-size: 0.75rem; /* 缩小字体 */
+  line-height: 1.4;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  position: relative;
+  width: 200px; /* 固定宽度确保完整显示 */
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+/* 指针指向图标 */
+.tooltip-content::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  right: 15px; /* 对准图标位置 */
+  border: 5px solid transparent;
+  border-top-color: rgba(0, 0, 0, 0.95);
+}
+
+.tooltip-description {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 400;
+  text-align: left;
+}
+
+/* ==================== 水质标签组件 ==================== */
+.water-label-container {
+  width: 100%;
+}
+
+.label-header, .label-header-compact {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.label-icon {
+  font-size: 1rem;
+}
+
+.label-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.label-display-compact {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.current-label-compact {
+  flex: 1;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+}
+
+.edit-button-compact {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  min-width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-button-compact:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.label-edit-compact {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.label-select, .label-input-compact {
+  flex: 1;
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  font-size: 0.85rem;
+  outline: none;
+  transition: all 0.2s ease;
+  height: 36px;
+}
+
+.label-select:focus, .label-input-compact:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+}
+
+.action-buttons-compact {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.save-button-compact, .cancel-button-compact {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid;
+}
+
+.save-button-compact {
+  background: rgba(16, 185, 129, 0.8);
+  color: white;
+  border-color: #10B981;
+}
+
+.save-button-compact:hover:not(:disabled) {
+  background: rgba(16, 185, 129, 1);
+  transform: translateY(-1px);
+}
+
+.cancel-button-compact {
+  background: rgba(239, 68, 68, 0.8);
+  color: white;
+  border-color: #EF4444;
+}
+
+.cancel-button-compact:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 1);
+  transform: translateY(-1px);
+}
+
+/* ==================== 历史记录弹窗 ==================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.history-modal {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 800px;
+  max-height: 80vh;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.modal-header {
+  padding: 1.5rem;
+  background: rgba(102, 126, 234, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.close-button:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #EF4444;
+}
+
+.modal-content {
+  padding: 0;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.history-table th {
+  background: rgba(102, 126, 234, 0.1);
+  color: #333;
+  font-weight: 600;
+  padding: 1rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.history-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  color: #333;
+}
+
+.history-table tr:hover {
+  background: rgba(102, 126, 234, 0.05);
+}
+
+.time-cell {
+  min-width: 120px;
+}
+
+.time-main {
+  font-weight: 500;
+  color: #333;
+}
+
+.time-ago {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 0.2rem;
+}
+
+.status-badge {
+  padding: 0.3rem 0.8rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: center;
+  min-width: 70px;
+  display: inline-block;
+}
+
+.water-label-cell {
+  min-width: 150px;
+  max-width: 200px;
+}
+
+.water-label-display {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.water-label-display .label-icon {
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.label-text {
+  font-size: 0.85rem;
+  color: #333;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.modal-footer {
+  padding: 1rem 1.5rem;
+  background: rgba(102, 126, 234, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.record-count {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.close-btn {
+  background: rgba(102, 126, 234, 0.2);
+  color: #667eea;
+  border: 1px solid rgba(102, 126, 234, 0.3);
+  padding: 0.5rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  background: rgba(102, 126, 234, 0.3);
+  transform: translateY(-1px);
+}
+
+/* ==================== 动画效果 ==================== */
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+@keyframes statusPulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.8; }
+  100% { opacity: 1; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==================== 响应式设计 ==================== */
+@media (max-width: 1200px) {
+  .core-params-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .header-content {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  
+  .logo, .header-center, .header-right {
+    justify-self: center;
+  }
+}
+
 @media (max-width: 768px) {
-  /* 总览区域在移动端改为上下布局 */
+  .core-params-row {
+    grid-template-columns: 1fr;
+  }
+  
   .overview-main-content {
     grid-template-columns: 1fr;
-    gap: 0;
-    min-height: 250px; /* 修复 min-height: auto 兼容性问题 */
+    min-height: 250px;
   }
   
   .water-label-section {
@@ -1727,12 +900,10 @@ body {
     flex-direction: column;
     align-items: flex-start;
     text-align: left;
-    gap: 1rem;
   }
   
   .temperature-display {
     align-self: flex-end;
-    margin-top: 0;
   }
   
   .status-description {
@@ -1740,7 +911,6 @@ body {
     margin-top: 1rem;
   }
   
-  /* 紧凑标签在移动端 */
   .label-edit-compact {
     flex-direction: column;
     gap: 0.75rem;
@@ -1750,18 +920,229 @@ body {
     justify-content: center;
   }
   
-  /* 修复移动端header布局 */
-  .header-content {
-    grid-template-columns: 1fr;
-    text-align: center;
-    gap: 1rem;
-  }
-  
-  .logo, .header-center, .header-right {
-    justify-self: center;
-  }
-  
   .header-right {
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    align-items: center;
+  }
+  
+  .header-action-btn {
+    width: 100%;
     justify-content: center;
   }
+  
+  .tooltip {
+    right: -5px;
+    bottom: calc(100% + 10px);
+  }
+  
+  .tooltip-content {
+    width: 180px;
+    font-size: 0.7rem;
+    padding: 0.5rem 0.7rem;
+  }
+  
+  .tooltip-content::after {
+    right: 12px;
+  }
+  
+  .parameter-card {
+    min-height: 250px;
+  }
+  
+  .history-modal {
+    width: 95%;
+    max-height: 85vh;
+  }
+  
+  .modal-header {
+    padding: 1rem;
+  }
+  
+  .history-table {
+    font-size: 0.8rem;
+  }
+  
+  .history-table th, .history-table td {
+    padding: 0.5rem;
+  }
+  
+  .modal-footer {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 15px;
+  }
+  
+  .main {
+    padding: 1rem 0;
+  }
+  
+  .tooltip-content {
+    width: 160px;
+    font-size: 0.65rem;
+    padding: 0.4rem 0.6rem;
+  }
+  
+  .tooltip-content::after {
+    right: 10px;
+  }
+  
+  .parameter-card {
+    min-height: 220px;
+    padding: 1rem;
+  }
+  
+  .card-icon {
+    font-size: 2rem;
+  }
+  
+  .logo h1 {
+    font-size: 1.5rem;
+  }
+  
+  .subtitle {
+    font-size: 0.8rem;
+  }
+  
+  .header-action-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+  }
+  
+  .card-title-section h3 {
+    font-size: 0.9rem;
+    gap: 0.3rem;
+  }
+  
+  .status-value {
+    font-size: 1.3rem;
+  }
+  
+  .reference {
+    font-size: 0.7rem;
+  }
+  
+  .water-label-cell {
+    min-width: 120px;
+    max-width: 150px;
+  }
+  
+  .label-text {
+    font-size: 0.8rem;
+  }
+  
+  .modal-header h3 {
+    font-size: 1.1rem;
+  }
+  
+  .time-cell {
+    min-width: 100px;
+  }
+}
+
+/* ==================== 页脚样式 ==================== */
+.footer {
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2rem 0;
+  margin-top: 2rem;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.footer-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footer-info p {
+  margin: 0;
+  opacity: 0.8;
+  font-size: 0.9rem;
+}
+
+.footer-links {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.footer-link {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.footer-link:hover {
+  color: #10B981;
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+  text-decoration: none;
+}
+
+.tech-stack {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.tech-item {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.3rem 0.8rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.parameter-card {
+  overflow: visible !important;
+}
+
+.tooltip {
+  position: absolute !important;
+  bottom: calc(100% + 15px) !important;
+  right: -10px !important;
+  left: auto !important;
+  transform: none !important;
+}
+
+.tooltip-content {
+  width: 200px !important;
+  font-size: 0.75rem !important;
+  background: rgba(0, 0, 0, 0.95) !important;
+}
+
+.tooltip-content::after {
+  right: 15px !important;
+  left: auto !important;
+}
+
+.info-icon {
+  background: none !important;
+  border: none !important;
+  width: auto !important;
+  height: auto !important;
+  border-radius: 0 !important;
+  margin-left: 0 !important;
 }

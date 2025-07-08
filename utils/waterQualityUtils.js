@@ -1,30 +1,10 @@
-// utils/waterQualityUtils.js - 更新的水质评价工具函数
+// utils/waterQualityUtils.js - 改进的水质评估工具函数
 
-// 水质状态颜色函数 - 支持三级评价
-export const getStatusColor = (status) => {
-  switch(status) {
-    case 'EXCELLENT': return '#10B981' // 🟢 绿色 - 优秀
-    case 'MARGINAL': return '#F59E0B'  // 🟡 黄色 - 一般
-    case 'UNSAFE': return '#EF4444'    // 🔴 红色 - 不安全
-    default: return '#6B7280'          // 灰色 - 未知
-  }
-}
-
-// 水质状态文本函数 - 支持三级评价
-export const getStatusText = (status) => {
-  switch(status) {
-    case 'EXCELLENT': return '🟢 Excellent' // 优秀，适合饮用
-    case 'MARGINAL': return '🟡 Marginal'   // 一般，勉强可接受
-    case 'UNSAFE': return '🔴 Unsafe'       // 不安全，不适合饮用
-    default: return '⚪ Unknown'            // 未知状态
-  }
-}
-
-// 状态描述函数
-export const getStatusDescription = (status) => {
+// 获取水质状态总体描述
+export const getWaterQualityDescription = (status) => {
   switch(status) {
     case 'EXCELLENT': 
-      return 'Water quality is excellent and safe for drinking. All parameters are within ideal ranges.'
+      return 'All parameters are within ideal ranges.'
     case 'MARGINAL': 
       return 'Water quality is acceptable but not ideal. Some parameters need attention.'
     case 'UNSAFE': 
@@ -72,26 +52,26 @@ export const getParameterStatus = (param, value) => {
   }
 }
 
-// 获取参数状态描述
+// 获取参数状态描述（显示在卡片中）
 export const getParameterDescription = (param, value, status) => {
   const descriptions = {
     excellent: {
       ph: 'Ideal drinking water pH range',
-      turbidity: 'Crystal clear water - Excellent quality',
+      turbidity: 'Crystal clear water',
       tds: 'Ideal mineral content for health',
       conductivity: 'Good drinking water quality',
       temperature: 'Optimal temperature'
     },
     marginal: {
       ph: 'Acceptable but not ideal pH level',
-      turbidity: 'Good clarity - Needs attention',
+      turbidity: 'Good clarity',
       tds: 'Acceptable mineral content',
       conductivity: 'Acceptable conductivity level',
       temperature: 'Acceptable temperature range'
     },
     unsafe: {
       ph: 'pH level unsafe for drinking',
-      turbidity: 'High turbidity - Not suitable',
+      turbidity: 'High turbidity',
       tds: value < 50 ? 'Too low - Lacks minerals' : 'Too high - Excessive dissolved solids',
       conductivity: value < 50 ? 'Too pure - Lacks minerals' : 'Too high - Excessive salts',
       temperature: 'Temperature outside safe range'
@@ -101,20 +81,71 @@ export const getParameterDescription = (param, value, status) => {
   return descriptions[status]?.[param] || 'Status unknown'
 }
 
-// 获取参数参考范围文本
+// 获取参考范围（显示在卡片中，保留科普价值，分三行显示）
 export const getParameterReference = (param) => {
   const references = {
-    ph: '🟢 6.5-8.0 | 🟡 6.0-6.4, 8.1-9.0 | 🔴 <6.0, >9.0',
-    turbidity: '🟢 0-1.0 | 🟡 1.1-4.0 | 🔴 >4.0 NTU',
-    tds: '🟢 80-300 | 🟡 50-79, 300-500 | 🔴 <50, >500 ppm',
-    conductivity: '🟢 100-400 | 🟡 400-800 | 🔴 <50, >800 μS/cm',
-    temperature: '🟢 5-25 | 🟡 0-35 | 🔴 <0, >35 °C'
+    ph: '🟢 6.5-8.0\n🟡 6.0-6.4, 8.1-9.0\n🔴 <6.0, >9.0',
+    turbidity: '🟢 0-1.0 NTU\n🟡 1.1-4.0 NTU\n🔴 >4.0 NTU',
+    tds: '🟢 80-300 ppm\n🟡 50-79, 300-500 ppm\n🔴 <50, >500 ppm',
+    conductivity: '🟢 100-400 μS/cm\n🟡 50-99, 400-800 μS/cm\n🔴 <50, >800 μS/cm',
+    temperature: '🟢 5-25°C\n🟡 0-35°C\n🔴 <0, >35°C'
   }
   
-  return references[param] || ''
+  return references[param]
 }
 
-// 数据源显示文本 - 更新为支持Neon数据库
+// 简化的英文悬浮提示内容（仅解释参数含义）
+export const getParameterTooltip = (param) => {
+  const tooltips = {
+    ph: "pH measures the acidity or alkalinity of water, affecting taste and safety.",
+    turbidity: "Turbidity indicates the cloudiness of water caused by suspended particles.",
+    conductivity: "Conductivity reflects the total amount of ions in water, related to mineral content.",
+    tds: "Total Dissolved Solids (TDS) represents the concentration of dissolved minerals in water.",
+    temperature: "Temperature affects the taste and biological activity in water."
+  }
+  return tooltips[param] || "This parameter indicates water quality."
+}
+
+// 综合水质状态评估
+export const evaluateOverallWaterQuality = (ph, turbidity, tds, conductivity) => {
+  let issues = 0
+
+  // pH检查
+  if (ph < 6.0 || ph > 9.0) issues += 2
+  else if (ph < 6.5 || ph > 8.0) issues += 1
+
+  // 浊度检查
+  if (turbidity > 4.0) issues += 2
+  else if (turbidity > 1.0) issues += 1
+
+  // TDS检查
+  if (tds < 50 || tds > 500) issues += 2
+  else if (tds < 80 || tds > 300) issues += 1
+
+  // 电导率检查
+  if (conductivity < 50 || conductivity > 800) issues += 2
+  else if (conductivity < 100 || conductivity > 400) issues += 1
+
+  if (issues >= 3) return 'UNSAFE'
+  else if (issues >= 1) return 'MARGINAL'
+  else return 'EXCELLENT'
+}
+
+// ==================== 时间和日期格式化函数 ==================== 
+// 格式化时间显示
+export const formatTime = (currentTime, mounted) => {
+  if (!mounted || !currentTime) return '--:--:--'
+  return currentTime.toLocaleTimeString()
+}
+
+// 格式化日期显示
+export const formatDate = (currentTime, mounted) => {
+  if (!mounted || !currentTime) return 'Loading...'
+  return currentTime.toLocaleDateString()
+}
+
+// ==================== 数据源和状态相关函数 ==================== 
+// 数据源显示文本
 export const getDataSourceText = (source) => {
   const sourceConfig = {
     // 主要数据源 - Neon数据库
@@ -138,16 +169,29 @@ export const getDataSourceText = (source) => {
   return sourceConfig[source] || source
 }
 
-// 格式化时间显示
-export const formatTime = (currentTime, mounted) => {
-  if (!mounted || !currentTime) return '--:--:--'
-  return currentTime.toLocaleTimeString()
+// 获取状态颜色
+export const getStatusColor = (status) => {
+  switch(status) {
+    case 'EXCELLENT': return 'rgba(16, 185, 129, 0.8)'
+    case 'MARGINAL': return 'rgba(245, 158, 11, 0.8)'  
+    case 'UNSAFE': return 'rgba(239, 68, 68, 0.8)'
+    default: return 'rgba(107, 114, 128, 0.8)'
+  }
 }
 
-// 格式化日期显示
-export const formatDate = (currentTime, mounted) => {
-  if (!mounted || !currentTime) return 'Loading...'
-  return currentTime.toLocaleDateString()
+// 获取状态文本
+export const getStatusText = (status) => {
+  switch(status) {
+    case 'EXCELLENT': return 'Excellent'
+    case 'MARGINAL': return 'Marginal'
+    case 'UNSAFE': return 'Unsafe'
+    default: return 'Unknown'
+  }
+}
+
+// 获取状态描述
+export const getStatusDescription = (status) => {
+  return getWaterQualityDescription(status)
 }
 
 // 获取数据新鲜度状态
