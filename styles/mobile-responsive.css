@@ -457,3 +457,421 @@
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   }
 }
+/* 修复工具提示和优化头部 - 添加到您的CSS文件中 */
+
+/* ==================== 修复工具提示样式 ==================== */
+.info-container {
+  display: inline-block;
+  position: relative;
+  margin-left: 0.5rem;
+}
+
+.info-icon {
+  cursor: pointer;
+  font-size: 0.85rem;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+  /* 移除圆圈背景和边框 */
+  background: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  /* 确保显示为普通文本 */
+  display: inline;
+  width: auto;
+  height: auto;
+}
+
+.info-icon:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* 修复工具提示位置和显示 */
+.tooltip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  width: 280px;
+  line-height: 1.5;
+  text-align: left;
+  pointer-events: none;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: rgba(0, 0, 0, 0.9);
+}
+
+/* 确保悬浮时显示 */
+.info-container:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(-5px);
+}
+
+/* 移动端工具提示优化 */
+@media (max-width: 768px) {
+  .info-container {
+    margin-left: 0.3rem;
+  }
+  
+  .info-icon {
+    font-size: 0.8rem;
+    /* 移动端增大点击区域但不显示背景 */
+    padding: 0.2rem !important;
+    margin: -0.2rem;
+    background: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+  }
+  
+  /* 移动端工具提示位置调整 */
+  .tooltip {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100vw - 40px);
+    max-width: 320px;
+    z-index: 1001;
+    /* 移动端默认隐藏，通过JavaScript控制显示 */
+    display: none;
+  }
+  
+  .tooltip.mobile-visible {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    animation: slideUpTooltip 0.3s ease forwards;
+  }
+  
+  .tooltip::after {
+    display: none; /* 移动端不显示箭头 */
+  }
+}
+
+@keyframes slideUpTooltip {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* ==================== 优化头部结构 ==================== */
+
+/* 压缩头部高度 */
+.header {
+  background: rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.75rem 0; /* 从1rem减少到0.75rem */
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.header-content {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  align-items: center;
+  gap: 0.75rem; /* 减少间距 */
+  min-height: 60px; /* 限制最小高度 */
+}
+
+/* 优化Logo区域 */
+.logo h1 {
+  font-size: 1.5rem; /* 从1.8rem减少 */
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 0.8rem; /* 从0.9rem减少 */
+  opacity: 0.8;
+  margin-left: 0.5rem;
+  line-height: 1.2;
+}
+
+/* 优化中间区域（时间显示） */
+.header-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem; /* 减少间距 */
+}
+
+.current-time {
+  font-size: 1rem; /* 从1.1rem减少 */
+  font-weight: 600;
+  font-family: 'Monaco', monospace;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.current-date {
+  font-size: 0.75rem; /* 从0.8rem减少 */
+  opacity: 0.8;
+  line-height: 1.2;
+  margin: 0;
+}
+
+/* 优化状态指示器 */
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem; /* 减少间距 */
+  font-size: 0.85rem; /* 从0.9rem减少 */
+}
+
+.status-dot {
+  width: 10px; /* 从12px减少 */
+  height: 10px;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+/* 优化右侧按钮区域 */
+.header-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem; /* 减少间距 */
+  flex-wrap: wrap;
+}
+
+.header-action-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.4rem 0.8rem; /* 从0.5rem 1rem减少 */
+  border-radius: 6px; /* 从8px减少 */
+  cursor: pointer;
+  font-size: 0.8rem; /* 从0.85rem减少 */
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem; /* 减少间距 */
+  line-height: 1.2;
+  min-height: 36px; /* 设置最小高度 */
+}
+
+.header-action-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+/* 移动端头部优化 */
+@media (max-width: 768px) {
+  .header {
+    padding: 0.5rem 0; /* 移动端进一步压缩 */
+  }
+  
+  .header-content {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 0.5rem;
+    min-height: auto;
+  }
+  
+  .logo h1 {
+    font-size: 1.3rem;
+  }
+  
+  .subtitle {
+    font-size: 0.75rem;
+    margin-left: 0;
+    margin-top: 0.1rem;
+  }
+  
+  .header-center {
+    flex-direction: row;
+    gap: 1rem;
+    justify-content: center;
+  }
+  
+  .current-time {
+    font-size: 0.9rem;
+  }
+  
+  .current-date {
+    font-size: 0.7rem;
+  }
+  
+  .header-right {
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  .header-action-btn {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.75rem;
+    min-width: 70px;
+    min-height: 32px;
+  }
+  
+  .status-indicator {
+    font-size: 0.8rem;
+    gap: 0.3rem;
+  }
+  
+  .status-dot {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 0.4rem 0;
+  }
+  
+  .logo h1 {
+    font-size: 1.2rem;
+  }
+  
+  .subtitle {
+    font-size: 0.7rem;
+  }
+  
+  .header-center {
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  
+  .current-time {
+    font-size: 0.85rem;
+  }
+  
+  .current-date {
+    font-size: 0.65rem;
+  }
+  
+  .header-action-btn {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.7rem;
+    min-width: 60px;
+    min-height: 30px;
+  }
+}
+
+/* ==================== 紧凑模式 ==================== */
+.header.compact {
+  padding: 0.5rem 0;
+}
+
+.header.compact .header-content {
+  min-height: 50px;
+}
+
+.header.compact .logo h1 {
+  font-size: 1.3rem;
+}
+
+.header.compact .subtitle {
+  font-size: 0.75rem;
+}
+
+.header.compact .current-time {
+  font-size: 0.9rem;
+}
+
+.header.compact .current-date {
+  font-size: 0.7rem;
+}
+
+.header.compact .header-action-btn {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.75rem;
+}
+
+/* ==================== 修复参数卡片中的工具提示 ==================== */
+.parameter-card .info-container {
+  margin-left: 0.3rem;
+}
+
+.parameter-card .info-icon {
+  font-size: 0.8rem;
+  opacity: 0.6;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.parameter-card .info-icon:hover {
+  opacity: 1;
+  color: rgba(255, 255, 255, 1);
+}
+
+.parameter-card .tooltip {
+  width: 260px;
+  font-size: 0.75rem;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* 确保工具提示在卡片边界内正确显示 */
+.parameter-card {
+  overflow: visible;
+}
+
+.parameter-card .card-title-section {
+  overflow: visible;
+  position: relative;
+  z-index: 1;
+}
+
+/* 修复工具提示在右侧卡片中的位置 */
+.core-params-row .parameter-card:nth-child(3) .tooltip,
+.core-params-row .parameter-card:nth-child(4) .tooltip {
+  left: auto;
+  right: 0;
+  transform: translateX(0);
+}
+
+.core-params-row .parameter-card:nth-child(3) .tooltip::after,
+.core-params-row .parameter-card:nth-child(4) .tooltip::after {
+  left: auto;
+  right: 20px;
+  transform: none;
+}
+
+@media (max-width: 768px) {
+  .core-params-row .parameter-card .tooltip {
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+  }
+  
+  .core-params-row .parameter-card .tooltip::after {
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+  }
+}
