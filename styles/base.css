@@ -17,7 +17,7 @@ html, body {
 
 /* ==================== 优化的布局容器 ==================== */
 .container {
-  max-width: 1100px;  /* 从1200px缩小到900px，更紧凑 */
+  max-width: 1500px;  /* 从1200px缩小到900px，更紧凑 */
   margin: 0 auto;
   padding: 0 16px;   /* 减少左右padding */
 }
@@ -524,48 +524,22 @@ html, body {
   }
 }
 
-/* 关键：手机竖屏 (最大480px) - 强制单列 */
+/* 手机竖屏 (最大480px) - 保持水平布局但增加高度 */
 @media (max-width: 480px) {
-  .container {
-    padding: 0 8px !important;
-    max-width: 100vw !important;
-    overflow-x: hidden !important;
-  }
-  
-  .main {
-    padding: 0.75rem 0 !important;
-    overflow-x: hidden !important;
-  }
-  
-  /* 强制单列布局 */
-  .core-params-row {
-    grid-template-columns: 1fr !important;
-    gap: 0.5rem !important;
-    margin-bottom: 1.5rem !important;
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-  
-  /* 参数卡片优化 */
   .parameter-card {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-height: 120px !important;
-    padding: 0.75rem !important;
-    margin: 0 !important;
-    box-sizing: border-box !important;
-    /* 改为水平布局 */
+    min-height: 160px !important; /* 从120px增加到160px */
+    padding: 1rem !important; /* 增加内边距 */
+    gap: 1rem !important; /* 增加图标和内容的间距 */
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
-    gap: 0.75rem !important;
   }
   
   .card-icon {
-    font-size: 2rem !important;
+    font-size: 2.5rem !important; /* 增大图标 */
     margin-bottom: 0 !important;
     flex-shrink: 0 !important;
-    width: 3rem !important;
+    width: 4rem !important; /* 增加图标区域宽度 */
     text-align: center !important;
   }
   
@@ -573,59 +547,64 @@ html, body {
     flex: 1 !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 0.25rem !important;
-    min-width: 0 !important; /* 防止内容溢出 */
-  }
-  
-  .card-title-section {
-    margin-bottom: 0 !important;
+    gap: 0.5rem !important; /* 增加内容间距 */
+    min-width: 0 !important;
+    justify-content: center !important;
   }
   
   .card-title-section h3 {
-    font-size: 0.9rem !important;
+    font-size: 1rem !important; /* 增大标题字体 */
     margin: 0 !important;
-    white-space: nowrap !important; /* 防止标题换行 */
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
+    line-height: 1.3 !important;
   }
   
   .value {
-    margin: 0 !important;
+    margin: 0.5rem 0 !important; /* 增加边距 */
     display: flex !important;
     align-items: baseline !important;
-    gap: 0.25rem !important;
+    gap: 0.4rem !important;
   }
   
   .value .number {
-    font-size: 1.3rem !important;
+    font-size: 1.6rem !important; /* 增大数值字体 */
     font-weight: 700 !important;
     line-height: 1 !important;
   }
   
   .value .unit {
-    font-size: 0.8rem !important;
+    font-size: 0.9rem !important; /* 增大单位字体 */
     opacity: 0.8 !important;
   }
   
   .description {
-    font-size: 0.75rem !important;
-    line-height: 1.2 !important;
+    font-size: 0.8rem !important; /* 增大描述字体 */
+    line-height: 1.4 !important;
     margin: 0 !important;
   }
   
   .reference {
-    font-size: 0.7rem !important;
+    font-size: 0.75rem !important;
     opacity: 0.8 !important;
-    margin: 0 !important;
+    margin: 0.25rem 0 0 0 !important;
   }
   
-  /* 状态指示器调整 */
-  .parameter-card::before {
-    top: 0.5rem !important;
-    right: 0.5rem !important;
-    font-size: 0.8rem !important;
+  /* 悬浮框移动端优化 */
+  .tooltip {
+    position: fixed !important; /* 改为固定定位 */
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    max-width: 90vw !important;
+    width: auto !important;
+    z-index: 9999 !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+    border-radius: 8px !important;
+    padding: 1rem !important;
+    font-size: 0.85rem !important;
+    line-height: 1.4 !important;
   }
 }
+
 
 /* 超小屏幕 (360px以下) */
 @media (max-width: 360px) {
