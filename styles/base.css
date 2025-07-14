@@ -17,7 +17,7 @@ html, body {
 
 /* ==================== 优化的布局容器 ==================== */
 .container {
-  max-width: 1000px;  /* 从1200px缩小到900px，更紧凑 */
+  max-width: 1100px;  /* 从1200px缩小到900px，更紧凑 */
   margin: 0 auto;
   padding: 0 16px;   /* 减少左右padding */
 }
@@ -115,5 +115,344 @@ html, body {
   
   .parameter-card {
     min-height: 200px;
+  }
+}
+/* 移动端竖屏布局优化 - 添加到 styles/base.css */
+
+/* ==================== 响应式布局优化 ==================== */
+
+/* 平板端（768px - 1000px） */
+@media (max-width: 1000px) and (min-width: 769px) {
+  .core-params-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  .header-content {
+    grid-template-columns: auto 1fr auto;
+    gap: 0.75rem;
+  }
+}
+
+/* 平板竖屏/小平板（651px - 768px） */
+@media (max-width: 768px) and (min-width: 651px) {
+  .container {
+    padding: 0 16px;
+  }
+  
+  .core-params-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+  
+  .parameter-card {
+    min-height: 220px;
+    padding: 1rem;
+  }
+  
+  /* 头部布局调整 */
+  .header-content {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    text-align: center;
+  }
+  
+  .header-center {
+    order: 2;
+    justify-content: center;
+  }
+  
+  .header-right {
+    order: 3;
+    justify-content: center;
+  }
+  
+  /* 总览卡片调整 */
+  .overview-main-content {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+  
+  .water-label-section {
+    margin: 0;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px 12px 0 0;
+  }
+  
+  .status-banner {
+    margin: 0;
+    border-radius: 0 0 12px 12px;
+  }
+}
+
+/* 大型手机横屏（481px - 650px） */
+@media (max-width: 650px) and (min-width: 481px) {
+  .container {
+    padding: 0 12px;
+  }
+  
+  .main {
+    padding: 1rem 0;
+  }
+  
+  /* 参数卡片：手机横屏保持2列 */
+  .core-params-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+  
+  .parameter-card {
+    min-height: 200px;
+    padding: 0.875rem;
+  }
+  
+  .card-icon {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .value .number {
+    font-size: 1.3rem;
+  }
+  
+  /* 头部完全堆叠 */
+  .header-content {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 0.5rem;
+  }
+  
+  .logo h1 {
+    font-size: 1.4rem;
+  }
+  
+  .subtitle {
+    font-size: 0.75rem;
+  }
+  
+  .header-center {
+    order: 2;
+  }
+  
+  .header-right {
+    order: 3;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  /* 总览卡片调整 */
+  .overview-main-content {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    gap: 0.5rem;
+    padding: 0.75rem;
+  }
+}
+
+/* 手机竖屏（320px - 480px） - 关键优化区域 */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 8px;
+  }
+  
+  .main {
+    padding: 0.75rem 0;
+  }
+  
+  /* 关键：参数卡片改为单列布局 */
+  .core-params-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .parameter-card {
+    min-height: 140px; /* 减少高度，因为是单列 */
+    padding: 0.75rem;
+    border-radius: 12px;
+  }
+  
+  .card-icon {
+    font-size: 1.6rem;
+    margin-bottom: 0.4rem;
+  }
+  
+  .card-title-section h3 {
+    font-size: 0.9rem;
+  }
+  
+  .value {
+    margin: 0.4rem 0;
+  }
+  
+  .value .number {
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+  
+  .value .unit {
+    font-size: 0.8rem;
+  }
+  
+  .description {
+    font-size: 0.75rem;
+    line-height: 1.3;
+  }
+  
+  .reference {
+    font-size: 0.7rem;
+  }
+  
+  /* 头部紧凑布局 */
+  .header {
+    padding: 0.5rem 0;
+  }
+  
+  .header-content {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 0.5rem;
+  }
+  
+  .logo h1 {
+    font-size: 1.2rem;
+  }
+  
+  .subtitle {
+    display: none; /* 隐藏副标题节省空间 */
+  }
+  
+  .header-center {
+    order: 2;
+  }
+  
+  .header-right {
+    order: 3;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  
+  .time-display {
+    text-align: center;
+  }
+  
+  .current-time {
+    font-size: 0.9rem;
+  }
+  
+  .current-date {
+    font-size: 0.7rem;
+  }
+  
+  .status-indicator {
+    justify-content: center;
+    font-size: 0.75rem;
+  }
+  
+  /* 头部按钮调整 */
+  .header-action-btn {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.75rem;
+    min-height: 32px;
+  }
+  
+  .header-center {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  /* 总览卡片优化 */
+  .overview-card {
+    margin-bottom: 1rem;
+    border-radius: 12px;
+  }
+  
+  .card-header {
+    padding: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .card-header h2 {
+    font-size: 1.1rem;
+  }
+  
+  .last-update {
+    font-size: 0.7rem;
+  }
+  
+  .overview-main-content {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    min-height: auto;
+  }
+  
+  .water-label-section {
+    margin: 0.5rem;
+    padding: 1rem;
+    border-right: none;
+    border-radius: 8px;
+  }
+  
+  .status-banner {
+    margin: 0.5rem;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  
+  .status-main-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .status-value {
+    font-size: 1.2rem;
+  }
+  
+  .temperature-display {
+    align-self: flex-end;
+  }
+  
+  .status-description {
+    font-size: 0.8rem;
+  }
+}
+
+/* 小屏手机（小于320px） */
+@media (max-width: 320px) {
+  .container {
+    padding: 0 6px;
+  }
+  
+  .parameter-card {
+    min-height: 120px;
+    padding: 0.6rem;
+  }
+  
+  .card-icon {
+    font-size: 1.4rem;
+  }
+  
+  .value .number {
+    font-size: 1.2rem;
+  }
+  
+  .logo h1 {
+    font-size: 1rem;
+  }
+  
+  .header-action-btn {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.7rem;
   }
 }

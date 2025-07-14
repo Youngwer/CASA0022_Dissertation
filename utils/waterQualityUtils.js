@@ -98,9 +98,9 @@ export const getParameterReference = (param) => {
 export const getParameterTooltip = (param) => {
   const tooltips = {
     ph: "the acidity or alkalinity of water",
-    turbidity: "cloudiness of water caused by suspended particles.",
+    turbidity: "cloudiness caused by suspended particles.",
     conductivity: "the total amount of ions in water",
-    tds: "the concentration of dissolved minerals in water.",
+    tds: "the total dissolved minerals in water.",
     temperature: "Temperature affects the taste and biological activity in water."
   }
   return tooltips[param] || "This parameter indicates water quality."
