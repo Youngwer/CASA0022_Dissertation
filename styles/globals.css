@@ -1,7 +1,96 @@
-/* styles/globals.css - 水质监测Dashboard样式主入口 */
+/* styles/globals.css - 优化后的水质监测Dashboard样式主入口 */
 
-/* 导入所有模块化的样式文件 */
-@import url('./base.css');         /* 基础样式、重置和响应式 */
-@import url('./layout.css');       /* 头部、页脚和主要布局 */
-@import url('./components.css');   /* 卡片、按钮等组件样式 */
-@import url('./forms-modals.css'); /* 表单、弹窗和交互式组件 */
+/* 导入所有优化的模块化样式文件 */
+@import url('./base.css');         /* 优化的基础样式、重置和响应式 */
+@import url('./layout.css');       /* 优化的头部、页脚和主要布局 */
+@import url('./components.css');   /* 优化的卡片、按钮等组件样式 */
+@import url('./forms-modals.css'); /* 优化的表单、弹窗和交互式组件 */
+
+/* ==================== 全局优化样式 ==================== */
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* 选择文本样式 */
+::selection {
+  background: rgba(102, 126, 234, 0.3);
+  color: white;
+}
+
+/* 焦点样式优化 */
+*:focus {
+  outline: 2px solid rgba(102, 126, 234, 0.5);
+  outline-offset: 2px;
+}
+
+button:focus, 
+input:focus, 
+select:focus {
+  outline: none;
+}
+
+/* 性能优化 */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 减少动画对于喜欢减少动画的用户 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* 高对比度模式支持 */
+@media (prefers-contrast: high) {
+  .parameter-card {
+    border-width: 2px;
+  }
+  
+  .header-action-btn {
+    border-width: 2px;
+  }
+  
+  .status-dot {
+    border: 2px solid white;
+  }
+}
+
+/* 打印样式优化 */
+@media print {
+  .header, .footer, .header-action-btn, .modal-overlay {
+    display: none !important;
+  }
+  
+  .parameter-card {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #333;
+  }
+  
+  body {
+    background: white !important;
+    color: #333 !important;
+  }
+}

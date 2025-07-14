@@ -1,164 +1,194 @@
-/* styles/layout.css - 头部、页脚和主要布局组件 */
+/* styles/layout.css - 优化后的布局样式 */
 
-/* ==================== 头部样式 ==================== */
+/* ==================== 头部样式 - 简化美化 ==================== */
 .header {
-  background: rgba(255, 255, 255, 0.15);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 1rem 0;
+  background: rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0.75rem 0;
   position: sticky;
   top: 0;
   z-index: 100;
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
 }
 
 .header-content {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 1rem;
 }
 
-.logo h1 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #ffffff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-}
-
-.subtitle {
-  font-size: 0.9rem;
-  opacity: 0.8;
-  margin-left: 0.5rem;
-}
-
-.header-center, .header-right {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.header-right {
-  justify-content: flex-end;
-  flex-wrap: wrap;
-}
-
-.header-action-btn {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.85rem;
-  transition: all 0.2s ease;
+.logo {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
+.logo h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 0.8rem;
+  opacity: 0.75;
+  font-weight: 500;
+}
+
+.header-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.header-action-btn {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 0.5rem 0.875rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 36px;
+}
+
 .header-action-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.25);
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .header-action-btn:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
 .history-btn {
-  background: rgba(102, 126, 234, 0.3);
-  border-color: rgba(102, 126, 234, 0.5);
+  background: rgba(102, 126, 234, 0.25);
+  border-color: rgba(102, 126, 234, 0.4);
+}
+
+.history-btn:hover:not(:disabled) {
+  background: rgba(102, 126, 234, 0.35);
 }
 
 .refresh-btn.loading {
   animation: spin 1s linear infinite;
 }
 
-/* ==================== 时间和状态显示 ==================== */
+/* ==================== 时间和状态显示 - 简化 ==================== */
+.time-display {
+  text-align: right;
+  line-height: 1.3;
+}
+
 .current-time {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
   font-family: 'Monaco', monospace;
 }
 
 .current-date {
-  font-size: 0.8rem;
-  opacity: 0.8;
+  font-size: 0.75rem;
+  opacity: 0.75;
 }
 
 .status-indicator {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 500;
 }
 
 .status-dot {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   animation: pulse 2s infinite;
 }
 
 .status-dot.online {
   background: #10B981;
-  box-shadow: 0 0 6px #10B981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
 }
 
 .status-dot.offline {
   background: #EF4444;
-  box-shadow: 0 0 6px #EF4444;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
 }
 
-/* ==================== 错误横幅 ==================== */
+.loading-text {
+  opacity: 0.8;
+  font-style: italic;
+}
+
+/* ==================== 错误横幅 - 简化 ==================== */
 .error-banner {
-  background: rgba(239, 68, 68, 0.9);
-  border: 1px solid rgba(239, 68, 68, 0.5);
-  border-radius: 12px;
-  padding: 1rem 1.5rem;
-  margin-bottom: 2rem;
+  background: rgba(239, 68, 68, 0.85);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: 10px;
+  padding: 0.875rem 1.25rem;
+  margin-bottom: 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  backdrop-filter: blur(8px);
 }
 
 .error-content {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  font-size: 0.9rem;
 }
 
 .retry-button {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.15);
   color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  font-size: 0.8rem;
+  transition: all 0.25s ease;
 }
 
 .retry-button:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.25);
   transform: translateY(-1px);
 }
 
-/* ==================== 页脚样式 ==================== */
+/* ==================== 页脚样式 - 简化美化 ==================== */
 .footer {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.15);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 2rem 0;
+  padding: 1.5rem 0;
   margin-top: 2rem;
+  backdrop-filter: blur(8px);
 }
 
 .footer-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
   text-align: center;
 }
 
@@ -166,88 +196,42 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
+.footer-info p {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin: 0;
+}
+
+.footer-info .tech-stack {
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+/* 简化的页脚链接 - 只保留Contact Us */
 .footer-links {
   display: flex;
-  gap: 1.5rem;
   justify-content: center;
-  flex-wrap: wrap;
 }
 
 .footer-link {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.75);
   text-decoration: none;
-  padding: 0.3rem 0.8rem;
-  border-radius: 6px;
+  padding: 0.4rem 1rem;
+  border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .footer-link:hover {
   color: #10B981;
-  background: rgba(16, 185, 129, 0.1);
+  background: rgba(16, 185, 129, 0.15);
   border-color: rgba(16, 185, 129, 0.3);
-}
-
-/* ==================== 技术栈标签 ==================== */
-.footer-tech {
-  margin-top: 0.5rem;
-}
-
-.tech-stack {
-  display: flex;
-  gap: 0.75rem;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.tech-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  padding: 0.4rem 0.8rem;
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.9);
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  font-size: 0.75rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.tech-item:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.4);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-/* 为不同技术添加特定颜色和图标 */
-.tech-item:nth-child(1):before { content: '🔧'; } /* Arduino */
-.tech-item:nth-child(2):before { content: '📡'; } /* LoRaWAN */
-.tech-item:nth-child(3):before { content: '🌐'; } /* TTN */
-.tech-item:nth-child(4):before { content: '⚡'; } /* Next.js */
-.tech-item:nth-child(5):before { content: '🚀'; } /* Vercel */
-
-.tech-item:nth-child(1):hover { background: rgba(0, 172, 193, 0.2); border-color: rgba(0, 172, 193, 0.5); } /* Arduino 青色 */
-.tech-item:nth-child(2):hover { background: rgba(106, 90, 205, 0.2); border-color: rgba(106, 90, 205, 0.5); } /* LoRaWAN 紫色 */
-.tech-item:nth-child(3):hover { background: rgba(34, 197, 94, 0.2); border-color: rgba(34, 197, 94, 0.5); } /* TTN 绿色 */
-.tech-item:nth-child(4):hover { background: rgba(0, 0, 0, 0.3); border-color: rgba(255, 255, 255, 0.6); } /* Next.js 黑白 */
-.tech-item:nth-child(5):hover { background: rgba(0, 0, 0, 0.3); border-color: rgba(255, 255, 255, 0.6); } /* Vercel 黑白 */
-
-/* 响应式技术标签 */
-@media (max-width: 768px) {
-  .tech-stack {
-    gap: 0.5rem;
-  }
-  
-  .tech-item {
-    font-size: 0.7rem;
-    padding: 0.3rem 0.6rem;
-  }
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
 }

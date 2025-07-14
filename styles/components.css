@@ -1,52 +1,55 @@
-/* styles/components.css - 卡片、按钮和通用组件样式 */
+/* styles/components.css - 优化后的组件样式 */
 
-/* ==================== 总览卡片 ==================== */
+/* ==================== 总览卡片 - 简化美化 ==================== */
 .overview-card {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  margin-bottom: 2rem;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  margin-bottom: 1.5rem;
   overflow: hidden;
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.6s ease-out;
 }
 
 .card-header {
-  padding: 1.5rem;
+  padding: 1.25rem 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .card-header h2 {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 600;
+  margin: 0;
 }
 
 .last-update {
-  font-size: 0.85rem;
-  opacity: 0.8;
+  font-size: 0.8rem;
+  opacity: 0.75;
 }
 
 .overview-main-content {
   display: grid;
   grid-template-columns: 1.2fr 1fr;
   gap: 0;
-  min-height: 150px;
+  min-height: 140px;
 }
 
 .water-label-section {
-  padding: 1.5rem;
-  background: rgba(255, 255, 255, 0.1);
-  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 1.25rem 1.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
 .status-banner {
-  padding: 1.5rem;
+  padding: 1.25rem 1.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -55,98 +58,116 @@
 .status-main-content {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 1.5rem;
-  margin-bottom: 1rem;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .status-content {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.4rem;
   flex: 1;
 }
 
+.status-label {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  font-weight: 500;
+}
+
 .status-value {
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   font-weight: 700;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .temperature-display {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.15);
-  padding: 0.6rem 1rem;
-  border-radius: 12px;
+  gap: 0.4rem;
+  background: rgba(255, 255, 255, 0.12);
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
 }
 
 .temperature-value {
   font-weight: 600;
   font-family: 'Monaco', monospace;
+  font-size: 0.9rem;
 }
 
-/* ==================== 参数卡片 ==================== */
+.status-description {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+/* ==================== 参数卡片网格 ==================== */
 .core-params-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 
 .parameter-card {
-  background: rgba(255, 255, 255, 0.18);
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 1.5rem;
-  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 1.25rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: visible;
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
-  min-height: 280px;
+  backdrop-filter: blur(8px);
+  min-height: 240px;
   display: flex;
   flex-direction: column;
+  animation: fadeIn 0.6s ease-out;
 }
 
 .parameter-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.18);
 }
 
+/* 状态颜色优化 */
 .parameter-card.excellent {
-  border-color: #10B981;
-  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.6);
+  background: rgba(16, 185, 129, 0.12);
 }
 
 .parameter-card.marginal {
-  border-color: #F59E0B;
-  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.6);
+  background: rgba(245, 158, 11, 0.12);
 }
 
 .parameter-card.unsafe {
-  border-color: #EF4444;
-  background: rgba(239, 68, 68, 0.15);
-  animation: statusPulse 2s infinite;
+  border-color: rgba(239, 68, 68, 0.6);
+  background: rgba(239, 68, 68, 0.12);
+  animation: statusPulse 3s infinite;
 }
 
-.parameter-card.excellent::before { content: '🟢'; }
-.parameter-card.marginal::before { content: '🟡'; }
-.parameter-card.unsafe::before { content: '🔴'; }
+/* 状态指示器简化 */
+.parameter-card.excellent::before { content: '●'; color: #10B981; }
+.parameter-card.marginal::before { content: '●'; color: #F59E0B; }
+.parameter-card.unsafe::before { content: '●'; color: #EF4444; }
 
 .parameter-card::before {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  font-size: 1.2rem;
+  font-size: 1rem;
+  opacity: 0.8;
 }
 
 .card-icon {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  font-size: 2.2rem;
+  margin-bottom: 0.75rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
 }
 
 .card-content {
@@ -161,111 +182,48 @@
 }
 
 .card-title-section h3 {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   opacity: 0.9;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
+  margin: 0;
 }
 
-.value {
-  display: flex;
-  align-items: baseline;
-  gap: 0.3rem;
-  margin: 0.8rem 0;
-}
-
-.number {
-  font-size: 2rem;
-  font-weight: 700;
-}
-
-.unit {
-  opacity: 0.8;
-  font-weight: 500;
-}
-
-.description {
-  font-size: 0.9rem;
-  line-height: 1.4;
-  margin-bottom: auto;
-}
-
-.parameter-card.excellent .description { color: #10B981; }
-.parameter-card.marginal .description { color: #F59E0B; }
-.parameter-card.unsafe .description { color: #EF4444; }
-
-.reference {
-  font-size: 0.8rem;
-  margin-top: auto;
-  padding: 0.8rem;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  border-left: 3px solid rgba(255, 255, 255, 0.3);
-  opacity: 0.9;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-weight: 500;
-  line-height: 1.7;
-  white-space: pre-line;
-  letter-spacing: 0.025em;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-/* ==================== 通用按钮样式 ==================== */
-.close-btn {
-  background: rgba(102, 126, 234, 0.2);
-  color: #667eea;
-  border: 1px solid rgba(102, 126, 234, 0.3);
-  padding: 0.5rem 1.5rem;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-.close-btn:hover {
-  background: rgba(102, 126, 234, 0.3);
-  transform: translateY(-1px);
-}
-
-/* ==================== 悬浮提示框 ==================== */
+/* 信息提示简化 */
 .info-container {
-  display: inline-block;
   position: relative;
-  margin-left: 0.5rem;
+  display: inline-flex;
+  cursor: help;
 }
 
 .info-icon {
-  cursor: pointer;
-  font-size: 0.9rem;
-  opacity: 0.7;
-  transition: all 0.2s ease;
+  font-size: 0.75rem;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
 }
 
-.info-icon:hover {
+.info-container:hover .info-icon {
   opacity: 1;
-  transform: scale(1.1);
 }
 
 .tooltip {
   position: absolute;
-  bottom: calc(100% + 8px);
+  bottom: 120%;
   left: 50%;
   transform: translateX(-50%);
   background: rgba(0, 0, 0, 0.9);
   color: white;
-  padding: 0.6rem 0.8rem;
+  padding: 0.5rem 0.75rem;
   border-radius: 6px;
   font-size: 0.75rem;
+  white-space: nowrap;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s, visibility 0.3s;
+  transition: all 0.2s ease;
   z-index: 1000;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  width: 250px;
-  line-height: 1.5;
-  text-align: left;
 }
 
 .tooltip::after {
@@ -274,7 +232,7 @@
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
-  border: 6px solid transparent;
+  border: 4px solid transparent;
   border-top-color: rgba(0, 0, 0, 0.9);
 }
 
@@ -282,3 +240,52 @@
   opacity: 1;
   visibility: visible;
 }
+
+/* 数值显示区域 - 优化数字字体 */
+.value {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  margin: 0.75rem 0;
+}
+
+.number {
+  font-size: 2rem;
+  font-weight: 700;
+  font-family: 'SF Pro Display', 'Helvetica Neue', 'Arial', sans-serif;
+  letter-spacing: -0.02em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.unit {
+  opacity: 0.75;
+  font-weight: 500;
+  font-size: 0.8rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* 描述和参考值 - 优化字体 */
+.description {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin-bottom: 0.75rem;
+  opacity: 0.9;
+}
+
+.reference {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  line-height: 1.3;
+  margin-top: auto;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  white-space: pre-line;
+  font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* 状态特定颜色 */
+.parameter-card.excellent .description { color: rgba(16, 185, 129, 0.9); }
+.parameter-card.marginal .description { color: rgba(245, 158, 11, 0.9); }
+.parameter-card.unsafe .description { color: rgba(239, 68, 68, 0.9); }
