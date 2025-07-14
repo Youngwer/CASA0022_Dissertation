@@ -6,7 +6,7 @@
  */
 
 #include "WaterMonitor.h"
-
+#include "WaterQualityLED.h"  // 添加这一行来使用水质评估函数
 // ==================== 全局变量定义 ====================
 unsigned char image[1024];
 Paint paint(image, 0, 0);
@@ -181,38 +181,79 @@ void displaySensorData() {
   epd.SetFrameMemory(paint.GetImage(), 0, currentY, paint.GetWidth(), paint.GetHeight());
   currentY += LINE_SPACING;
   
-  // pH显示  
-  paint.Clear(UNCOLORED);
-  char phStr[25];
-  sprintf(phStr, "   pH: %.2f", pHValue);
-  paint.DrawStringAt(2, 2, phStr, &Font12, COLORED);
+  // pH显示 - 根据是否excellent决定显示样式
+  if (isExcellentpH(pHValue)) {
+    // excellent - 白底黑字
+    paint.Clear(UNCOLORED);
+    char phStr[25];
+    sprintf(phStr, "   pH: %.2f", pHValue);
+    paint.DrawStringAt(2, 2, phStr, &Font12, COLORED);
+  } else {
+    // 不是excellent - 黑底白字，垂直居中
+    paint.Clear(COLORED);  // 黑色背景
+    char phStr[25];
+    sprintf(phStr, "   pH: %.2f", pHValue);
+    // 垂直居中计算：(画布高度20 - 字体高度12) / 2 = 4
+    paint.DrawStringAt(2, 4, phStr, &Font12, UNCOLORED);
+  }
   epd.SetFrameMemory(paint.GetImage(), 0, currentY, paint.GetWidth(), paint.GetHeight());
   currentY += LINE_SPACING;
-  
-  // 浊度显示
-  paint.Clear(UNCOLORED);
-  char turbStr[25];
-  sprintf(turbStr, " Turb: %.1f NTU", turbidityNTU);
-  paint.DrawStringAt(2, 2, turbStr, &Font12, COLORED);
+
+  // 浊度显示 - 根据是否excellent决定显示样式
+  if (isExcellentTurbidity(turbidityNTU)) {
+    // excellent - 白底黑字
+    paint.Clear(UNCOLORED);
+    char turbStr[25];
+    sprintf(turbStr, " Turb: %.1f NTU", turbidityNTU);
+    paint.DrawStringAt(2, 2, turbStr, &Font12, COLORED);
+  } else {
+    // 不是excellent - 黑底白字，垂直居中
+    paint.Clear(COLORED);  // 黑色背景
+    char turbStr[25];
+    sprintf(turbStr, " Turb: %.1f NTU", turbidityNTU);
+    // 垂直居中计算：(画布高度20 - 字体高度12) / 2 = 4
+    paint.DrawStringAt(2, 4, turbStr, &Font12, UNCOLORED);
+  }
   epd.SetFrameMemory(paint.GetImage(), 0, currentY, paint.GetWidth(), paint.GetHeight());
   currentY += LINE_SPACING;
-  
-  // TDS显示
-  paint.Clear(UNCOLORED);
-  char tdsStr[25];
-  sprintf(tdsStr, "  TDS: %.1f ppm", tdsValue);
-  paint.DrawStringAt(2, 2, tdsStr, &Font12, COLORED);
+
+  // TDS显示 - 根据是否excellent决定显示样式
+  if (isExcellentTDS(tdsValue)) {
+    // excellent - 白底黑字
+    paint.Clear(UNCOLORED);
+    char tdsStr[25];
+    sprintf(tdsStr, "  TDS: %.1f ppm", tdsValue);
+    paint.DrawStringAt(2, 2, tdsStr, &Font12, COLORED);
+  } else {
+    // 不是excellent - 黑底白字，垂直居中
+    paint.Clear(COLORED);  // 黑色背景
+    char tdsStr[25];
+    sprintf(tdsStr, "  TDS: %.1f ppm", tdsValue);
+    // 垂直居中计算：(画布高度20 - 字体高度12) / 2 = 4
+    paint.DrawStringAt(2, 4, tdsStr, &Font12, UNCOLORED);
+  }
   epd.SetFrameMemory(paint.GetImage(), 0, currentY, paint.GetWidth(), paint.GetHeight());
   currentY += LINE_SPACING;
-  
-  // 电导率显示
-  paint.Clear(UNCOLORED);
-  char ecStr[30];
-  sprintf(ecStr, "   EC: %.1f uS/cm", conductivityValue);
-  paint.DrawStringAt(2, 2, ecStr, &Font12, COLORED);
+
+  // 电导率显示 - 根据是否excellent决定显示样式
+  if (isExcellentEC(conductivityValue)) {
+    // excellent - 白底黑字
+    paint.Clear(UNCOLORED);
+    char ecStr[30];
+    sprintf(ecStr, "   EC: %.1f uS/cm", conductivityValue);
+    paint.DrawStringAt(2, 2, ecStr, &Font12, COLORED);
+  } else {
+    // 不是excellent - 黑底白字，垂直居中
+    paint.Clear(COLORED);  // 黑色背景
+    char ecStr[30];
+    sprintf(ecStr, "   EC: %.1f uS/cm", conductivityValue);
+    // 垂直居中计算：(画布高度20 - 字体高度12) / 2 = 4
+    paint.DrawStringAt(2, 4, ecStr, &Font12, UNCOLORED);
+  }
   epd.SetFrameMemory(paint.GetImage(), 0, currentY, paint.GetWidth(), paint.GetHeight());
   currentY += LINE_SPACING;
-  
+  // === 添加空行 ===
+  currentY += LINE_SPACING;  // 这会创建一个空行
   // === 水质状态显示 - 使用Font16并统一黑底白字显示 ===
   paint.SetHeight(32);  // 32像素高的画布
   String status = getSimplifiedWaterStatus();
