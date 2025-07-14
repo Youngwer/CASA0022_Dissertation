@@ -1,4 +1,4 @@
-/* styles/base.css - 增强版基础样式和布局 */
+/* styles/base.css - 基础样式和布局 */
 
 /* ==================== 基础样式重置 ==================== */
 * {
@@ -12,18 +12,8 @@ html, body {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
   color: #ffffff;
-  /* 移动端优化 */
-  -webkit-text-size-adjust: 100%;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
-
-/* ==================== 移动端触摸优化 ==================== */
-* {
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-}
-
+z
 /* ==================== 基础布局容器 ==================== */
 .container {
   max-width: 1200px;
@@ -33,7 +23,6 @@ html, body {
 
 .dashboard {
   min-height: 100vh;
-  position: relative;
 }
 
 .main {
@@ -56,354 +45,60 @@ html, body {
   to { transform: rotate(360deg); }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideUp {
-  from { transform: translateY(100%); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-/* ==================== 响应式设计 - 桌面端 ==================== */
-@media (min-width: 1201px) {
-  .core-params-row {
-    grid-template-columns: repeat(4, 1fr);
-  }
-  
-  .container {
-    padding: 0 40px;
-  }
-}
-
-/* ==================== 平板端响应式 ==================== */
-@media (max-width: 1200px) and (min-width: 769px) {
+/* ==================== 响应式设计 ==================== */
+@media (max-width: 1200px) {
   .core-params-row {
     grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-  }
-  
-  .header-content {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-  
-  .container {
-    padding: 0 30px;
-  }
-}
-
-/* ==================== 平板竖屏/小平板 ==================== */
-@media (max-width: 768px) and (min-width: 481px) {
-  .core-params-row {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-  }
-  
-  .overview-main-content {
-    grid-template-columns: 1fr;
-    min-height: 200px;
-  }
-  
-  .water-label-section {
-    border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 1.25rem;
-  }
-  
-  .status-main-content {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
   }
   
   .header-content {
     grid-template-columns: 1fr;
     text-align: center;
-    gap: 1rem;
   }
   
-  .header-right {
-    flex-direction: row;
-    width: auto;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  
-  .header-action-btn {
-    flex: 0 0 auto;
-    min-width: 100px;
-  }
-  
-  .parameter-card {
-    min-height: 220px;
-  }
-  
-  .container {
-    padding: 0 20px;
+  .logo, .header-center, .header-right {
+    justify-self: center;
   }
 }
 
-/* ==================== 手机端响应式 ==================== */
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .core-params-row {
     grid-template-columns: 1fr;
-    gap: 0.75rem;
   }
   
   .overview-main-content {
     grid-template-columns: 1fr;
-    min-height: auto;
+    min-height: 250px;
   }
   
   .water-label-section {
     border-right: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     padding: 1rem;
-    text-align: center;
   }
   
   .status-main-content {
     flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-  }
-  
-  .header-content {
-    grid-template-columns: 1fr;
-    text-align: center;
-    gap: 0.75rem;
+    align-items: flex-start;
   }
   
   .header-right {
-    flex-direction: row;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .header-action-btn {
     width: 100%;
     justify-content: center;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-  
-  .header-action-btn {
-    flex: 1 1 auto;
-    min-width: 80px;
-    max-width: 120px;
-    justify-content: center;
-    padding: 0.6rem 0.8rem;
-    font-size: 0.8rem;
   }
   
   .parameter-card {
-    min-height: 200px;
-    padding: 1rem;
-    text-align: center;
+    min-height: 250px;
   }
   
-  .container {
-    padding: 0 12px;
-  }
-  
-  .main {
-    padding: 1rem 0;
-  }
-}
-
-/* ==================== 超小屏幕 ==================== */
-@media (max-width: 375px) {
-  .container {
-    padding: 0 8px;
-  }
-  
-  .parameter-card {
-    min-height: 180px;
-    padding: 0.75rem;
-  }
-  
-  .header-action-btn {
-    min-width: 70px;
-    padding: 0.5rem 0.6rem;
-    font-size: 0.75rem;
-  }
-}
-
-/* ==================== 横屏优化 ==================== */
-@media screen and (max-height: 600px) and (orientation: landscape) {
-  .main {
-    padding: 1rem 0;
-  }
-  
-  .overview-card {
-    margin-bottom: 1rem;
-  }
-  
-  .parameter-card {
-    min-height: 160px;
-  }
-}
-
-/* ==================== 移动端横屏优化 ==================== */
-@media screen and (max-height: 500px) and (orientation: landscape) and (max-width: 900px) {
-  .main {
-    padding: 0.5rem 0;
-  }
-  
-  .overview-main-content {
-    grid-template-columns: 1fr 1fr;
-    min-height: 120px;
-  }
-  
-  .water-label-section {
-    border-right: 1px solid rgba(255, 255, 255, 0.2);
-    border-bottom: none;
-    text-align: left;
-  }
-  
-  .core-params-row {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.5rem;
-  }
-  
-  .parameter-card {
-    min-height: 140px;
-    padding: 0.75rem;
-  }
-  
-  .header {
-    padding: 0.5rem 0;
-  }
-  
-  .card-header {
-    padding: 0.75rem;
-  }
-}
-
-/* ==================== 工具提示响应式 ==================== */
-@media (max-width: 768px) {
   .tooltip {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: calc(100vw - 40px);
-    max-width: 300px;
-    z-index: 1000;
-    padding: 0.75rem;
-    font-size: 0.85rem;
-    border-radius: 8px;
-    text-align: center;
-    /* 默认隐藏，只在点击时显示 */
-    display: none;
-  }
-  
-  .tooltip.mobile-visible {
-    display: block;
-    animation: slideUp 0.3s ease;
-  }
-}
-
-/* ==================== 性能优化 ==================== */
-@media (max-width: 768px) {
-  /* 减少复杂动画以提高移动端性能 */
-  * {
-    will-change: auto;
-  }
-  
-  .parameter-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  /* 禁用一些CPU密集型动画 */
-  .parameter-card.unsafe {
-    animation: none;
-  }
-  
-  /* 简化模糊效果 */
-  .header {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    background: rgba(255, 255, 255, 0.2);
-  }
-  
-  .overview-card {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    background: rgba(255, 255, 255, 0.25);
-  }
-}
-
-/* ==================== 可访问性增强 ==================== */
-@media (max-width: 768px) {
-  /* 确保最小触摸目标大小 */
-  button, .header-action-btn, .edit-button-compact, .close-button {
-    min-height: 44px;
-    min-width: 44px;
-  }
-  
-  /* 提高文字对比度 */
-  .status-value, .number, .current-time {
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-  }
-  
-  /* 增大间距提高可读性 */
-  .card-title-section h3 {
-    line-height: 1.4;
-  }
-  
-  .description {
-    line-height: 1.5;
-  }
-}
-
-/* ==================== 高DPI屏幕优化 ==================== */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .card-icon {
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-  }
-  
-  /* 优化边框显示 */
-  .parameter-card, .overview-card {
-    border-width: 0.5px;
-  }
-}
-
-/* ==================== 暗色模式适配 (可选) ==================== */
-@media (prefers-color-scheme: dark) {
-  .history-modal {
-    background: linear-gradient(135deg, rgba(30, 30, 30, 0.95) 0%, rgba(20, 20, 20, 0.9) 100%);
-  }
-  
-  .modal-header h3 {
-    color: #ffffff;
-  }
-  
-  .history-table th {
-    background: rgba(255, 255, 255, 0.1);
-    color: #ffffff;
-  }
-  
-  .history-table td {
-    color: #e0e0e0;
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-}
-
-/* ==================== 打印样式 ==================== */
-@media print {
-  .header, .footer, .header-action-btn {
-    display: none;
-  }
-  
-  .main {
-    padding: 0;
-  }
-  
-  .parameter-card {
-    break-inside: avoid;
-    box-shadow: none;
-    border: 1px solid #ccc;
-  }
-  
-  .core-params-row {
-    grid-template-columns: repeat(2, 1fr);
+    bottom: 50%;
+    left: calc(100% + 10px);
+    transform: translateY(50%);
   }
 }
