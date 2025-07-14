@@ -158,7 +158,6 @@ const HistoryModal = ({ isOpen, onClose }) => {
           <div className="record-count">
             Showing {records.length} recent measurements
           </div>
-          <button onClick={onClose} className="close-btn">Close</button>
         </div>
       </div>
     </div>
