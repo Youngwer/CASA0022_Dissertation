@@ -5,7 +5,7 @@
 @import url('./layout.css');       /* 优化的头部、页脚和主要布局 */
 @import url('./components.css');   /* 优化的卡片、按钮等组件样式 */
 @import url('./forms-modals.css'); /* 优化的表单、弹窗和交互式组件 */
-
+@import url('./mobile-fix.css');
 /* ==================== 全局优化样式 ==================== */
 
 /* 滚动条美化 */
