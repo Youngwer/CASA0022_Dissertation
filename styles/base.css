@@ -1,4 +1,4 @@
-/* styles/base.css - 优化后的基础样式和布局 */
+/* styles/base.css - 清理后的基础样式和布局（去除!important） */
 
 /* ==================== 基础样式重置 ==================== */
 * {
@@ -13,21 +13,57 @@ html, body {
   min-height: 100vh;
   color: #ffffff;
   line-height: 1.5;
+  overflow-x: hidden; /* 防止水平滚动 */
 }
 
-/* ==================== 优化的布局容器 ==================== */
+/* ==================== 基础布局容器 ==================== */
 .container {
-  max-width: 1100px;  /* 从1200px缩小到900px，更紧凑 */
+  width: 100%;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 0 16px;   /* 减少左右padding */
+  padding: 0 16px;
+  box-sizing: border-box;
 }
 
 .dashboard {
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 .main {
-  padding: 1.5rem 0;  /* 减少上下padding */
+  padding: 1.5rem 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* ==================== 电脑端75%宽度布局 ==================== */
+
+/* 只有主要内容区域使用75%宽度 */
+.main .container {
+  max-width: 75%;
+  padding: 0 20px;
+}
+
+/* header保持75%宽度 */
+.header .container {
+  max-width: 75%;
+  padding: 0 20px;
+}
+
+/* footer保持全宽 */
+.footer .container {
+  max-width: 75%;
+  padding: 0 20px;
+}
+
+/* ==================== 参数网格基础样式 ==================== */
+.core-params-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* ==================== 动画定义 ==================== */
@@ -51,81 +87,53 @@ html, body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ==================== 优化的响应式设计 ==================== */
-@media (max-width: 1000px) {
+/* ==================== 响应式布局（按尺寸从大到小） ==================== */
+
+/* 超大屏幕 (1400px+) */
+@media (min-width: 1400px) {
+  .main .container {
+    max-width: 1050px;
+  }
+}
+
+/* 大屏幕 (1200px - 1399px) */
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .main .container {
+    max-width: 900px;
+  }
+}
+
+/* 中大屏幕 (1000px - 1199px) */
+@media (min-width: 1000px) and (max-width: 1199px) {
+  .main .container {
+    max-width: 75%;
+  }
+  
+  .core-params-row {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+}
+
+/* 平板横屏 (769px - 999px) */
+@media (min-width: 769px) and (max-width: 999px) {
   .container {
     max-width: 100%;
-    padding: 0 12px;
+    padding: 0 16px;
+  }
+  
+  .main .container {
+    max-width: 90%;
   }
   
   .core-params-row {
     grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-  }
-  
-  .header-content {
-    grid-template-columns: 1fr auto;
-    gap: 0.75rem;
-  }
-}
-
-@media (max-width: 650px) {
-  .container {
-    padding: 0 8px;
-  }
-  
-  .main {
-    padding: 1rem 0;
-  }
-  
-  .core-params-row {
-    grid-template-columns: 1fr;
-    gap: 0.5rem;
-  }
-  
-  .overview-main-content {
-    grid-template-columns: 1fr;
-    min-height: 200px;
-    gap: 0.5rem;
-    padding: 0.5rem;
-  }
-  
-  .water-label-section {
-    border-right: none;
-    border-bottom: none;
-    margin: 0.5rem;
-  }
-  
-  .status-banner {
-    margin: 0.5rem;
-  }
-  
-  .header-content {
-    grid-template-columns: 1fr;
-    text-align: center;
-    gap: 0.5rem;
-  }
-  
-  .header-right {
-    flex-direction: row;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.875rem;
   }
   
   .parameter-card {
-    min-height: 200px;
-  }
-}
-/* 移动端竖屏布局优化 - 添加到 styles/base.css */
-
-/* ==================== 响应式布局优化 ==================== */
-
-/* 平板端（768px - 1000px） */
-@media (max-width: 1000px) and (min-width: 769px) {
-  .core-params-row {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    min-height: 220px;
+    padding: 1.2rem;
   }
   
   .header-content {
@@ -134,10 +142,15 @@ html, body {
   }
 }
 
-/* 平板竖屏/小平板（651px - 768px） */
-@media (max-width: 768px) and (min-width: 651px) {
+/* 平板竖屏 (651px - 768px) */
+@media (min-width: 651px) and (max-width: 768px) {
   .container {
+    max-width: 100%;
     padding: 0 16px;
+  }
+  
+  .main .container {
+    max-width: 90%;
   }
   
   .core-params-row {
@@ -146,11 +159,10 @@ html, body {
   }
   
   .parameter-card {
-    min-height: 220px;
+    min-height: 200px;
     padding: 1rem;
   }
   
-  /* 头部布局调整 */
   .header-content {
     grid-template-columns: 1fr;
     gap: 0.75rem;
@@ -167,7 +179,6 @@ html, body {
     justify-content: center;
   }
   
-  /* 总览卡片调整 */
   .overview-main-content {
     grid-template-columns: 1fr;
     gap: 0.75rem;
@@ -187,9 +198,10 @@ html, body {
   }
 }
 
-/* 大型手机横屏（481px - 650px） */
-@media (max-width: 650px) and (min-width: 481px) {
+/* 大手机横屏 (481px - 650px) */
+@media (min-width: 481px) and (max-width: 650px) {
   .container {
+    max-width: 100%;
     padding: 0 12px;
   }
   
@@ -197,15 +209,18 @@ html, body {
     padding: 1rem 0;
   }
   
-  /* 参数卡片：手机横屏保持2列 */
+  .main .container {
+    max-width: 95%;
+  }
+  
   .core-params-row {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem;
   }
   
   .parameter-card {
-    min-height: 200px;
-    padding: 0.875rem;
+    min-height: 180px;
+    padding: 1rem;
   }
   
   .card-icon {
@@ -217,7 +232,6 @@ html, body {
     font-size: 1.3rem;
   }
   
-  /* 头部完全堆叠 */
   .header-content {
     grid-template-columns: 1fr;
     text-align: center;
@@ -244,7 +258,6 @@ html, body {
     gap: 0.5rem;
   }
   
-  /* 总览卡片调整 */
   .overview-main-content {
     grid-template-columns: 1fr;
     min-height: auto;
@@ -253,58 +266,106 @@ html, body {
   }
 }
 
-/* 手机竖屏（320px - 480px） - 关键优化区域 */
+/* 手机竖屏 (最大480px) */
 @media (max-width: 480px) {
   .container {
+    max-width: 100vw;
     padding: 0 8px;
+    overflow-x: hidden;
   }
   
   .main {
     padding: 0.75rem 0;
+    overflow-x: hidden;
   }
   
-  /* 关键：参数卡片改为单列布局 */
+  /* 强制单列布局 */
   .core-params-row {
     grid-template-columns: 1fr;
-    gap: 0.5rem;
+    gap: 1rem; /* 增加卡片间距为悬浮框留空间 */
     margin-bottom: 1.5rem;
+    width: 100%;
+    max-width: 100%;
   }
   
+  /* 参数卡片水平布局，增加高度 */
   .parameter-card {
-    min-height: 140px; /* 减少高度，因为是单列 */
-    padding: 0.75rem;
-    border-radius: 12px;
+    width: 100%;
+    max-width: 100%;
+    min-height: 160px; /* 从120px增加到160px */
+    padding: 1rem; /* 增加内边距 */
+    margin: 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem; /* 增加图标和内容的间距 */
   }
   
   .card-icon {
-    font-size: 1.6rem;
-    margin-bottom: 0.4rem;
+    font-size: 2.2rem; /* 稍微增大图标 */
+    margin-bottom: 0;
+    flex-shrink: 0;
+    width: 3.5rem; /* 增加图标区域宽度 */
+    text-align: center;
+  }
+  
+  .card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem; /* 增加元素间距 */
+    min-width: 0;
+    justify-content: center; /* 垂直居中内容 */
+  }
+  
+  .card-title-section {
+    margin-bottom: 0.3rem; /* 增加标题下方间距 */
   }
   
   .card-title-section h3 {
-    font-size: 0.9rem;
+    font-size: 1rem; /* 稍微增大标题字体 */
+    margin: 0;
+    line-height: 1.2;
+    /* 允许标题换行 */
   }
   
   .value {
-    margin: 0.4rem 0;
+    margin: 0.3rem 0; /* 增加数值区域上下间距 */
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
   }
   
   .value .number {
-    font-size: 1.4rem;
+    font-size: 1.5rem; /* 增大数值字体 */
     font-weight: 700;
+    line-height: 1;
   }
   
   .value .unit {
-    font-size: 0.8rem;
+    font-size: 0.9rem; /* 稍微增大单位字体 */
+    opacity: 0.8;
   }
   
   .description {
-    font-size: 0.75rem;
+    font-size: 0.8rem; /* 稍微增大描述字体 */
     line-height: 1.3;
+    margin: 0.2rem 0;
   }
   
   .reference {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
+    opacity: 0.8;
+    margin: 0.2rem 0;
+    line-height: 1.2;
+  }
+  
+  /* 状态指示器调整 */
+  .parameter-card::before {
+    top: 0.75rem;
+    right: 0.75rem;
+    font-size: 0.9rem;
   }
   
   /* 头部紧凑布局 */
@@ -328,6 +389,9 @@ html, body {
   
   .header-center {
     order: 2;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
   }
   
   .header-right {
@@ -354,23 +418,19 @@ html, body {
     font-size: 0.75rem;
   }
   
-  /* 头部按钮调整 */
   .header-action-btn {
     padding: 0.4rem 0.6rem;
     font-size: 0.75rem;
     min-height: 32px;
   }
   
-  .header-center {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-  }
-  
   /* 总览卡片优化 */
   .overview-card {
-    margin-bottom: 1rem;
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 1.5rem; /* 增加与参数卡片的间距 */
     border-radius: 12px;
+    box-sizing: border-box;
   }
   
   .card-header {
@@ -391,21 +451,25 @@ html, body {
   .overview-main-content {
     grid-template-columns: 1fr;
     gap: 0.5rem;
-    padding: 0.5rem;
-    min-height: auto;
+    padding: 0.75rem; /* 增加内边距 */
+    min-height: 180px; /* 增加总览卡片高度 */
+    width: 100%;
+    box-sizing: border-box;
   }
   
-  .water-label-section {
+  .water-label-section,
+  .status-banner {
+    width: 100%;
+    max-width: 100%;
     margin: 0.5rem;
-    padding: 1rem;
+    padding: 1.2rem; /* 增加内边距 */
+    min-height: 80px; /* 确保最小高度 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     border-right: none;
     border-radius: 8px;
-  }
-  
-  .status-banner {
-    margin: 0.5rem;
-    padding: 1rem;
-    border-radius: 8px;
+    box-sizing: border-box;
   }
   
   .status-main-content {
@@ -428,23 +492,54 @@ html, body {
   }
 }
 
-/* 小屏手机（小于320px） */
-@media (max-width: 320px) {
+/* 中等手机屏幕 (361px - 480px) */
+@media (min-width: 361px) and (max-width: 480px) {
+  .parameter-card {
+    min-height: 170px; /* 稍微再高一点 */
+    padding: 1.1rem;
+  }
+  
+  .card-icon {
+    font-size: 2.4rem;
+    width: 3.8rem;
+  }
+  
+  .value .number {
+    font-size: 1.6rem;
+  }
+}
+
+/* 超小屏手机 (最大360px) */
+@media (max-width: 360px) {
   .container {
     padding: 0 6px;
   }
   
   .parameter-card {
-    min-height: 120px;
-    padding: 0.6rem;
+    min-height: 150px; /* 小屏幕适度减少但仍保持足够高度 */
+    padding: 0.9rem;
+    gap: 0.8rem;
   }
   
   .card-icon {
-    font-size: 1.4rem;
+    font-size: 2rem;
+    width: 3.2rem;
   }
   
   .value .number {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
+  }
+  
+  .value .unit {
+    font-size: 0.8rem;
+  }
+  
+  .description {
+    font-size: 0.75rem;
+  }
+  
+  .reference {
+    font-size: 0.7rem;
   }
   
   .logo h1 {
@@ -456,550 +551,25 @@ html, body {
     font-size: 0.7rem;
   }
 }
-/* 手机端参数卡片网格修复 - 覆盖现有样式 */
 
-/* ==================== 强制修复手机端网格布局 ==================== */
-
-/* 首先确保容器不会溢出 */
-.container {
-  width: 100%;
-  max-width: 100vw; /* 确保不超过视口宽度 */
-  overflow-x: hidden; /* 防止水平滚动 */
-  box-sizing: border-box;
-}
-
-/* 主要内容区域 */
-.main {
-  width: 100%;
-  overflow-x: hidden;
-}
-
-/* 参数网格基础样式 */
-.core-params-row {
-  display: grid;
-  width: 100%;
-  box-sizing: border-box;
-  margin-bottom: 2rem;
-}
-
-/* ==================== 明确的响应式断点 ==================== */
-
-/* 超大屏幕 (1200px+) */
-@media (min-width: 1200px) {
-  .core-params-row {
-    grid-template-columns: repeat(4, 1fr) !important;
-    gap: 1.25rem !important;
-  }
-}
-
-/* 大屏幕 (1001px - 1199px) */
-@media (max-width: 1199px) and (min-width: 1001px) {
-  .core-params-row {
-    grid-template-columns: repeat(4, 1fr) !important;
-    gap: 1rem !important;
-  }
-}
-
-/* 中等屏幕/平板横屏 (769px - 1000px) */
-@media (max-width: 1000px) and (min-width: 769px) {
-  .core-params-row {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 0.875rem !important;
-  }
-}
-
-/* 平板竖屏 (651px - 768px) */
-@media (max-width: 768px) and (min-width: 651px) {
-  .core-params-row {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 0.75rem !important;
-  }
-}
-
-/* 大手机横屏 (481px - 650px) */
-@media (max-width: 650px) and (min-width: 481px) {
-  .core-params-row {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 0.75rem !important;
-  }
-}
-
-/* 关键：手机竖屏 (最大480px) - 强制单列 */
-@media (max-width: 480px) {
-  .container {
-    padding: 0 8px !important;
-    max-width: 100vw !important;
-    overflow-x: hidden !important;
-  }
-  
-  .main {
-    padding: 0.75rem 0 !important;
-    overflow-x: hidden !important;
-  }
-  
-  /* 强制单列布局 */
-  .core-params-row {
-    grid-template-columns: 1fr !important;
-    gap: 0.5rem !important;
-    margin-bottom: 1.5rem !important;
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-  
-  /* 参数卡片优化 */
+/* 小屏手机特殊情况（小于320px） */
+@media (max-width: 320px) {
   .parameter-card {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-height: 120px !important;
-    padding: 0.75rem !important;
-    margin: 0 !important;
-    box-sizing: border-box !important;
-    /* 改为水平布局 */
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    gap: 0.75rem !important;
+    min-height: 140px;
+    padding: 0.8rem;
+    gap: 0.7rem;
   }
   
   .card-icon {
-    font-size: 2rem !important;
-    margin-bottom: 0 !important;
-    flex-shrink: 0 !important;
-    width: 3rem !important;
-    text-align: center !important;
+    font-size: 1.8rem;
+    width: 3rem;
   }
   
-  .card-content {
-    flex: 1 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 0.25rem !important;
-    min-width: 0 !important; /* 防止内容溢出 */
-  }
-  
-  .card-title-section {
-    margin-bottom: 0 !important;
+  .value .number {
+    font-size: 1.3rem;
   }
   
   .card-title-section h3 {
-    font-size: 0.9rem !important;
-    margin: 0 !important;
-    white-space: nowrap !important; /* 防止标题换行 */
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-  }
-  
-  .value {
-    margin: 0 !important;
-    display: flex !important;
-    align-items: baseline !important;
-    gap: 0.25rem !important;
-  }
-  
-  .value .number {
-    font-size: 1.3rem !important;
-    font-weight: 700 !important;
-    line-height: 1 !important;
-  }
-  
-  .value .unit {
-    font-size: 0.8rem !important;
-    opacity: 0.8 !important;
-  }
-  
-  .description {
-    font-size: 0.75rem !important;
-    line-height: 1.2 !important;
-    margin: 0 !important;
-  }
-  
-  .reference {
-    font-size: 0.7rem !important;
-    opacity: 0.8 !important;
-    margin: 0 !important;
-  }
-  
-  /* 状态指示器调整 */
-  .parameter-card::before {
-    top: 0.5rem !important;
-    right: 0.5rem !important;
-    font-size: 0.8rem !important;
-  }
-}
-
-/* 超小屏幕 (360px以下) */
-@media (max-width: 360px) {
-  .container {
-    padding: 0 6px !important;
-  }
-  
-  .parameter-card {
-    min-height: 100px !important;
-    padding: 0.6rem !important;
-    gap: 0.6rem !important;
-  }
-  
-  .card-icon {
-    font-size: 1.8rem !important;
-    width: 2.5rem !important;
-  }
-  
-  .value .number {
-    font-size: 1.2rem !important;
-  }
-  
-  .value .unit {
-    font-size: 0.75rem !important;
-  }
-  
-  .description {
-    font-size: 0.7rem !important;
-  }
-  
-  .reference {
-    font-size: 0.65rem !important;
-  }
-}
-
-/* ==================== 调试信息（可选，测试时使用） ==================== */
-/*
-@media (max-width: 480px) {
-  .core-params-row::before {
-    content: "Mobile Portrait Mode - Single Column";
-    display: block;
-    background: red;
-    color: white;
-    padding: 0.5rem;
-    text-align: center;
-    margin-bottom: 1rem;
-    border-radius: 4px;
-  }
-}
-*/
-
-/* ==================== 确保总览卡片也不溢出 ==================== */
-@media (max-width: 480px) {
-  .overview-card {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-bottom: 1rem !important;
-    box-sizing: border-box !important;
-  }
-  
-  .overview-main-content {
-    grid-template-columns: 1fr !important;
-    gap: 0.5rem !important;
-    padding: 0.5rem !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-  }
-  
-  .water-label-section,
-  .status-banner {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0.5rem !important;
-    box-sizing: border-box !important;
-  }
-}
-
-/* ==================== 防止所有可能的溢出 ==================== */
-@media (max-width: 480px) {
-  * {
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-  }
-  
-  .dashboard {
-    overflow-x: hidden !important;
-  }
-  
-  body {
-    overflow-x: hidden !important;
-  }
-}
-/* 布局宽度和卡片高度优化 - 添加到 styles/base.css */
-
-/* ==================== 电脑端75%宽度布局 ==================== */
-
-/* 只有主要内容区域使用75%宽度，header保持全宽 */
-.main .container {
-  max-width: 75%; /* 主要内容区域限制为75%宽度 */
-  margin: 0 auto;
-  padding: 0 20px; /* 稍微增加padding */
-}
-
-/* header保持全宽 */
-.header .container {
-  max-width: 100% !important; /* header继续使用全宽 */
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-/* footer也保持全宽 */
-.footer .container {
-  max-width: 100% !important;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-/* 大屏幕时进一步限制宽度 */
-@media (min-width: 1400px) {
-  .main .container {
-    max-width: 1050px; /* 超大屏幕时固定最大宽度 */
-  }
-}
-
-@media (min-width: 1200px) and (max-width: 1399px) {
-  .main .container {
-    max-width: 900px; /* 大屏幕时的合适宽度 */
-  }
-}
-
-@media (min-width: 1000px) and (max-width: 1199px) {
-  .main .container {
-    max-width: 75%;
-  }
-}
-
-/* ==================== 手机端卡片高度优化 ==================== */
-
-/* 手机竖屏 (最大480px) - 增加卡片高度 */
-@media (max-width: 480px) {
-  .parameter-card {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-height: 160px !important; /* 从120px增加到160px */
-    padding: 1rem !important; /* 增加内边距 */
-    margin: 0 !important;
-    box-sizing: border-box !important;
-    /* 保持水平布局 */
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    gap: 1rem !important; /* 增加图标和内容的间距 */
-  }
-  
-  .card-icon {
-    font-size: 2.2rem !important; /* 稍微增大图标 */
-    margin-bottom: 0 !important;
-    flex-shrink: 0 !important;
-    width: 3.5rem !important; /* 增加图标区域宽度 */
-    text-align: center !important;
-  }
-  
-  .card-content {
-    flex: 1 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 0.4rem !important; /* 增加元素间距 */
-    min-width: 0 !important;
-    justify-content: center !important; /* 垂直居中内容 */
-  }
-  
-  .card-title-section {
-    margin-bottom: 0.3rem !important; /* 增加标题下方间距 */
-  }
-  
-  .card-title-section h3 {
-    font-size: 1rem !important; /* 稍微增大标题字体 */
-    margin: 0 !important;
-    line-height: 1.2 !important;
-    /* 允许标题换行，去掉 white-space: nowrap */
-  }
-  
-  .value {
-    margin: 0.3rem 0 !important; /* 增加数值区域上下间距 */
-    display: flex !important;
-    align-items: baseline !important;
-    gap: 0.3rem !important;
-  }
-  
-  .value .number {
-    font-size: 1.5rem !important; /* 增大数值字体 */
-    font-weight: 700 !important;
-    line-height: 1 !important;
-  }
-  
-  .value .unit {
-    font-size: 0.9rem !important; /* 稍微增大单位字体 */
-    opacity: 0.8 !important;
-  }
-  
-  .description {
-    font-size: 0.8rem !important; /* 稍微增大描述字体 */
-    line-height: 1.3 !important;
-    margin: 0.2rem 0 !important;
-  }
-  
-  .reference {
-    font-size: 0.75rem !important;
-    opacity: 0.8 !important;
-    margin: 0.2rem 0 !important;
-    line-height: 1.2 !important;
-  }
-  
-  /* 状态指示器调整 */
-  .parameter-card::before {
-    top: 0.75rem !important;
-    right: 0.75rem !important;
-    font-size: 0.9rem !important;
-  }
-  
-  /* 信息提示悬浮框优化 */
-  .tooltip {
-    bottom: 120% !important; /* 增加悬浮框与元素的距离 */
-    left: 0 !important;
-    transform: none !important;
-    width: max-content !important;
-    max-width: 240px !important; /* 增加最大宽度 */
-    font-size: 0.75rem !important;
-    padding: 0.5rem 0.75rem !important; /* 增加内边距 */
-    border-radius: 8px !important;
-    background: rgba(0, 0, 0, 0.9) !important;
-    color: white !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
-    z-index: 1000 !important;
-    line-height: 1.3 !important;
-  }
-  
-  /* 悬浮框箭头 */
-  .tooltip::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 1rem;
-    border: 5px solid transparent;
-    border-top-color: rgba(0, 0, 0, 0.9);
-  }
-  
-  /* 确保悬浮框不会被遮挡 */
-  .info-container {
-    position: relative !important;
-    z-index: 10 !important;
-  }
-  
-  .info-container:hover .tooltip {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-}
-
-/* 中等手机屏幕 (361px - 480px) */
-@media (max-width: 480px) and (min-width: 361px) {
-  .parameter-card {
-    min-height: 170px !important; /* 稍微再高一点 */
-    padding: 1.1rem !important;
-  }
-  
-  .card-icon {
-    font-size: 2.4rem !important;
-    width: 3.8rem !important;
-  }
-  
-  .value .number {
-    font-size: 1.6rem !important;
-  }
-}
-
-/* 超小屏幕 (最大360px) - 也要保证足够高度 */
-@media (max-width: 360px) {
-  .parameter-card {
-    min-height: 150px !important; /* 小屏幕适度减少但仍保持足够高度 */
-    padding: 0.9rem !important;
-    gap: 0.8rem !important;
-  }
-  
-  .card-icon {
-    font-size: 2rem !important;
-    width: 3.2rem !important;
-  }
-  
-  .value .number {
-    font-size: 1.4rem !important;
-  }
-  
-  .value .unit {
-    font-size: 0.8rem !important;
-  }
-  
-  .description {
-    font-size: 0.75rem !important;
-  }
-  
-  .reference {
-    font-size: 0.7rem !important;
-  }
-  
-  .tooltip {
-    max-width: 200px !important;
-    font-size: 0.7rem !important;
-    padding: 0.4rem 0.6rem !important;
-  }
-}
-
-/* ==================== 平板端保持合理高度 ==================== */
-
-/* 平板竖屏/小平板 (651px - 768px) */
-@media (max-width: 768px) and (min-width: 651px) {
-  .main .container {
-    max-width: 90% !important; /* 平板端使用90%宽度 */
-    padding: 0 16px !important;
-  }
-  
-  .parameter-card {
-    min-height: 200px !important;
-    padding: 1.2rem !important;
-  }
-}
-
-/* 大手机横屏 (481px - 650px) */
-@media (max-width: 650px) and (min-width: 481px) {
-  .main .container {
-    max-width: 95% !important; /* 手机横屏使用95%宽度 */
-    padding: 0 12px !important;
-  }
-  
-  .parameter-card {
-    min-height: 180px !important;
-    padding: 1rem !important;
-  }
-}
-
-/* ==================== 总览卡片也适当调整 ==================== */
-
-@media (max-width: 480px) {
-  .overview-card {
-    margin-bottom: 1.5rem !important; /* 增加与参数卡片的间距 */
-  }
-  
-  .overview-main-content {
-    min-height: 180px !important; /* 增加总览卡片高度 */
-    padding: 0.75rem !important;
-  }
-  
-  .water-label-section,
-  .status-banner {
-    padding: 1.2rem !important; /* 增加内边距 */
-    min-height: 80px !important; /* 确保最小高度 */
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-  }
-}
-
-/* ==================== 确保桌面端不受影响 ==================== */
-
-@media (min-width: 1001px) {
-  .parameter-card {
-    min-height: 240px !important; /* 桌面端保持原有高度 */
-  }
-}
-
-@media (max-width: 1000px) and (min-width: 769px) {
-  .parameter-card {
-    min-height: 220px !important; /* 平板横屏适中高度 */
+    font-size: 0.9rem;
   }
 }
