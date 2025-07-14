@@ -18,7 +18,7 @@ const ContactModal = ({ isOpen, onClose }) => {
         
         <div className="contact-content">
           <p className="contact-description">
-            Get in touch with the AquaMonitor development team. We'd love to hear from you!
+            Get in touch with the AquaMonitor development team. I'd love to hear from you!
           </p>
           
           <div className="contact-links">
