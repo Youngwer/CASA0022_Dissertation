@@ -85,13 +85,19 @@ html, body {
   
   .overview-main-content {
     grid-template-columns: 1fr;
-    min-height: auto;
+    min-height: 200px;
+    gap: 0.5rem;
+    padding: 0.5rem;
   }
   
   .water-label-section {
     border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 1rem;
+    border-bottom: none;
+    margin: 0.5rem;
+  }
+  
+  .status-banner {
+    margin: 0.5rem;
   }
   
   .header-content {

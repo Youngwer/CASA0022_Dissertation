@@ -175,21 +175,21 @@
   transform: translateY(-1px);
 }
 
-/* ==================== 页脚样式 - 简化美化 ==================== */
+/* ==================== 页脚样式 - 版权居中，Contact Us右下角 ==================== */
 .footer {
   background: rgba(0, 0, 0, 0.15);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding: 1.5rem 0;
   margin-top: 2rem;
   backdrop-filter: blur(8px);
+  position: relative;
 }
 
 .footer-content {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  gap: 1rem;
-  text-align: center;
+  position: relative;
 }
 
 .footer-info {
@@ -197,6 +197,7 @@
   flex-direction: column;
   align-items: center;
   gap: 0.4rem;
+  text-align: center;
 }
 
 .footer-info p {
@@ -210,28 +211,52 @@
   opacity: 0.6;
 }
 
-/* 简化的页脚链接 - 只保留Contact Us */
-.footer-links {
-  display: flex;
-  justify-content: center;
+/* Contact Us按钮 - 绝对定位到右下角 */
+.footer-contact {
+  position: absolute;
+  right: 0;
+  bottom: 0;
 }
 
-.footer-link {
-  color: rgba(255, 255, 255, 0.75);
+.footer-contact-link {
+  color: rgba(255, 255, 255, 0.85);
   text-decoration: none;
-  padding: 0.4rem 1rem;
+  padding: 0.6rem 1.2rem;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   transition: all 0.25s ease;
   font-size: 0.85rem;
   font-weight: 500;
   background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+  white-space: nowrap;
+  display: inline-block;
 }
 
-.footer-link:hover {
+.footer-contact-link:hover {
   color: #10B981;
   background: rgba(16, 185, 129, 0.15);
-  border-color: rgba(16, 185, 129, 0.3);
+  border-color: rgba(16, 185, 129, 0.4);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+/* 响应式处理 */
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .footer-contact {
+    position: static;
+    margin-top: 1rem;
+  }
+  
+  .footer-contact-link {
+    width: auto;
+    text-align: center;
+    padding: 0.75rem 1.5rem;
+  }
 }

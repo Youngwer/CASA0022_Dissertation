@@ -1,4 +1,4 @@
-// components/WaterLabelInput.js - 紧凑的水质标签输入组件
+// components/WaterLabelInput.js - 带信息提示的水质标签输入组件
 
 import { useState } from 'react'
 
@@ -78,7 +78,13 @@ const WaterLabelInput = ({ currentLabel, onLabelUpdate }) => {
     <div className="compact-water-label">
       <div className="label-header-compact">
         <span className="label-icon">🏷️</span>
-        <span className="label-title">Water Source</span>
+        <span className="label-title">
+          Water Source&nbsp;   
+          <span className="info-container">
+            <span className="info-icon"> ℹ️</span>
+            <span className="tooltip">Label sample to track different types of water</span>
+          </span>
+        </span>
       </div>
 
       {!isEditing ? (

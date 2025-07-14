@@ -35,24 +35,46 @@
 .overview-main-content {
   display: grid;
   grid-template-columns: 1.2fr 1fr;
-  gap: 0;
+  gap: 0.5rem;
   min-height: 140px;
+  padding: 0.75rem;
 }
 
 .water-label-section {
   padding: 1.25rem 1.5rem;
   background: rgba(255, 255, 255, 0.08);
   border-right: 1px solid rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  margin: 0.75rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.water-label-section:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .status-banner {
   padding: 1.25rem 1.5rem;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  margin: 0.75rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.status-banner:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .status-main-content {
