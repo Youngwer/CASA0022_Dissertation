@@ -22,16 +22,14 @@ const ContactModal = ({ isOpen, onClose }) => {
           </p>
           
           <div className="contact-links">
-            <a 
-              href="ucfnwy2@ucl.ac.uk" 
-              className="contact-link email"
-              target="_blank"
-              rel="noopener noreferrer"
+            <a
+            className="contact-link email"
+            onClick={(e) => e.preventDefault()}
+            rel="noopener noreferrer"
             >
-              <span className="contact-icon">📧</span>
-              <span className="contact-text">ucfnwy2@ucl.ac.uk</span>
+            <span className="contact-icon">📧</span>
+            <span className="contact-text">ucfnwy2@ucl.ac.uk</span>
             </a>
-            
             <a 
               href="https://github.com/Youngwer/CASA0022_Dissertation" 
               className="contact-link github"
