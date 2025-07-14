@@ -1,0 +1,459 @@
+/* mobile-responsive.css - 针对手机端的响应式设计优化 */
+
+/* ==================== 移动端基础优化 ==================== */
+@media screen and (max-width: 480px) {
+  /* 基础容器调整 */
+  .container {
+    padding: 0 12px;
+  }
+
+  .main {
+    padding: 1rem 0;
+  }
+
+  /* 头部移动端优化 */
+  .header {
+    padding: 0.75rem 0;
+  }
+
+  .header-content {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    text-align: center;
+  }
+
+  .logo h1 {
+    font-size: 1.4rem;
+  }
+
+  .subtitle {
+    font-size: 0.8rem;
+    margin-left: 0;
+    margin-top: 0.2rem;
+  }
+
+  .header-center {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .current-time {
+    font-size: 1rem;
+  }
+
+  .current-date {
+    font-size: 0.75rem;
+  }
+
+  .header-right {
+    flex-direction: row;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .header-action-btn {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.8rem;
+    border-radius: 6px;
+    min-width: 80px;
+  }
+
+  /* 总览卡片移动端优化 */
+  .overview-card {
+    margin-bottom: 1.5rem;
+    border-radius: 16px;
+  }
+
+  .card-header {
+    padding: 1rem;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+
+  .card-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .last-update {
+    font-size: 0.8rem;
+  }
+
+  .overview-main-content {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .water-label-section {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .status-banner {
+    padding: 1rem;
+  }
+
+  .status-main-content {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .status-content {
+    align-items: center;
+    text-align: center;
+  }
+
+  .status-value {
+    font-size: 1.4rem;
+  }
+
+  .temperature-display {
+    padding: 0.5rem 0.8rem;
+    justify-content: center;
+  }
+
+  /* 参数卡片网格移动端优化 */
+  .core-params-row {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .parameter-card {
+    min-height: 200px;
+    padding: 1rem;
+    text-align: center;
+    border-radius: 12px;
+  }
+
+  .parameter-card::before {
+    top: 0.75rem;
+    right: 0.75rem;
+    font-size: 1rem;
+  }
+
+  .card-icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .card-title-section h3 {
+    font-size: 0.9rem;
+    justify-content: center;
+  }
+
+  .value {
+    justify-content: center;
+    margin: 0.6rem 0;
+  }
+
+  .number {
+    font-size: 1.6rem;
+  }
+
+  .unit {
+    font-size: 0.9rem;
+  }
+
+  .description {
+    font-size: 0.85rem;
+    text-align: center;
+  }
+
+  .reference {
+    font-size: 0.75rem;
+    text-align: center;
+    margin-top: 0.5rem;
+  }
+
+  /* 表单和模态框移动端优化 */
+  .label-display-compact {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .current-label-compact {
+    text-align: center;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .edit-button-compact {
+    width: 100%;
+    padding: 0.6rem;
+    font-size: 1rem;
+  }
+
+  .label-edit-compact {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .label-select, .label-input-compact {
+    font-size: 0.9rem;
+    padding: 0.6rem 0.8rem;
+    height: auto;
+    min-height: 42px;
+  }
+
+  /* 模态框移动端优化 */
+  .history-modal {
+    width: 98%;
+    max-height: 90vh;
+    border-radius: 12px;
+  }
+
+  .modal-header {
+    padding: 1rem;
+  }
+
+  .modal-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .modal-content {
+    max-height: 65vh;
+  }
+
+  .modal-footer {
+    padding: 0.75rem 1rem;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+
+  /* 历史记录表格移动端优化 */
+  .history-table {
+    font-size: 0.75rem;
+  }
+
+  .history-table th,
+  .history-table td {
+    padding: 0.4rem 0.2rem;
+    text-align: center;
+  }
+
+  /* 错误横幅移动端优化 */
+  .error-banner {
+    padding: 0.75rem 1rem;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+
+  .error-content {
+    justify-content: center;
+  }
+
+  .retry-button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  /* 页脚移动端优化 */
+  .footer {
+    padding: 1.5rem 0;
+    margin-top: 1.5rem;
+  }
+
+  .footer-content {
+    gap: 1rem;
+  }
+
+  .footer-links {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .footer-link {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  .tech-stack {
+    gap: 0.4rem;
+  }
+
+  .tech-item {
+    font-size: 0.65rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  /* 工具提示移动端优化 */
+  .info-container {
+    position: relative;
+  }
+
+  .tooltip {
+    display: none; /* 在移动端隐藏悬浮提示，因为触摸设备不支持hover */
+  }
+
+  /* 为移动端添加点击提示功能 */
+  .info-icon {
+    cursor: pointer;
+    padding: 0.2rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    font-size: 0.8rem;
+  }
+
+  .info-icon:active {
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* ==================== 超小屏幕设备优化 (iPhone SE等) ==================== */
+@media screen and (max-width: 375px) {
+  .container {
+    padding: 0 8px;
+  }
+
+  .header-content {
+    gap: 0.5rem;
+  }
+
+  .logo h1 {
+    font-size: 1.2rem;
+  }
+
+  .subtitle {
+    font-size: 0.75rem;
+  }
+
+  .header-action-btn {
+    padding: 0.5rem 0.6rem;
+    font-size: 0.75rem;
+    min-width: 70px;
+  }
+
+  .parameter-card {
+    min-height: 180px;
+    padding: 0.75rem;
+  }
+
+  .card-icon {
+    font-size: 1.8rem;
+  }
+
+  .number {
+    font-size: 1.4rem;
+  }
+
+  .card-title-section h3 {
+    font-size: 0.85rem;
+  }
+
+  .description {
+    font-size: 0.8rem;
+  }
+}
+
+/* ==================== 横屏模式优化 ==================== */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .main {
+    padding: 0.5rem 0;
+  }
+
+  .overview-card {
+    margin-bottom: 1rem;
+  }
+
+  .card-header {
+    padding: 0.75rem;
+  }
+
+  .overview-main-content {
+    grid-template-columns: 1fr 1fr;
+    min-height: 120px;
+  }
+
+  .water-label-section {
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: none;
+  }
+
+  .core-params-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .parameter-card {
+    min-height: 150px;
+    padding: 0.75rem;
+  }
+
+  .footer {
+    padding: 1rem 0;
+    margin-top: 1rem;
+  }
+}
+
+/* ==================== 动画和性能优化 ==================== */
+@media screen and (max-width: 480px) {
+  /* 减少移动端动画以提高性能 */
+  .parameter-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .parameter-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .header-action-btn {
+    transition: background-color 0.2s ease;
+  }
+
+  .header-action-btn:hover {
+    transform: none;
+  }
+
+  /* 禁用一些不必要的动画 */
+  .refresh-btn.loading {
+    animation: none;
+  }
+
+  /* 优化触摸反馈 */
+  .header-action-btn:active,
+  .retry-button:active,
+  .edit-button-compact:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+  }
+}
+
+/* ==================== 可访问性增强 ==================== */
+@media screen and (max-width: 480px) {
+  /* 增大可点击区域 */
+  .header-action-btn {
+    min-height: 44px; /* iOS推荐的最小触摸目标 */
+  }
+
+  .edit-button-compact {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .close-button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* 提高文字对比度 */
+  .current-time {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  }
+
+  .status-value {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  }
+
+  .number {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+}

@@ -1,7 +1,264 @@
-/* styles/globals.css - 水质监测Dashboard样式主入口 */
+/* styles/globals.css - 水质监测Dashboard样式主入口 (增强版) */
 
 /* 导入所有模块化的样式文件 */
-@import url('./base.css');         /* 基础样式、重置和响应式 */
-@import url('./layout.css');       /* 头部、页脚和主要布局 */
-@import url('./components.css');   /* 卡片、按钮等组件样式 */
-@import url('./forms-modals.css'); /* 表单、弹窗和交互式组件 */
+@import url('./base.css');              /* 增强版基础样式、重置和响应式 */
+@import url('./layout.css');            /* 头部、页脚和主要布局 */
+@import url('./components.css');        /* 卡片、按钮等组件样式 */
+@import url('./forms-modals.css');      /* 表单、弹窗和交互式组件 */
+@import url('./mobile-responsive.css'); /* 专门的移动端响应式优化 */
+
+/* ==================== 全局变量定义 ==================== */
+:root {
+  /* 颜色主题 */
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --glass-bg: rgba(255, 255, 255, 0.18);
+  --glass-border: rgba(255, 255, 255, 0.3);
+  --glass-backdrop: blur(10px);
+  
+  /* 状态颜色 */
+  --status-excellent: #10B981;
+  --status-marginal: #F59E0B;
+  --status-unsafe: #EF4444;
+  --status-offline: #6B7280;
+  
+  /* 间距 */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  
+  /* 字体大小 */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  
+  /* 阴影 */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+  
+  /* 圆角 */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  
+  /* 过渡动画 */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.2s ease;
+  --transition-slow: 0.3s ease;
+}
+
+/* ==================== 移动端变量覆盖 ==================== */
+@media (max-width: 768px) {
+  :root {
+    /* 移动端调整间距 */
+    --spacing-xs: 0.2rem;
+    --spacing-sm: 0.4rem;
+    --spacing-md: 0.75rem;
+    --spacing-lg: 1rem;
+    --spacing-xl: 1.5rem;
+    
+    /* 移动端字体大小调整 */
+    --text-xs: 0.7rem;
+    --text-sm: 0.8rem;
+    --text-base: 0.9rem;
+    --text-lg: 1rem;
+    --text-xl: 1.1rem;
+    --text-2xl: 1.3rem;
+    --text-3xl: 1.6rem;
+    
+    /* 移动端减少阴影以提高性能 */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.15);
+    --shadow-xl: 0 8px 16px rgba(0, 0, 0, 0.15);
+    
+    /* 移动端简化模糊效果 */
+    --glass-backdrop: none;
+  }
+}
+
+/* ==================== 超小屏幕变量覆盖 ==================== */
+@media (max-width: 375px) {
+  :root {
+    --spacing-md: 0.5rem;
+    --spacing-lg: 0.75rem;
+    --spacing-xl: 1rem;
+    
+    --text-xs: 0.65rem;
+    --text-sm: 0.75rem;
+    --text-base: 0.85rem;
+    --text-lg: 0.95rem;
+    --text-xl: 1rem;
+    --text-2xl: 1.2rem;
+    --text-3xl: 1.4rem;
+  }
+}
+
+/* ==================== 全局工具类 ==================== */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.glass-effect {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.slide-up {
+  animation: slideUp 0.3s ease forwards;
+}
+
+/* ==================== 触摸优化 ==================== */
+@media (hover: none) and (pointer: coarse) {
+  /* 触摸设备特定样式 */
+  .parameter-card:hover {
+    transform: none;
+  }
+  
+  .parameter-card:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+  
+  .header-action-btn:hover {
+    transform: none;
+  }
+  
+  .header-action-btn:active {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(0.95);
+  }
+}
+
+/* ==================== 减少动画偏好 ==================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .parameter-card {
+    transition: none;
+  }
+  
+  .header-action-btn {
+    transition: none;
+  }
+}
+
+/* ==================== 强制GPU加速 (谨慎使用) ==================== */
+@media (min-width: 769px) {
+  .parameter-card,
+  .overview-card,
+  .header {
+    transform: translateZ(0);
+    will-change: transform;
+  }
+}
+
+/* ==================== 针对特定设备的优化 ==================== */
+/* iPhone X 系列及以上的安全区域适配 */
+@supports (padding: max(0px)) {
+  .container {
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
+  
+  .header {
+    padding-top: max(1rem, env(safe-area-inset-top));
+  }
+  
+  .footer {
+    padding-bottom: max(2rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* iPad 横屏优化 */
+@media screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  .core-params-row {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+  
+  .overview-main-content {
+    grid-template-columns: 1.5fr 1fr;
+  }
+}
+
+/* ==================== 开发环境样式 (可选) ==================== */
+@media screen and (max-width: 768px) {
+  /* 开发时显示当前断点信息 */
+  body::before {
+    content: "Mobile: " attr(data-viewport);
+    position: fixed;
+    top: 0;
+    right: 0;
+    background: rgba(255, 0, 0, 0.8);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
+    z-index: 9999;
+    display: none; /* 生产环境中隐藏 */
+  }
+}
+
+/* ==================== 性能监控样式 ==================== */
+.performance-indicator {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  z-index: 1000;
+  display: none; /* 只在开发环境显示 */
+}
+
+/* ==================== 最终覆盖和修复 ==================== */
+/* 确保所有交互元素在移动端都有合适的大小 */
+@media (max-width: 768px) {
+  input, button, select, textarea {
+    font-size: 16px; /* 防止iOS缩放 */
+  }
+  
+  /* 修复iOS Safari的一些显示问题 */
+  input[type="text"], input[type="email"], input[type="password"], textarea {
+    -webkit-appearance: none;
+    border-radius: 0;
+  }
+  
+  /* 确保长文本不会溢出 */
+  .description, .status-value, .current-label-compact {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+}
