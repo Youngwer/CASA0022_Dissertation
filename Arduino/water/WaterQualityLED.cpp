@@ -57,28 +57,28 @@ void turnOffAllLEDs() {
 
 // ==================== 水质评估主函数 ====================
 int evaluateWaterQuality(float pH, float turbidity, float tds, float ec) {
-  Serial.println("\n=== 水质评估 ===");
+  Serial.println("\n=== Water Quality Measurement ===");
   Serial.print("pH: "); Serial.println(pH, 2);
-  Serial.print("浊度: "); Serial.print(turbidity, 1); Serial.println(" NTU");
+  Serial.print("Turbidity: "); Serial.print(turbidity, 1); Serial.println(" NTU");
   Serial.print("TDS: "); Serial.print(tds, 0); Serial.println(" ppm");
-  Serial.print("电导率: "); Serial.print(ec, 0); Serial.println(" µS/cm");
+  Serial.print("Conductivity: "); Serial.print(ec, 0); Serial.println(" µS/cm");
   
   // 检查红灯条件 - 任何一个参数不合格就显示红灯
   if (!isAcceptablepH(pH) || !isAcceptableTurbidity(turbidity) || 
       !isAcceptableTDS(tds) || !isAcceptableEC(ec)) {
-    Serial.println("评估结果: 不适合饮用");
+    Serial.println("Assessment results: Unsafe to drink");
     return RED_LED;
   }
   
   // 检查是否所有参数都优秀
   if (isExcellentpH(pH) && isExcellentTurbidity(turbidity) && 
       isExcellentTDS(tds) && isExcellentEC(ec)) {
-    Serial.println("评估结果: 优秀，适合饮用");
+    Serial.println("Assessment results: Excellent to drink");
     return GREEN_LED;
   }
   
   // 其他情况显示黄灯
-  Serial.println("评估结果: 一般，勉强可接受");
+  Serial.println("Assessment results: Marginal, acceptable to drink");
   return YELLOW_LED;
 }
 
