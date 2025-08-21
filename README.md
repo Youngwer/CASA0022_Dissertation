@@ -7,7 +7,7 @@
 
 > A portable, real-time drinking water quality monitoring system designed for public spaces, featuring multi-parameter sensing, LoRaWAN connectivity, and comprehensive web-based data visualization.
 
-📖 **[View Full Dissertation](./docs/Dissertation.pdf)
+📖 **[View Full Dissertation](./Portable%20LoRaWAN-Based%20Real-Time%20Water%20Quality.pdf)
 
 ## 🎯 Project Overview
 
@@ -18,7 +18,7 @@ This system addresses the critical need for real-time water quality monitoring i
 - **Long-range connectivity**: LoRaWAN communication via The Things Network
 - **Public accessibility**: Web dashboard for community monitoring
 - **Portable design**: Battery-powered operation for diverse deployment scenarios
-
+![](./image/enclosure/shiwu.jpg)
 ### 🏆 Key Achievements
 - ✅ **100% classification accuracy** according to WHO/EPA standards
 - ✅ **Excellent sensor calibration** (R² = 0.9995 for pH, R² = 0.9987 for turbidity)
@@ -39,7 +39,7 @@ This system addresses the critical need for real-time water quality monitoring i
 - **Web Dashboard**: Public access to current and historical data
 - **Source Tracking**: Categorize and compare different water facilities
 - **Mobile Responsive**: Optimized for both desktop and mobile viewing
-- **Data Export**: Downloadable datasets for research purposes
+
 
 ![](./image/hardware%20system%20workflow.png)
 
@@ -133,7 +133,7 @@ Sensors → Arduino MKR WAN 1310 → LoRaWAN → TTN → Webhook → PostgreSQL 
 
 ### 2. Arduino Setup
 
-#### Get Device EUI
+#### LoRa: Get Device EUI
 ```cpp
 // Run this code first to get your DevEUI
 #include <MKRWAN.h>
@@ -348,19 +348,6 @@ This system has been successfully tested across diverse public facilities in the
 | Westfield Public Fountain | Excellent | Higher mineral content (245 ppm TDS) |
 | Campus Bathroom Tap | Excellent | Similar quality to fountain sources |
 
-## 🔬 Research Applications
-
-### Dataset Contributions
-- **287 water quality measurements** across 15+ locations
-- **Comparative analysis** of public infrastructure water quality
-- **Temporal variation studies** for the same water sources
-- **Validation data** for IoT water monitoring systems
-
-### Academic Impact
-- Demonstrates **100% classification accuracy** for WHO/EPA standards
-- Validates **LoRaWAN reliability** for public space monitoring
-- Provides **baseline data** for future UCL East area studies
-- Establishes **portable monitoring methodology** for public health
 
 ## 🤝 Contributing
 
@@ -402,16 +389,6 @@ We welcome contributions to improve AquaMonitor! Here's how you can help:
 
 ### Common Issues
 
-#### Device Not Connecting to TTN
-```bash
-# Check DevEUI registration
-Serial.println(modem.deviceEUI());
-
-# Verify frequency plan (EU868)
-if (!modem.begin(EU868)) {
-  Serial.println("Failed to start module");
-}
-```
 
 #### Sensor Reading Errors
 - **pH Probe**: Ensure proper conditioning in storage solution
@@ -444,12 +421,9 @@ This project is licensed under the MIT [License](https://opensource.org/license/
 ### Get in Touch
 - 📧 **Email**: ucfnwy2@ucl.ac.uk
 - 🐱 **GitHub**: [@Youngwer](https://github.com/Youngwer)
-- 📄 **Dissertation**: [Full PDF](./docs/Dissertation.pdf)
-
-### Support
+- 📄 **Dissertation**: [Full PDF](./Portable%20LoRaWAN-Based%20Real-Time%20Water%20Quality.pdf)
 - 🐛 **Bug Reports**: [GitHub Issues](https://github.com/Youngwer/CASA0022_Dissertation/issues)
-- 💡 **Feature Requests**: [GitHub Discussions](https://github.com/Youngwer/CASA0022_Dissertation/discussions)
-- 📚 **Documentation**: [Project Wiki](https://github.com/Youngwer/CASA0022_Dissertation/wiki)
+
 
 ---
 
